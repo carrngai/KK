@@ -38,6 +38,7 @@ codeunit 50100 "General Function"
             // FACashFlowDimMapping.SetRange("FA Posting Type", GenJnlLine."FA Posting Type");
             // FACashFlowDimMapping.SetRange("FA Movement Dimension", DimSetEntry."Dimension Value Code");
             // if FACashFlowDimMapping.FindFirst() then
+            //not getting correct CF Dimension Value Code / ID?
             if FACashFlowDimMapping.Get(GenJnlLine."FA Posting Type", DimSetEntry."Dimension Value Code") then
                 CashFlowDim := FACashFlowDimMapping."Cash Flow Dimension";
             if CashFlowDim <> '' then begin
