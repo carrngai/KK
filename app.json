@@ -1,0 +1,26 @@
+{
+  "id": "2c50fc3b-aa05-4f76-81e5-8dd82a8a6ba3",
+  "name": "KK",
+  "publisher": "Tectura",
+  "version": "1.0.0.0",
+  "brief": "",
+  "description": "",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "",
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "18.0.0.0",
+  "idRanges": [
+    {
+      "from": 50100,
+      "to": 50149
+    }
+  ],
+  "contextSensitiveHelpUrl": "https://KK.com/help/",
+  "showMyCode": true,
+  "runtime": "7.0"
+}
