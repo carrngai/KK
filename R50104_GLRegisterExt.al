@@ -215,6 +215,12 @@ report 50104 "G/L Register Ext"
                         begin
                             "Detailed Cust. Ledg. Entry".SetFilter("Cust. Ledger Entry No.", '<>%1', "Cust. Ledger Entry"."Entry No.");
                         end;
+
+                        trigger OnAfterGetRecord()
+                        begin
+                            if ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::Invoice) OR ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::"Credit Memo") then
+                                PrintSalesDoc := true;
+                        end;
                     }
                 }
                 dataitem("Vendor Ledger Entry"; "Vendor Ledger Entry") //G003
@@ -424,6 +430,16 @@ report 50104 "G/L Register Ext"
                 Clear(ShowApplied);
                 Clear(LastTransNo);
             end;
+
+            trigger OnPostDataItem()
+            var
+                l_GLRegister: Record "G/L Register";
+            begin
+                if AutoPrintSalesDoc AND PrintSalesDoc then begin
+                    l_GLRegister.CopyFilters("G/L Register");
+                    Report.Run(50106, false, false, l_GLRegister);
+                end;
+            end;
         }
     }
 
@@ -446,9 +462,14 @@ report 50104 "G/L Register Ext"
                     }
                     field(ShowPostingGroup; ShowPostingGroup) //G003
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Show Posting Group';
                         ToolTip = 'Specifies if the report displays posting group in detail.';
+                    }
+                    field(AutoPrintSalesDoc; AutoPrintSalesDoc) //G005
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Auto Print Sales Document if any Register includes Customer Invoice / Credit Memo';
                     }
                 }
             }
@@ -457,6 +478,11 @@ report 50104 "G/L Register Ext"
         actions
         {
         }
+
+        trigger OnOpenPage()
+        begin
+            AutoPrintSalesDoc := true;
+        end;
     }
 
     labels
@@ -488,12 +514,15 @@ report 50104 "G/L Register Ext"
         DrAmt: Decimal; //G003
         CrAmt: Decimal; //G003
         ExchRate: Decimal; //G003
+        AutoPrintSalesDoc: Boolean; //G005
+        PrintSalesDoc: Boolean; //G005
 
     trigger OnPreReport()
     begin
         GLRegFilter := "G/L Register".GetFilters();
         TempPurchInvLinePrinted.DeleteAll();
         GLSetup.Get;
+        PrintSalesDoc := false;
     end;
 
     local procedure DetailsPrinted(PurchInvLine: Record "Purch. Inv. Line"): Boolean

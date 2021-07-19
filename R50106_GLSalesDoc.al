@@ -1,4 +1,4 @@
-report 50106 "G/L Invoice"
+report 50106 "G/L Sales Document"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './R50106_GLSalesDoc.rdl';
