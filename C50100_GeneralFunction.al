@@ -5,6 +5,7 @@ codeunit 50100 "General Function"
 
     end;
 
+    //G019++
     [EventSubscriber(ObjectType::Table, 81, 'OnAfterValidateEvent', 'FA Posting Type', false, false)]
     local procedure OnAfterValidateEvent_GenJnlLine_FAPostingType(VAR Rec: Record "Gen. Journal Line"; VAR xRec: Record "Gen. Journal Line")
     var
@@ -17,6 +18,12 @@ codeunit 50100 "General Function"
     var
     begin
         UpdateCashFlowDimension(Rec);
+    end;
+
+    [EventSubscriber(ObjectType::Page, 5628, 'OnAfterActionEvent', 'Dimensions', false, false)]
+    local procedure OnAfterActionEvent_FAGLJournal_Dimension(var Rec: Record "Gen. Journal Line")
+    begin
+        Rec.Validate("Dimension Set ID");
     end;
 
     local procedure UpdateCashFlowDimension(VAR GenJnlLine: Record "Gen. Journal Line")
@@ -34,11 +41,6 @@ codeunit 50100 "General Function"
 
         if DimSetEntry.Get(GenJnlLine."Dimension Set ID", 'FIXEDASSETMOVEMENT') then begin
             clear(CashFlowDim);
-            // FACashFlowDimMapping.Reset();
-            // FACashFlowDimMapping.SetRange("FA Posting Type", GenJnlLine."FA Posting Type");
-            // FACashFlowDimMapping.SetRange("FA Movement Dimension", DimSetEntry."Dimension Value Code");
-            // if FACashFlowDimMapping.FindFirst() then
-            //not getting correct CF Dimension Value Code / ID?
             if FACashFlowDimMapping.Get(GenJnlLine."FA Posting Type", DimSetEntry."Dimension Value Code") then
                 CashFlowDim := FACashFlowDimMapping."Cash Flow Dimension";
             if CashFlowDim <> '' then begin
@@ -64,7 +66,6 @@ codeunit 50100 "General Function"
                 end;
             end;
         end;
-
-
     end;
+    //G019--
 }

@@ -4,7 +4,7 @@ table 50107 "FA Cash Flow Dimension Mapping"
 
     fields
     {
-        field(1; "FA Posting Type"; Enum "FA Journal Line FA Posting Type")
+        field(1; "FA Posting Type"; Enum "Gen. Journal Line FA Posting Type")
         {
             Caption = 'FA Posting Type';
         }

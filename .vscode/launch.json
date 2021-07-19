@@ -7,7 +7,7 @@
             "type": "al",
             "environmentType": "Sandbox",
             "environmentName": "sandbox",
-            "startupObjectId": 22,
+            "startupObjectId": 240,
             "startupObjectType": "Page",
             //"schemaUpdateMode":"ForceSync",
             "breakOnError": true,
