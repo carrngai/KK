@@ -1,9 +1,9 @@
-page 50102 "Holding Company / Investor"
+page 50102 "Holding Company/Investor"
 {
     PageType = List;
     ApplicationArea = All;
     UsageCategory = Administration;
-    SourceTable = "Holding Company / Investor";
+    SourceTable = "Holding Company/Investor";
     AutoSplitKey = true;
 
     layout
@@ -28,7 +28,7 @@ page 50102 "Holding Company / Investor"
                     ApplicationArea = All;
                     Editable = false;
                 }
-                field("Holding Company/Investor"; Rec."Holding Company/Investor")
+                field("Holding Company/Investor"; Rec."Holding Company/Investor Name")
                 {
                     ToolTip = 'Specifies the value of the Holding Company/Investor field';
                     ApplicationArea = All;

@@ -31,6 +31,11 @@ tableextension 50100 CompanyInformationExt extends "Company Information"
         {
             DataClassification = ToBeClassified;
         }
+        field(50107; "Consolidate Company"; Text[30])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = Company.Name;
+        }
     }
 
     var

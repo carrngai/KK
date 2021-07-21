@@ -75,10 +75,10 @@ page 50101 "Company Information Change"
     {
         area(Navigation)
         {
-            action("Holding Company / Investor")
+            action("Holding Company/Investor")
             {
                 ApplicationArea = All;
-                RunObject = page "Holding Company / Investor";
+                RunObject = page "Holding Company/Investor";
                 RunPageLink = Company = field(Company), "Start Date" = field("Start Date");
                 Promoted = true;
                 PromotedCategory = Category4;
