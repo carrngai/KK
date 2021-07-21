@@ -12,13 +12,13 @@ table 50107 "FA Cash Flow Dimension Mapping"
         field(2; "FA Movement Dimension"; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Dimension Value".Code where("Dimension Code" = const('FIXEDASSETMOVEMENT'));
+            TableRelation = "Dimension Value".Code where("Dimension Code" = const('FIXED ASSET MOVEMENT'));
         }
 
         field(3; "Cash Flow Dimension"; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Dimension Value".Code where("Dimension Code" = const('CASHFLOW'));
+            TableRelation = "Dimension Value".Code where("Dimension Code" = const('CASH FLOW'));
         }
     }
 

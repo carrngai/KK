@@ -21,6 +21,16 @@ pageextension 50111 "Business Unit List Ext" extends "Business Unit List"
                 ToolTip = 'Specifies the value of the Last Balance Currency Factor field';
                 ApplicationArea = All;
             }
+            field("Parent Company"; Rec."Parent Company")
+            {
+                ToolTip = 'Specifies the value of the Parent Company field';
+                ApplicationArea = All;
+            }
+            field("Conso Path"; Rec."Conso Path")
+            {
+                ToolTip = 'Specifies the value of the Conso Path field';
+                ApplicationArea = All;
+            }
         }
     }
 

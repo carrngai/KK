@@ -40,11 +40,6 @@ pageextension 50100 CompanyInformationExt extends "Company Information"
                 ToolTip = 'Specifies the value of the Remarks field';
                 ApplicationArea = All;
             }
-            field("Consolidate Company"; Rec."Consolidate Company")
-            {
-                ToolTip = 'Specifies the value of the Consolidate Company field';
-                ApplicationArea = All;
-            }
         }
     }
 

@@ -23,6 +23,11 @@ pageextension 50110 "Business Unit Card Ext" extends "Business Unit Card"
                 ApplicationArea = All;
                 Editable = false;
             }
+            field("Parent Company"; Rec."Parent Company")
+            {
+                ToolTip = 'Specifies the value of the Parent Company field';
+                ApplicationArea = All;
+            }
         }
     }
 
