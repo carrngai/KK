@@ -39,14 +39,14 @@ codeunit 50100 "General Function"
         if (GenJnlLine."Journal Template Name" <> 'ASSETS') then
             exit;
 
-        if DimSetEntry.Get(GenJnlLine."Dimension Set ID", 'FIXEDASSETMOVEMENT') then begin
+        if DimSetEntry.Get(GenJnlLine."Dimension Set ID", 'FIXED ASSET MOVEMENT') then begin
             clear(CashFlowDim);
             if FACashFlowDimMapping.Get(GenJnlLine."FA Posting Type", DimSetEntry."Dimension Value Code") then
                 CashFlowDim := FACashFlowDimMapping."Cash Flow Dimension";
             if CashFlowDim <> '' then begin
                 DimMgt.GetDimensionSet(TempDimSetEntry, GenJnlLine."Dimension Set ID");
-                DimVal.GET('CASHFLOW', CashFlowDim);
-                TempDimSetEntry.SetRange("Dimension Code", 'CASHFLOW');
+                DimVal.GET('CASH FLOW', CashFlowDim);
+                TempDimSetEntry.SetRange("Dimension Code", 'CASH FLOW');
                 if TempDimSetEntry.FindFirst() then begin
                     TempDimSetEntry."Dimension Value Code" := CashFlowDim;
                     TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
@@ -54,7 +54,7 @@ codeunit 50100 "General Function"
                 end
                 else begin
                     TempDimSetEntry.Init();
-                    TempDimSetEntry."Dimension Code" := 'CASHFLOW';
+                    TempDimSetEntry."Dimension Code" := 'CASH FLOW';
                     TempDimSetEntry."Dimension Value Code" := CashFlowDim;
                     TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
                     TempDimSetEntry.Insert();
