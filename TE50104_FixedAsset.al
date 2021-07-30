@@ -11,6 +11,10 @@ tableextension 50104 FixedAssetExt extends "Fixed Asset"
         {
             DataClassification = ToBeClassified;
         }
+        field(50102; "Description Remarks"; Text[250])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     var

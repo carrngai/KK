@@ -11,10 +11,20 @@ pageextension 50107 FixedAssetCardExt extends "Fixed Asset Card"
                 ToolTip = 'Specifies the value of the No. 2 field';
                 ApplicationArea = All;
             }
+        }
+        addafter(Description)
+        {
+            field("Description Remarks"; Rec."Description Remarks")
+            {
+                ToolTip = 'Specifies the value of the Description Remarks field';
+                ApplicationArea = All;
+                MultiLine = true;
+            }
             field(Remarks; Rec.Remarks)
             {
                 ToolTip = 'Specifies the value of the Remarks field';
                 ApplicationArea = All;
+                MultiLine = true;
             }
         }
     }
