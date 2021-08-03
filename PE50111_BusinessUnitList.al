@@ -46,6 +46,15 @@ pageextension 50111 "Business Unit List Ext" extends "Business Unit List"
                 RunObject = report "Calculate BU Average Rate";
             }
         }
+        addafter("Run Consolidation")
+        {
+            action("Run Consolidation Ext")
+            {
+                ApplicationArea = all;
+                Image = Calculate;
+                RunObject = report "Import Conso. from DB Ext";
+            }
+        }
     }
 
     var
