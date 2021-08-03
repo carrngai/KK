@@ -77,33 +77,100 @@ report 50108 "Import Conso. from DB Ext"
 
                 trigger OnAfterGetRecord()
                 var
-                    GLAcc: Record "G/L Account";    //G017
-                    OpeningExchRateAdj: Decimal; //G017
-
+                    //G017++
+                    //ConsoGLAcc: Record "G/L Account";
+                    GLAcc: Record "G/L Account";
+                    OpeningExchRateAdj: Decimal;
+                    SourceCodeSetup: Record "Source Code Setup";
+                    ConsoBalance: Decimal;
+                    l_GLEntry: Record "G/L Entry";
+                    l_GLReverseAmt: Decimal;
+                    l_GLEntry2: Record "G/L Entry";
+                //G017--
                 begin
                     Window.Update(2, "No.");
                     Window.Update(3, '');
 
                     BusUnitConsolidate.InsertGLAccount("G/L Account");
 
-                    //G017
-                    clear(OpeningExchRateAdj);
-                    SetFilter("Date Filter", '..%1', ConsolidStartDate);
-                    SetFilter("Business Unit Filter", "Business Unit".Code);
-                    CalcFields("Balance at Date");
+                    //G017++
+                    if ("Business Unit"."Currency Code" <> GLSetup."LCY Code") AND ("Consol. Translation Method" = "Consol. Translation Method"::"Average Rate (Manual)") AND ("Income/Balance" = "Income/Balance"::"Income Statement") then begin
+                        // Reverse Last Period Adjustment 
+                        l_GLReverseAmt := 0;
+                        l_GLEntry.Reset();
+                        l_GLEntry.SetRange("G/L Account No.", "G/L Account"."No.");
+                        l_GLEntry.SetRange("Posting Date", 0D, ConsolidStartDate - 1);
+                        l_GLEntry.SetRange("Business Unit Code", "Business Unit".Code);
+                        l_GLEntry.SetRange("Conso. Exch. Adj.", true);
+                        if l_GLEntry.FindSet() then
+                            repeat
+                                l_GLReverseAmt += l_GLEntry.Amount;
+                            until l_GLEntry.Next() = 0;
 
-                    if "G/L Account"."Consol. Translation Method" = "G/L Account"."Consol. Translation Method"::"Average Rate (Manual)" then begin
-                        GLAcc.Reset();
-                        GLAcc.ChangeCompany("Business Unit"."Company Name");
-                        GLAcc.SetFilter("Date Filter", '..%1', ConsolidStartDate);
-                        GLAcc.SetRange("No.", "No.");
-                        if GLAcc.FindFirst() then begin
-                            GLAcc.CalcFields("Balance at Date");
-                            OpeningExchRateAdj := ((GLAcc."Balance at Date" * "Business Unit"."Income Currency Factor") - "Balance at Date");
-                            Message(Format(OpeningExchRateAdj));
+                        Clear(GenJnlLine);
+                        GenJnlLine."Business Unit Code" := "Business Unit".Code;
+                        GenJnlLine."Posting Date" := ConsolidEndDate;
+                        GenJnlLine."Document No." := GLDocNo;
+                        GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
+                        GenJnlLine."Account No." := "G/L Account"."No.";
+                        GenJnlLine.Description := StrSubstNo('Opening Bal. Adj. - Reversal');
+                        GenJnlLine.Amount := -l_GLReverseAmt;
+                        if -l_GLReverseAmt > 0 then begin
+                            "Business Unit".TestField("Exch. Rate Gains Acc.");
+                            GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Gains Acc."
+                        end else begin
+                            "Business Unit".TestField("Exch. Rate Losses Acc.");
+                            GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Losses Acc."
+                        end;
+                        GenJnlLine."Conso. Exch. Adj." := true;
+                        GenJnlPostLineTmp(GenJnlLine);
+
+
+                        // Revaluate Balance at current rate
+                        ConsoBalance := 0;
+                        OpeningExchRateAdj := 0;
+
+                        l_GLEntry2.Reset();
+                        l_GLEntry2.SetRange("G/L Account No.", "G/L Account"."No.");
+                        l_GLEntry2.SetRange("Posting Date", 0D, ConsolidStartDate - 1);
+                        l_GLEntry2.SetRange("Business Unit Code", "Business Unit".Code);
+                        l_GLEntry2.SetRange("Conso. Exch. Adj.", false);
+                        if l_GLEntry2.FindSet() then
+                            repeat
+                                ConsoBalance += l_GLEntry2.Amount;
+                            until l_GLEntry2.Next() = 0;
+
+                        if ConsoBalance <> 0 then begin
+                            GLAcc.Reset();
+                            GLAcc.ChangeCompany("Business Unit"."Company Name");
+                            GLAcc.SetRange("No.", "No.");
+                            GLAcc.SetFilter("Date Filter", '..%1', ConsolidStartDate - 1);
+                            if GLAcc.FindFirst() then begin
+                                GLAcc.CalcFields("Balance at Date");
+                                OpeningExchRateAdj := ((GLAcc."Balance at Date" / "Business Unit"."Income Currency Factor") - ConsoBalance);
+                                if OpeningExchRateAdj <> 0 then begin
+                                    Clear(GenJnlLine);
+                                    GenJnlLine."Business Unit Code" := "Business Unit".Code;
+                                    GenJnlLine."Posting Date" := ConsolidEndDate;
+                                    GenJnlLine."Document No." := GLDocNo;
+                                    GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
+                                    GenJnlLine."Account No." := "G/L Account"."No.";
+                                    GenJnlLine.Description := CopyStr(StrSubstNo('Opening Bal. Adj. at Exch. Rate %1 : (%2/%1) - (%3)', Round("Business Unit"."Income Currency Factor", 0.00001), GLAcc."Balance at Date", ConsoBalance), 1, MaxStrLen(GenJnlLine.Description));
+                                    GenJnlLine.Amount := OpeningExchRateAdj;
+                                    if OpeningExchRateAdj > 0 then begin
+                                        "Business Unit".TestField("Exch. Rate Gains Acc.");
+                                        GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Gains Acc."
+                                    end else begin
+                                        "Business Unit".TestField("Exch. Rate Losses Acc.");
+                                        GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Losses Acc."
+                                    end;
+                                    GenJnlLine."Conso. Exch. Adj." := true;
+                                    GenJnlPostLineTmp(GenJnlLine);
+                                end;
+                            end;
                         end;
                     end;
-                    //G017
+                    //G017--
                 end;
             }
             dataitem("Currency Exchange Rate"; "Currency Exchange Rate")
@@ -211,6 +278,7 @@ report 50108 "Import Conso. from DB Ext"
                   Text004);
             end;
         }
+
     }
 
     requestpage
@@ -298,6 +366,10 @@ report 50108 "Import Conso. from DB Ext"
 
     trigger OnPostReport()
     begin
+
+        GenJnlPostLineFinally; //G017
+        TempGenJnlLine.DeleteAll(); //G017
+
         Commit();
         REPORT.Run(REPORT::"Consolidated Trial Balance");
     end;
@@ -342,6 +414,10 @@ report 50108 "Import Conso. from DB Ext"
         GLEntryNo: Integer;
         ConsPeriodSubsidiaryQst: Label 'The consolidation period %1 .. %2 is not within the fiscal year of one or more of the subsidiaries.\Do you want to proceed with the consolidation?', Comment = '%1 and %2 - request page values';
         ConsPeriodCompanyQst: Label 'The consolidation period %1 .. %2 is not within the fiscal year %3 .. %4 of the consolidated company %5.\Do you want to proceed with the consolidation?', Comment = '%1, %2, %3, %4 - request page values, %5 - company name';
+
+        GenJnlLine: Record "Gen. Journal Line";//G017
+        TempGenJnlLine: Record "Gen. Journal Line" temporary; //G017
+        NextLineNo: Integer; //G017
 
     local procedure CheckClosingPostings(GLAccNo: Code[20]; StartDate: Date; EndDate: Date)
     var
@@ -462,15 +538,36 @@ report 50108 "Import Conso. from DB Ext"
 
     local procedure CheckBusUnitsDatesToFiscalYear(var BusUnit: Record "Business Unit")
     begin
-        with BusUnit do
-            if ("Starting Date" <> 0D) or ("Ending Date" <> 0D) then begin
-                TestField("Starting Date");
-                TestField("Ending Date");
-                if "Starting Date" > "Ending Date" then
-                    Error(
-                      Text032, FieldCaption("Starting Date"),
-                      FieldCaption("Ending Date"), "Company Name");
-            end;
+        if (BusUnit."Starting Date" <> 0D) or (BusUnit."Ending Date" <> 0D) then begin
+            BusUnit.TestField("Starting Date");
+            BusUnit.TestField("Ending Date");
+            if BusUnit."Starting Date" > BusUnit."Ending Date" then
+                Error(
+                  Text032, BusUnit.FieldCaption("Starting Date"),
+                  BusUnit.FieldCaption("Ending Date"), BusUnit."Company Name");
+        end;
+    end;
+
+    local procedure GenJnlPostLineTmp(var GenJnlLine: Record "Gen. Journal Line") //G017
+    begin
+        NextLineNo := NextLineNo + 1;
+        TempGenJnlLine := GenJnlLine;
+        TempGenJnlLine.Amount := Round(TempGenJnlLine.Amount);
+        TempGenJnlLine."Line No." := NextLineNo;
+        TempGenJnlLine."System-Created Entry" := true;
+        TempGenJnlLine.Insert();
+    end;
+
+    local procedure GenJnlPostLineFinally() //G017
+    var
+        GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line";
+    begin
+        TempGenJnlLine.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Posting Date");
+        if TempGenJnlLine.FindSet then
+            repeat
+                Window.Update(3, TempGenJnlLine."Account No.");
+                GenJnlPostLine.RunWithCheck(TempGenJnlLine);
+            until TempGenJnlLine.Next() = 0;
     end;
 }
 

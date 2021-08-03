@@ -34,6 +34,28 @@ pageextension 50110 "Business Unit Card Ext" extends "Business Unit Card"
     actions
     {
         // Add changes to page actions here
+        addbefore("Run Consolidation")
+        {
+            action("Calculate Average Rate(Manual)...")
+            {
+                ApplicationArea = all;
+                Image = Calculate;
+                RunObject = report "Calculate BU Average Rate";
+            }
+        }
+        addafter("Run Consolidation")
+        {
+            action("Run Consolidation Ext")
+            {
+                ApplicationArea = all;
+                Image = ImportDatabase;
+                RunObject = report "Import Conso. from DB Ext";
+            }
+        }
+        modify("Run Consolidation")
+        {
+            Visible = false;
+        }
     }
 
     var

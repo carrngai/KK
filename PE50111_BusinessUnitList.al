@@ -51,9 +51,13 @@ pageextension 50111 "Business Unit List Ext" extends "Business Unit List"
             action("Run Consolidation Ext")
             {
                 ApplicationArea = all;
-                Image = Calculate;
+                Image = ImportDatabase;
                 RunObject = report "Import Conso. from DB Ext";
             }
+        }
+        modify("Run Consolidation")
+        {
+            Visible = false;
         }
     }
 
