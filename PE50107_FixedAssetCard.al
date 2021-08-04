@@ -27,6 +27,36 @@ pageextension 50107 FixedAssetCardExt extends "Fixed Asset Card"
                 MultiLine = true;
             }
         }
+        addbefore(DepreciationStartingDate)
+        {
+            field("Straight-Line %"; FADepreciationBook."Straight-Line %")
+            {
+                ApplicationArea = FixedAssets;
+                ShowMandatory = true;
+
+                trigger OnValidate()
+                begin
+                    LoadFADepreciationBooks();
+                    FADepreciationBook.Validate("Straight-Line %");
+                    SaveSimpleDepreciationBook(xRec."No.");
+                end;
+            }
+        }
+        addafter(NumberOfDepreciationYears)
+        {
+            field("No. of Depreciation Months"; FADepreciationBook."No. of Depreciation Months")
+            {
+                ApplicationArea = FixedAssets;
+                ShowMandatory = true;
+
+                trigger OnValidate()
+                begin
+                    LoadFADepreciationBooks();
+                    FADepreciationBook.Validate("No. of Depreciation Months");
+                    SaveSimpleDepreciationBook(xRec."No.");
+                end;
+            }
+        }
     }
 
     actions

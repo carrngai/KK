@@ -35,12 +35,25 @@ page 50104 "IC Transaction Path"
     {
         area(Processing)
         {
-            action(Details)
+            action("IC Trans. Path Details")
             {
                 ApplicationArea = All;
+                Image = Line;
                 RunObject = page "IC Transaction Path Details";
                 RunPageLink = "Path Code" = field("Path Code");
+                Promoted = true;
+                PromotedCategory = Process;
 
+            }
+
+            action("IC Trans. Acc. Mapping")
+            {
+                ApplicationArea = all;
+                Image = MapAccounts;
+                RunObject = page "IC Transaction Account Mapping";
+                RunPageLink = "Path Code" = field("Path Code");
+                Promoted = true;
+                PromotedCategory = Process;
             }
         }
     }

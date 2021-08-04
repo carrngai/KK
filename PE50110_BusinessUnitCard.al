@@ -29,6 +29,22 @@ pageextension 50110 "Business Unit Card Ext" extends "Business Unit Card"
                 ApplicationArea = All;
             }
         }
+        addlast("G/L Accounts")
+        {
+            group("JV/Asso Adjustment")
+            {
+                field("Investment Account"; Rec."Investment Account")
+                {
+                    ToolTip = 'Specifies the value of the Investment Account field';
+                    ApplicationArea = All;
+                }
+                field("Share of Profit Account"; Rec."Share of Profit Account")
+                {
+                    ToolTip = 'Specifies the value of the Share of Profit Account field';
+                    ApplicationArea = All;
+                }
+            }
+        }
     }
 
     actions

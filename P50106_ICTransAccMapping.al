@@ -59,7 +59,16 @@ page 50106 "IC Transaction Account Mapping"
         }
         area(Factboxes)
         {
-
+            part("Dimensions Set"; "Dimension Set Entries FactBox")
+            {
+                ApplicationArea = all;
+                SubPageLink = "Dimension Set ID" = field("Dimension Set ID");
+            }
+            part("Bal. Dimensions Set"; "Dimension Set Entries FactBox")
+            {
+                ApplicationArea = all;
+                SubPageLink = "Dimension Set ID" = field("Bal. Dimension Set ID");
+            }
         }
     }
 
@@ -74,7 +83,7 @@ page 50106 "IC Transaction Account Mapping"
                 Caption = 'Dimensions';
                 Image = Dimensions;
                 Promoted = true;
-                PromotedCategory = Category4;
+                PromotedCategory = Process;
                 ToolTip = 'View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.';
 
                 trigger OnAction()
@@ -90,7 +99,7 @@ page 50106 "IC Transaction Account Mapping"
                 Caption = 'Bal. Dimensions';
                 Image = Dimensions;
                 Promoted = true;
-                PromotedCategory = Category4;
+                PromotedCategory = Process;
                 ToolTip = 'View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.';
 
                 trigger OnAction()
@@ -102,4 +111,5 @@ page 50106 "IC Transaction Account Mapping"
 
         }
     }
+
 }

@@ -1,5 +1,6 @@
 report 50108 "Import Conso. from DB Ext"
 
+//G015 Handle JV / Associate company during consolidation
 //G017 During “Run Consolidation”, Reverse exch. rate adj. entries for pervious pervious and create new exch. Rate adjustment entries for current rate. 
 {
     Caption = 'Consolidation Report Ext';
@@ -78,7 +79,6 @@ report 50108 "Import Conso. from DB Ext"
                 trigger OnAfterGetRecord()
                 var
                     //G017++
-                    //ConsoGLAcc: Record "G/L Account";
                     GLAcc: Record "G/L Account";
                     OpeningExchRateAdj: Decimal;
                     SourceCodeSetup: Record "Source Code Setup";
@@ -94,7 +94,7 @@ report 50108 "Import Conso. from DB Ext"
                     BusUnitConsolidate.InsertGLAccount("G/L Account");
 
                     //G017++
-                    if ("Business Unit"."Currency Code" <> GLSetup."LCY Code") AND ("Consol. Translation Method" = "Consol. Translation Method"::"Average Rate (Manual)") AND ("Income/Balance" = "Income/Balance"::"Income Statement") then begin
+                    if (("Business Unit"."Currency Code" <> GLSetup."LCY Code") OR ("Business Unit"."Currency Code" <> '')) AND ("Consol. Translation Method" = "Consol. Translation Method"::"Average Rate (Manual)") AND ("Income/Balance" = "Income/Balance"::"Income Statement") then begin
                         // Reverse Last Period Adjustment 
                         l_GLReverseAmt := 0;
                         l_GLEntry.Reset();
@@ -107,23 +107,25 @@ report 50108 "Import Conso. from DB Ext"
                                 l_GLReverseAmt += l_GLEntry.Amount;
                             until l_GLEntry.Next() = 0;
 
-                        Clear(GenJnlLine);
-                        GenJnlLine."Business Unit Code" := "Business Unit".Code;
-                        GenJnlLine."Posting Date" := ConsolidEndDate;
-                        GenJnlLine."Document No." := GLDocNo;
-                        GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
-                        GenJnlLine."Account No." := "G/L Account"."No.";
-                        GenJnlLine.Description := StrSubstNo('Opening Bal. Adj. - Reversal');
-                        GenJnlLine.Amount := -l_GLReverseAmt;
-                        if -l_GLReverseAmt > 0 then begin
-                            "Business Unit".TestField("Exch. Rate Gains Acc.");
-                            GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Gains Acc."
-                        end else begin
-                            "Business Unit".TestField("Exch. Rate Losses Acc.");
-                            GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Losses Acc."
+                        if l_GLReverseAmt <> 0 then begin
+                            Clear(GenJnlLine);
+                            GenJnlLine."Business Unit Code" := "Business Unit".Code;
+                            GenJnlLine."Posting Date" := ConsolidEndDate;
+                            GenJnlLine."Document No." := GLDocNo;
+                            GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
+                            GenJnlLine."Account No." := "G/L Account"."No.";
+                            GenJnlLine.Description := StrSubstNo('Opening Bal. Adj. - Reversal');
+                            GenJnlLine.Amount := -l_GLReverseAmt;
+                            if -l_GLReverseAmt > 0 then begin
+                                "Business Unit".TestField("Exch. Rate Gains Acc.");
+                                GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Gains Acc."
+                            end else begin
+                                "Business Unit".TestField("Exch. Rate Losses Acc.");
+                                GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Losses Acc."
+                            end;
+                            GenJnlLine."Conso. Exch. Adj." := true;
+                            GenJnlPostLineTmp(GenJnlLine);
                         end;
-                        GenJnlLine."Conso. Exch. Adj." := true;
-                        GenJnlPostLineTmp(GenJnlLine);
 
 
                         // Revaluate Balance at current rate
@@ -220,6 +222,10 @@ report 50108 "Import Conso. from DB Ext"
             }
 
             trigger OnAfterGetRecord()
+            var
+                l_GLAcc: Record "G/L Account"; //G015
+                l_ProfitAmt: Decimal; //G015
+                SourceCodeSetup: Record "Source Code Setup"; //G015
             begin
                 Window.Update(1, Code);
                 Window.Update(2, '');
@@ -262,6 +268,41 @@ report 50108 "Import Conso. from DB Ext"
 
                 AdditionalCurrencyCode := '';
                 SubsidCurrencyCode := '';
+
+                //G015++
+                if "Consolidation %" < 50 then begin
+                    "Business Unit".TestField("Investment Account");
+                    "Business Unit".TestField("Share of Profit Account");
+                    l_ProfitAmt := 0;
+                    l_GLAcc.Reset();
+                    l_GLAcc.ChangeCompany("Business Unit"."Company Name");
+                    l_GLAcc.SetRange("Account Type", l_GLAcc."Account Type"::Posting);
+                    l_GLAcc.SetRange("Income/Balance", l_GLAcc."Income/Balance"::"Income Statement");
+                    l_GLAcc.SetFilter("Date Filter", '%1..%2', ConsolidStartDate, ConsolidEndDate);
+                    if l_GLAcc.FindSet() then
+                        repeat
+                            l_GLAcc.CalcFields("Net Change");
+                            l_ProfitAmt += l_GLAcc."Net Change";
+                        until l_GLAcc.Next() = 0;
+
+                    if l_ProfitAmt <> 0 then begin
+                        Clear(GenJnlLine);
+                        GenJnlLine."Business Unit Code" := "Business Unit".Code;
+                        GenJnlLine."Posting Date" := ConsolidEndDate;
+                        GenJnlLine."Document No." := GLDocNo;
+                        GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
+                        GenJnlLine."Account No." := "Business Unit"."Share of Profit Account";
+                        GenJnlLine."Bal. Account No." := "Business Unit"."Investment Account";
+                        GenJnlLine.Description := CopyStr(StrSubstNo('JV/ASSO %1 at %3 Conso.% at Exch.Rate %2', l_ProfitAmt, Round("Business Unit"."Income Currency Factor", 0.00001), "Business Unit"."Consolidation %"), 1, MaxStrLen(GenJnlLine.Description));
+                        if (("Business Unit"."Currency Code" <> '') OR ("Business Unit"."Currency Code" <> GLSetup."LCY Code")) then
+                            GenJnlLine.Amount := Round(l_ProfitAmt * ("Business Unit"."Consolidation %" / 100) / "Business Unit"."Income Currency Factor", 0.01)
+                        else
+                            GenJnlLine.Amount := Round(l_ProfitAmt * ("Business Unit"."Consolidation %" / 100), 0.01);
+                        GenJnlPostLineTmp(GenJnlLine);
+                    end;
+                end;
+                //G015--
+
             end;
 
             trigger OnPreDataItem()

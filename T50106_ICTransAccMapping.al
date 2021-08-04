@@ -27,6 +27,10 @@ table 50106 "IC Transaction Account Mapping"
             Caption = 'Dimension Set ID';
             Editable = false;
             TableRelation = "Dimension Set Entry";
+            trigger OnLookup()
+            begin
+                ShowDimensions();
+            end;
         }
         field(5; "Bal. Account Type"; Option)
         {
@@ -46,6 +50,10 @@ table 50106 "IC Transaction Account Mapping"
             Caption = 'Dimension Set ID';
             Editable = false;
             TableRelation = "Dimension Set Entry";
+            trigger OnLookup()
+            begin
+                ShowDimensions2();
+            end;
         }
         field(8; "Elimination"; Boolean)
         {

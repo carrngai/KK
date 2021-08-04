@@ -38,15 +38,7 @@ page 50105 "IC Transaction Path Details"
     {
         area(Processing)
         {
-            action(ActionName)
-            {
-                ApplicationArea = All;
 
-                trigger OnAction();
-                begin
-
-                end;
-            }
         }
     }
 }

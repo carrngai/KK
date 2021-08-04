@@ -21,6 +21,16 @@ tableextension 50105 "Business Unit Ext" extends "Business Unit"
         {
             DataClassification = ToBeClassified;
         }
+        field(50102; "Investment Account"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "G/L Account";
+        }
+        field(50103; "Share of Profit Account"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "G/L Account";
+        }
     }
 
     var

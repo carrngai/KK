@@ -38,15 +38,7 @@ page 50107 "FA Cash Flow Dimension Mapping"
     {
         area(Processing)
         {
-            action(ActionName)
-            {
-                ApplicationArea = All;
 
-                trigger OnAction();
-                begin
-
-                end;
-            }
         }
     }
 }
