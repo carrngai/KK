@@ -9,10 +9,10 @@ table 50106 "IC Transaction Account Mapping"
             DataClassification = ToBeClassified;
             TableRelation = "IC Transaction Path"."Path Code";
         }
-        field(2; "Account Type"; Option)
+        field(2; "Account Type"; Enum "Gen. Journal Account Type")
         {
             DataClassification = ToBeClassified;
-            OptionMembers = "G/L Account","Bank Account";
+            ValuesAllowed = 0, 3;
         }
         field(3; "Account No."; Code[20])
         {
@@ -32,10 +32,10 @@ table 50106 "IC Transaction Account Mapping"
                 ShowDimensions();
             end;
         }
-        field(5; "Bal. Account Type"; Option)
+        field(5; "Bal. Account Type"; Enum "Gen. Journal Account Type")
         {
             DataClassification = ToBeClassified;
-            OptionMembers = "G/L Account","Bank Account";
+            ValuesAllowed = 0, 3;
         }
         field(6; "Bal. Account No."; Code[20])
         {
