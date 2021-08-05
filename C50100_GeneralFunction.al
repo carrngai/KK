@@ -86,8 +86,8 @@ codeunit 50100 "General Function"
         DimMgt: Codeunit DimensionManagement;
         DimVal: Record "Dimension Value";
         DimSetEntry: Record "Dimension Set Entry";
-        tempDimSetEntry: Record "Dimension Set Entry" temporary;
-        tempDimSetEntry2: Record "Dimension Set Entry" temporary;
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+        TempDimSetEntry2: Record "Dimension Set Entry" temporary;
         NoOfSeq: Integer;
         ICGenJnlLine: Record "Gen. Journal Line";
         FromCompany: Code[50];
@@ -108,6 +108,7 @@ codeunit 50100 "General Function"
                     if ICTransPathD.FindSet() then begin
                         NoOfSeq := ICTransPathD.Count;
                         repeat
+                            //Last Step
                             if ICTransPathD.Sequence = NoOfSeq then begin
                                 ICPartner.ChangeCompany(ICTransPathD."To Company");
                                 ICPartner.SetRange("Inbox Details", FromCompany);
@@ -137,17 +138,29 @@ codeunit 50100 "General Function"
 
                                     ICGenJnlLine.Validate(Amount, -TempGenJournalLine.Amount);
 
-                                    // DimVal.Get('ELIMINATION', 'TRUE');
-                                    // DimMgt.GetDimensionSet(tempDimSetEntry, TempGenJournalLine."Dimension Set ID");
-                                    // TempDimSetEntry.Init();
-                                    // TempDimSetEntry."Dimension Code" := 'ELIMINATION';
-                                    // TempDimSetEntry."Dimension Value Code" := 'TRUE';
-                                    // TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
-                                    // TempDimSetEntry.Insert();
-                                    // tempDimSetEntry2.ChangeCompany(ICTransPathD."To Company");
-                                    // tempDimSetEntry2 := tempDimSetEntry;
-                                    // ICGenJnlLine.Validate("Dimension Set ID", DimMgt.GetDimensionSetID(TempDimSetEntry2));
+                                    TempDimSetEntry2.ChangeCompany(ICTransPathD."To Company");
+                                    DimVal.ChangeCompany(ICTransPathD."To Company");
 
+                                    DimMgt.GetDimensionSet(tempDimSetEntry, TempGenJournalLine."Dimension Set ID");
+                                    if tempDimSetEntry.FindSet() then
+                                        repeat
+                                            TempDimSetEntry2.Init();
+                                            TempDimSetEntry2."Dimension Code" := tempDimSetEntry."Dimension Code";
+                                            TempDimSetEntry2."Dimension Value Code" := tempDimSetEntry."Dimension Value Code";
+                                            DimVal.Get(tempDimSetEntry."Dimension Code", tempDimSetEntry."Dimension Value Code");
+                                            TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                                            TempDimSetEntry2.Insert();
+                                        until tempDimSetEntry.Next() = 0;
+
+                                    TempDimSetEntry2.Init();
+                                    TempDimSetEntry2."Dimension Code" := 'ELIMINATION';
+                                    TempDimSetEntry2."Dimension Value Code" := 'TRUE';
+                                    DimVal.Get('ELIMINATION', 'TRUE');
+                                    TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                                    TempDimSetEntry2.Insert();
+
+                                    //ICGenJnlLine."Dimension Set ID" := DimMgt.GetDimensionSetID(TempDimSetEntry2);
+                                    ICGenJnlLine."Dimension Set ID" := TempDimSetEntry2.GetDimensionSetID(TempDimSetEntry2);
                                     ICGenJnlLine.Modify();
 
                                     //Allocation Line         
@@ -188,7 +201,56 @@ codeunit 50100 "General Function"
                                 end;
                             end
                             else begin
+                                //IC ARAP
+                                //Get Line No.
+                                ICGenJnlLine.ChangeCompany(ICTransPathD."To Company");
+                                ICGenJnlLine.SetRange("Journal Template Name", 'GENERAL');
+                                ICGenJnlLine.SetRange("Journal Batch Name", 'DEFAULT');
+                                if ICGenJnlLine.FindLast() then
+                                    NextLineNo := ICGenJnlLine."Line No." + 10000
+                                else
+                                    NextLineNo := 10000;
 
+                                ICPartner.ChangeCompany(ICTransPathD."To Company");
+                                ICPartner.SetRange("Inbox Details", FromCompany);
+                                if ICPartner.FindFirst() then begin
+                                    //Line1
+                                    ICGenJnlLine.Init();
+                                    ICGenJnlLine."Journal Template Name" := 'GENERAL';
+                                    ICGenJnlLine."Journal Batch Name" := 'DEFAULT';
+                                    ICGenJnlLine."Line No." := NextLineNo;
+                                    ICGenJnlLine."Posting Date" := TempGenJournalLine."Posting Date";
+                                    ICGenJnlLine."External Document No." := TempGenJournalLine."Document No.";
+                                    ICGenJnlLine."Account Type" := TempGenJournalLine."Account Type"::Vendor;
+                                    ICGenJnlLine."Account No." := ICPartner."Vendor No.";
+                                    ICGenJnlLine."Currency Code" := TempGenJournalLine."Currency Code";
+                                    ICGenJnlLine."Currency Factor" := TempGenJournalLine."Currency Factor";
+                                    ICGenJnlLine.Insert();
+                                    ICGenJnlLine.Validate(Amount, -TempGenJournalLine.Amount);
+                                    //ICGenJnlLine."Dimension Set ID" := ??
+                                    ICGenJnlLine.Modify();
+                                end;
+
+                                // ICPartner.SetRange("Inbox Details", ); //ToCompany
+                                // if ICPartner.FindFirst() then begin
+                                //     //Line2
+                                //     ICGenJnlLine.Init();
+                                //     ICGenJnlLine."Journal Template Name" := 'GENERAL';
+                                //     ICGenJnlLine."Journal Batch Name" := 'DEFAULT';
+                                //     ICGenJnlLine."Line No." := NextLineNo;
+                                //     ICGenJnlLine."Posting Date" := TempGenJournalLine."Posting Date";
+                                //     ICGenJnlLine."External Document No." := TempGenJournalLine."Document No.";
+                                //     ICGenJnlLine."Account Type" := TempGenJournalLine."Account Type"::Customer;
+                                //     ICGenJnlLine."Account No." := ICPartner."Customer No.";
+                                //     ICGenJnlLine."Currency Code" := TempGenJournalLine."Currency Code";
+                                //     ICGenJnlLine."Currency Factor" := TempGenJournalLine."Currency Factor";
+                                //     ICGenJnlLine.Insert();
+                                //     ICGenJnlLine.Validate(Amount, TempGenJournalLine.Amount);    
+                                //     //ICGenJnlLine."Dimension Set ID" := ??
+                                //     ICGenJnlLine.Modify();                
+                                // end;
+
+                                FromCompany := ICTransPathD."To Company";
                             end;
 
                         until ICTransPathD.Next() = 0;
