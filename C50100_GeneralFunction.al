@@ -1,5 +1,8 @@
 codeunit 50100 "General Function"
 {
+    Permissions = TableData "Dimension Set Entry" = rim, //G014
+                  TableData "Dimension Set Tree Node" = rim; //G014
+
     trigger OnRun()
     begin
 
@@ -133,14 +136,12 @@ codeunit 50100 "General Function"
                                     ICGenJnlLine."Account No." := ICPartner."Vendor No.";
                                     ICGenJnlLine."Currency Code" := TempGenJournalLine."Currency Code";
                                     ICGenJnlLine."Currency Factor" := TempGenJournalLine."Currency Factor";
-
                                     ICGenJnlLine.Insert();
-
                                     ICGenJnlLine.Validate(Amount, -TempGenJournalLine.Amount);
 
+                                    //First Line - Dimension
                                     TempDimSetEntry2.ChangeCompany(ICTransPathD."To Company");
                                     DimVal.ChangeCompany(ICTransPathD."To Company");
-
                                     DimMgt.GetDimensionSet(tempDimSetEntry, TempGenJournalLine."Dimension Set ID");
                                     if tempDimSetEntry.FindSet() then
                                         repeat
@@ -151,17 +152,15 @@ codeunit 50100 "General Function"
                                             TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
                                             TempDimSetEntry2.Insert();
                                         until tempDimSetEntry.Next() = 0;
-
                                     TempDimSetEntry2.Init();
                                     TempDimSetEntry2."Dimension Code" := 'ELIMINATION';
-                                    TempDimSetEntry2."Dimension Value Code" := 'TRUE';
-                                    DimVal.Get('ELIMINATION', 'TRUE');
+                                    TempDimSetEntry2."Dimension Value Code" := 'ELIMINATION';
+                                    DimVal.Get('ELIMINATION', 'ELIMINATION');
                                     TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
                                     TempDimSetEntry2.Insert();
-
-                                    //ICGenJnlLine."Dimension Set ID" := DimMgt.GetDimensionSetID(TempDimSetEntry2);
-                                    ICGenJnlLine."Dimension Set ID" := TempDimSetEntry2.GetDimensionSetID(TempDimSetEntry2);
+                                    ICGenJnlLine."Dimension Set ID" := GetDimensionSetIDFromCompany(TempDimSetEntry2, ICTransPathD."To Company");
                                     ICGenJnlLine.Modify();
+                                    TempDimSetEntry2.DeleteAll();
 
                                     //Allocation Line         
                                     ICAllocation.Reset();
@@ -183,21 +182,42 @@ codeunit 50100 "General Function"
                                             ICGenJnlLine."Currency Factor" := TempGenJournalLine."Currency Factor";
                                             ICGenJnlLine.Insert();
                                             ICGenJnlLine.Validate(Amount, ICAllocation.Amount);
-                                            //ICGenJnlLine.validate("Dimension Set ID", ICAllocation."Bal. Dimension Set ID");
-                                            //need to add elimintaion dimenison
-                                            // ICTransMapping.Reset();
-                                            // ICTransMapping.SetRange("Path Code",GenJnlLine."IC Path Code");
-                                            // ICTransMapping.SetRange("Account Type", GenJnlLine."Account Type");
-                                            // ICTransMapping.SetRange("Account No.", GenJnlLine."Account No.");
-                                            // ICTransMapping.SetRange("Dimension Set ID", GenJnlLine."Dimension Set ID");    
-                                            // ICTransMapping.SetRange("Bal. Dimension Set ID",ICAllocation."Bal. Dimension Set ID");
-                                            // if ICTransMapping.FindFirst() then begin
-                                            // end;  
+                                            //Allocation Line - Dimension
+                                            DimMgt.GetDimensionSet(tempDimSetEntry, ICAllocation."Bal. Dimension Set ID");
+                                            if tempDimSetEntry.FindSet() then
+                                                repeat
+                                                    TempDimSetEntry2.Init();
+                                                    TempDimSetEntry2."Dimension Code" := tempDimSetEntry."Dimension Code";
+                                                    TempDimSetEntry2."Dimension Value Code" := tempDimSetEntry."Dimension Value Code";
+                                                    DimVal.Get(tempDimSetEntry."Dimension Code", tempDimSetEntry."Dimension Value Code");
+                                                    TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                                                    TempDimSetEntry2.Insert();
+                                                until tempDimSetEntry.Next() = 0;
+
+                                            If ICTransMapping.Get(TempGenJournalLine."IC Path Code",
+                                                                    TempGenJournalLine."Account Type",
+                                                                    TempGenJournalLine."Account No.",
+                                                                    TempGenJournalLine."Dimension Set ID",
+                                                                    TempGenJournalLine."IC Bal. Account Type",
+                                                                    TempGenJournalLine."IC Bal. Account No.",
+                                                                    ICAllocation."Bal. Dimension Set ID") then begin
+                                                if ICTransMapping.Elimination then begin
+                                                    TempDimSetEntry2.Init();
+                                                    TempDimSetEntry2."Dimension Code" := 'ELIMINATION';
+                                                    TempDimSetEntry2."Dimension Value Code" := 'ELIMINATION';
+                                                    DimVal.Get('ELIMINATION', 'ELIMINATION');
+                                                    TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                                                    TempDimSetEntry2.Insert();
+                                                end;
+                                            end;
+
+                                            ICGenJnlLine."Dimension Set ID" := GetDimensionSetIDFromCompany(TempDimSetEntry2, ICTransPathD."To Company");
                                             ICGenJnlLine.Modify();
+                                            TempDimSetEntry2.DeleteAll();
 
                                         until ICAllocation.Next() = 0;
                                     end;
-                                    //need to delet IC allocation
+                                    //need to delete IC allocation
                                 end;
                             end
                             else begin
@@ -260,6 +280,79 @@ codeunit 50100 "General Function"
             until Next() = 0;
         end;
     end;
-    //G014--
 
+
+    procedure GetDimensionSetIDFromCompany(var DimSetEntry: Record "Dimension Set Entry"; FromCompany: Text[30]): Integer
+    var
+        DimSetEntry2: Record "Dimension Set Entry";
+        DimSetTreeNode: Record "Dimension Set Tree Node";
+        Found: Boolean;
+    begin
+        DimSetEntry2.ChangeCompany(FromCompany);
+        DimSetTreeNode.ChangeCompany(FromCompany);
+
+        DimSetEntry2.Copy(DimSetEntry);
+
+        if DimSetEntry."Dimension Set ID" > 0 then
+            DimSetEntry.SetRange("Dimension Set ID", DimSetEntry."Dimension Set ID");
+
+        DimSetEntry.SetCurrentKey("Dimension Value ID");
+        DimSetEntry.SetFilter("Dimension Code", '<>%1', '');
+        DimSetEntry.SetFilter("Dimension Value Code", '<>%1', '');
+
+        if not DimSetEntry.FindSet then begin
+            DimSetEntry.Copy(DimSetEntry2);
+            exit(0);
+        end;
+
+        Found := true;
+        DimSetTreeNode."Dimension Set ID" := 0;
+        repeat
+            DimSetEntry.TestField("Dimension Value ID");
+            if Found then
+                if not DimSetTreeNode.Get(DimSetTreeNode."Dimension Set ID", DimSetEntry."Dimension Value ID") then begin
+                    Found := false;
+                    DimSetTreeNode.LockTable();
+                end;
+
+            if not Found then begin
+                DimSetTreeNode."Parent Dimension Set ID" := DimSetTreeNode."Dimension Set ID";
+                DimSetTreeNode."Dimension Value ID" := DimSetEntry."Dimension Value ID";
+                DimSetTreeNode."Dimension Set ID" := 0;
+                DimSetTreeNode."In Use" := false;
+                if not DimSetTreeNode.Insert(true) then
+                    DimSetTreeNode.Get(DimSetTreeNode."Parent Dimension Set ID", DimSetTreeNode."Dimension Value ID");
+            end;
+        until DimSetEntry.Next() = 0;
+        if not DimSetTreeNode."In Use" then begin
+            if Found then begin
+                DimSetTreeNode.LockTable();
+                DimSetTreeNode.Get(DimSetTreeNode."Parent Dimension Set ID", DimSetTreeNode."Dimension Value ID");
+            end;
+            DimSetTreeNode."In Use" := true;
+            DimSetTreeNode.Modify();
+            InsertDimSetEntriesFromCompany(DimSetEntry, DimSetTreeNode."Dimension Set ID", FromCompany);
+        end;
+
+        DimSetEntry.Copy(DimSetEntry2);
+
+        exit(DimSetTreeNode."Dimension Set ID");
+    end;
+
+    local procedure InsertDimSetEntriesFromCompany(var DimSetEntry: Record "Dimension Set Entry"; NewID: Integer; FromCompany: Text[30])
+    var
+        DimSetEntry2: Record "Dimension Set Entry";
+    begin
+        DimSetEntry2.ChangeCompany(FromCompany);
+        DimSetEntry2.LockTable();
+        if DimSetEntry.FindSet then
+            repeat
+                DimSetEntry2 := DimSetEntry;
+                DimSetEntry2."Dimension Set ID" := NewID;
+                DimSetEntry2."Global Dimension No." := DimSetEntry2.GetGlobalDimNo();
+                DimSetEntry2.Insert();
+            until DimSetEntry.Next() = 0;
+    end;
+
+    //G014--
 }
