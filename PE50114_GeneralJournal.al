@@ -13,17 +13,17 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
         modify(Comment) { Visible = false; }
         addbefore("Bal. Account Type")
         {
-            field("IC Path Code"; Rec."IC Path Code")
+            field("IC Path Code"; Rec."IC Path Code") //G014
             {
                 ToolTip = 'Specifies the value of the IC Path Code field';
                 ApplicationArea = All;
             }
-            field("IC Bal. Account Type"; Rec."IC Bal. Account Type")
+            field("IC Bal. Account Type"; Rec."IC Bal. Account Type") //G014
             {
                 ToolTip = 'Specifies the value of the IC Bal. Account Type field';
                 ApplicationArea = All;
             }
-            field("IC Bal. Account No."; Rec."IC Bal. Account No.")
+            field("IC Bal. Account No."; Rec."IC Bal. Account No.") //G014
             {
                 ToolTip = 'Specifies the value of the IC Bal. Account No. field';
                 ApplicationArea = All;
@@ -38,7 +38,7 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
         // Add changes to page actions here
         addlast("&Line")
         {
-            action("IC Allocation")
+            action("IC Allocation") //G014
             {
                 ApplicationArea = all;
                 Caption = 'Allocations';
@@ -52,9 +52,17 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
 
                 ToolTip = 'Allocate the amount on the selected journal line to the dimensions that you specify.';
             }
+
+            action(ActionName)
+            {
+                ApplicationArea = All;
+
+                trigger OnAction()
+                begin
+
+                end;
+            }
         }
     }
 
-    var
-        myInt: Integer;
 }

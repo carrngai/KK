@@ -81,22 +81,75 @@ codeunit 50100 "General Function"
     //G017--
 
     //G014++
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnAfterProcessLines', '', true, true)]
-    local procedure OnAfterCode(var TempGenJournalLine: Record "Gen. Journal Line" temporary)
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnBeforeProcessLines', '', true, true)]
+    local procedure OnBeforeProcessLines(var GenJournalLine: Record "Gen. Journal Line"; PreviewMode: Boolean; CommitIsSuppressed: Boolean)
     var
-        ICTransMapping: Record "IC Transaction Account Mapping";
-        ICTransPathD: Record "IC Transaction Path Details";
-        DimMgt: Codeunit DimensionManagement;
-        DimVal: Record "Dimension Value";
-        DimSetEntry: Record "Dimension Set Entry";
-        TempDimSetEntry: Record "Dimension Set Entry" temporary;
-        TempDimSetEntry2: Record "Dimension Set Entry" temporary;
-        NoOfSeq: Integer;
-        ICGenJnlLine: Record "Gen. Journal Line";
-        FromCompany: Code[50];
-        NextLineNo: Integer;
-        ICPartner: Record "IC Partner";
         ICAllocation: Record "IC Gen. Jnl. Allocation";
+        TotalAllocatedAmt: Decimal;
+        l_GenJnlLine: Record "Gen. Journal Line";
+    begin
+        with GenJournalLine do begin
+            SetCurrentKey("Journal Template Name", "Journal Batch Name", "Posting Date", "Document No.");
+            SetRange("Journal Template Name", "Journal Template Name");
+            SetRange("Journal Batch Name", "Journal Batch Name");
+            Find('-');
+            repeat
+                //Check IC Bal. Account No.
+                if (GenJournalLine."IC Path Code" <> '') AND ("IC Bal. Account No." = '') then
+                    Error('Line No. %1 : IC Bal. Account No. must have a value.', GenJournalLine."Line No.");
+
+                //Check Allocated Amount
+                TotalAllocatedAmt := 0;
+                if (GenJournalLine."IC Path Code" <> '') then begin
+                    ICAllocation.Reset();
+                    ICAllocation.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
+                    ICAllocation.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
+                    ICAllocation.SetRange("Journal Line No.", GenJournalLine."Line No.");
+                    if ICAllocation.FindSet() then
+                        repeat
+                            TotalAllocatedAmt := TotalAllocatedAmt + ICAllocation.Amount;
+                        until ICAllocation.Next() = 0;
+                    if TotalAllocatedAmt <> GenJournalLine.Amount then
+                        Error('Line No. %1 : Allocated Amount(%2) is not equal to Journal Line Amount(%3).', GenJournalLine."Line No.", TotalAllocatedAmt, GenJournalLine.Amount);
+                end else begin
+                    ICAllocation.Reset();
+                    ICAllocation.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
+                    ICAllocation.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
+                    ICAllocation.SetRange("Journal Line No.", GenJournalLine."Line No.");
+                    if ICAllocation.FindSet() then
+                        Error('Line No. %1 : IC Path Code is blank, Allocation must be deleted', GenJournalLine."Line No.");
+                end;
+
+                //Check IC direction must be from Customer
+                if (GenJournalLine."IC Path Code" <> '') then begin
+                    l_GenJnlLine.Reset();
+                    l_GenJnlLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
+                    l_GenJnlLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
+                    l_GenJnlLine.SetRange("Document No.", GenJournalLine."Document No.");
+                    l_GenJnlLine.SetFilter("Line No.", '<>%1', GenJournalLine."Line No.");
+                    if l_GenJnlLine.FindFirst() then
+                        if l_GenJnlLine."Account Type" <> l_GenJnlLine."Account Type"::Customer then
+                            Error('Line No. %1 : Account Type should be Customer.', GenJournalLine."Line No.");
+                end;
+
+            until Next() = 0;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnAfterProcessLines', '', true, true)]
+    local procedure OnAfterProcessLines_CreateICTrans(var TempGenJournalLine: Record "Gen. Journal Line" temporary)
+    var
+        ICTransPathDetail: Record "IC Transaction Path Details";
+        ICTransPathDetail2: Record "IC Transaction Path Details";
+        ICAllocation: Record "IC Gen. Jnl. Allocation";
+        ICTransMapping: Record "IC Transaction Account Mapping";
+        ICPartner: Record "IC Partner";
+        FromCompany: Code[50];
+        AtCompany: Code[50];
+        NextCompany: Code[50];
+        ICEliminate: Boolean;
+
     begin
         FromCompany := CompanyName;
         with TempGenJournalLine do begin
@@ -106,190 +159,181 @@ codeunit 50100 "General Function"
             Find('-');
             repeat
                 if (TempGenJournalLine."IC Path Code" <> '') then begin
-                    ICTransPathD.Reset();
-                    ICTransPathD.SetRange("Path Code", TempGenJournalLine."IC Path Code");
-                    if ICTransPathD.FindSet() then begin
-                        NoOfSeq := ICTransPathD.Count;
+                    ICTransPathDetail.Reset();
+                    ICTransPathDetail.SetRange("Path Code", TempGenJournalLine."IC Path Code");
+                    if ICTransPathDetail.FindSet() then begin
                         repeat
-                            //Last Step
-                            if ICTransPathD.Sequence = NoOfSeq then begin
-                                ICPartner.ChangeCompany(ICTransPathD."To Company");
+                            AtCompany := ICTransPathDetail."To Company";
+
+                            ICTransPathDetail2.CopyFilters(ICTransPathDetail);
+                            ICTransPathDetail2.SetFilter(Sequence, '%1..', ICTransPathDetail.Sequence + 1);
+                            if ICTransPathDetail2.FindFirst() then begin
+                                NextCompany := ICTransPathDetail2."To Company";
+                                //If there is NextCompenay >> IC ARAP
+
+                                //IC_Line1
+                                ICPartner.ChangeCompany(AtCompany);
+                                ICPartner.SetRange("Inbox Details", FromCompany);
+                                if ICPartner.FindFirst() then
+                                    InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", -TempGenJournalLine.Amount, 0, true, AtCompany);
+                                //IC_Line2
+                                ICPartner.SetRange("Inbox Details", NextCompany);
+                                if ICPartner.FindFirst() then
+                                    InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", TempGenJournalLine.Amount, 0, true, AtCompany);
+
+                                FromCompany := AtCompany;
+                            end else begin
+                                //If there is NO NextCompenay >>Last Line
+                                //Last IC Line
+                                ICPartner.ChangeCompany(AtCompany);
                                 ICPartner.SetRange("Inbox Details", FromCompany);
                                 if ICPartner.FindFirst() then begin
-                                    //Get Line No.
-                                    ICGenJnlLine.ChangeCompany(ICTransPathD."To Company");
-                                    ICGenJnlLine.SetRange("Journal Template Name", 'GENERAL');
-                                    ICGenJnlLine.SetRange("Journal Batch Name", 'DEFAULT');
-                                    if ICGenJnlLine.FindLast() then
-                                        NextLineNo := ICGenJnlLine."Line No." + 10000
-                                    else
-                                        NextLineNo := 10000;
-
-                                    //First Line
-                                    ICGenJnlLine.Init();
-                                    ICGenJnlLine."Journal Template Name" := 'GENERAL';
-                                    ICGenJnlLine."Journal Batch Name" := 'DEFAULT';
-                                    ICGenJnlLine."Line No." := NextLineNo;
-                                    ICGenJnlLine."Posting Date" := TempGenJournalLine."Posting Date";
-                                    ICGenJnlLine."External Document No." := TempGenJournalLine."Document No.";
-                                    ICGenJnlLine."Account Type" := TempGenJournalLine."Account Type"::Vendor;
-                                    ICGenJnlLine."Account No." := ICPartner."Vendor No.";
-                                    ICGenJnlLine."Currency Code" := TempGenJournalLine."Currency Code";
-                                    ICGenJnlLine."Currency Factor" := TempGenJournalLine."Currency Factor";
-                                    ICGenJnlLine.Insert();
-                                    ICGenJnlLine.Validate(Amount, -TempGenJournalLine.Amount);
-
-                                    //First Line - Dimension
-                                    TempDimSetEntry2.ChangeCompany(ICTransPathD."To Company");
-                                    DimVal.ChangeCompany(ICTransPathD."To Company");
-                                    DimMgt.GetDimensionSet(tempDimSetEntry, TempGenJournalLine."Dimension Set ID");
-                                    if tempDimSetEntry.FindSet() then
-                                        repeat
-                                            TempDimSetEntry2.Init();
-                                            TempDimSetEntry2."Dimension Code" := tempDimSetEntry."Dimension Code";
-                                            TempDimSetEntry2."Dimension Value Code" := tempDimSetEntry."Dimension Value Code";
-                                            DimVal.Get(tempDimSetEntry."Dimension Code", tempDimSetEntry."Dimension Value Code");
-                                            TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
-                                            TempDimSetEntry2.Insert();
-                                        until tempDimSetEntry.Next() = 0;
-                                    TempDimSetEntry2.Init();
-                                    TempDimSetEntry2."Dimension Code" := 'ELIMINATION';
-                                    TempDimSetEntry2."Dimension Value Code" := 'ELIMINATION';
-                                    DimVal.Get('ELIMINATION', 'ELIMINATION');
-                                    TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
-                                    TempDimSetEntry2.Insert();
-                                    ICGenJnlLine."Dimension Set ID" := GetDimensionSetIDFromCompany(TempDimSetEntry2, ICTransPathD."To Company");
-                                    ICGenJnlLine.Modify();
-                                    TempDimSetEntry2.DeleteAll();
-
-                                    //Allocation Line         
-                                    ICAllocation.Reset();
-                                    ICAllocation.SetRange("Journal Template Name", TempGenJournalLine."Journal Template Name");
-                                    ICAllocation.SetRange("Journal Batch Name", TempGenJournalLine."Journal Batch Name");
-                                    ICAllocation.SetRange("Journal Line No.", TempGenJournalLine."Line No.");
-                                    if ICAllocation.FindSet() then begin
-                                        repeat
-                                            NextLineNo := ICGenJnlLine."Line No." + 10000;
-                                            ICGenJnlLine.Init();
-                                            ICGenJnlLine."Journal Template Name" := 'GENERAL';
-                                            ICGenJnlLine."Journal Batch Name" := 'DEFAULT';
-                                            ICGenJnlLine."Line No." := NextLineNo;
-                                            ICGenJnlLine."Posting Date" := TempGenJournalLine."Posting Date";
-                                            ICGenJnlLine."External Document No." := TempGenJournalLine."Document No.";
-                                            ICGenJnlLine."Account Type" := TempGenJournalLine."IC Bal. Account Type";
-                                            ICGenJnlLine."Account No." := TempGenJournalLine."IC Bal. Account No.";
-                                            ICGenJnlLine."Currency Code" := TempGenJournalLine."Currency Code";
-                                            ICGenJnlLine."Currency Factor" := TempGenJournalLine."Currency Factor";
-                                            ICGenJnlLine.Insert();
-                                            ICGenJnlLine.Validate(Amount, ICAllocation.Amount);
-                                            //Allocation Line - Dimension
-                                            DimMgt.GetDimensionSet(tempDimSetEntry, ICAllocation."Bal. Dimension Set ID");
-                                            if tempDimSetEntry.FindSet() then
-                                                repeat
-                                                    TempDimSetEntry2.Init();
-                                                    TempDimSetEntry2."Dimension Code" := tempDimSetEntry."Dimension Code";
-                                                    TempDimSetEntry2."Dimension Value Code" := tempDimSetEntry."Dimension Value Code";
-                                                    DimVal.Get(tempDimSetEntry."Dimension Code", tempDimSetEntry."Dimension Value Code");
-                                                    TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
-                                                    TempDimSetEntry2.Insert();
-                                                until tempDimSetEntry.Next() = 0;
-
-                                            If ICTransMapping.Get(TempGenJournalLine."IC Path Code",
-                                                                    TempGenJournalLine."Account Type",
-                                                                    TempGenJournalLine."Account No.",
-                                                                    TempGenJournalLine."Dimension Set ID",
-                                                                    TempGenJournalLine."IC Bal. Account Type",
-                                                                    TempGenJournalLine."IC Bal. Account No.",
-                                                                    ICAllocation."Bal. Dimension Set ID") then begin
-                                                if ICTransMapping.Elimination then begin
-                                                    TempDimSetEntry2.Init();
-                                                    TempDimSetEntry2."Dimension Code" := 'ELIMINATION';
-                                                    TempDimSetEntry2."Dimension Value Code" := 'ELIMINATION';
-                                                    DimVal.Get('ELIMINATION', 'ELIMINATION');
-                                                    TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
-                                                    TempDimSetEntry2.Insert();
-                                                end;
-                                            end;
-
-                                            ICGenJnlLine."Dimension Set ID" := GetDimensionSetIDFromCompany(TempDimSetEntry2, ICTransPathD."To Company");
-                                            ICGenJnlLine.Modify();
-                                            TempDimSetEntry2.DeleteAll();
-
-                                        until ICAllocation.Next() = 0;
-                                    end;
-                                    //need to delete IC allocation
+                                    InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", -TempGenJournalLine.Amount, 0, true, AtCompany);
                                 end;
-                            end
-                            else begin
-                                //IC ARAP
-                                //Get Line No.
-                                ICGenJnlLine.ChangeCompany(ICTransPathD."To Company");
-                                ICGenJnlLine.SetRange("Journal Template Name", 'GENERAL');
-                                ICGenJnlLine.SetRange("Journal Batch Name", 'DEFAULT');
-                                if ICGenJnlLine.FindLast() then
-                                    NextLineNo := ICGenJnlLine."Line No." + 10000
-                                else
-                                    NextLineNo := 10000;
+                                //Allocation Line         
+                                ICAllocation.Reset();
+                                ICAllocation.SetRange("Journal Template Name", TempGenJournalLine."Journal Template Name");
+                                ICAllocation.SetRange("Journal Batch Name", TempGenJournalLine."Journal Batch Name");
+                                ICAllocation.SetRange("Journal Line No.", TempGenJournalLine."Line No.");
+                                if ICAllocation.FindSet() then begin
+                                    repeat
+                                        ICEliminate := false;
+                                        If ICTransMapping.Get(TempGenJournalLine."IC Path Code",
+                                                                TempGenJournalLine."Account Type",
+                                                                TempGenJournalLine."Account No.",
+                                                                TempGenJournalLine."Dimension Set ID",
+                                                                TempGenJournalLine."IC Bal. Account Type",
+                                                                TempGenJournalLine."IC Bal. Account No.",
+                                                                ICAllocation."Bal. Dimension Set ID") then
+                                            ICEliminate := ICTransMapping.Elimination;
 
-                                ICPartner.ChangeCompany(ICTransPathD."To Company");
-                                ICPartner.SetRange("Inbox Details", FromCompany);
-                                if ICPartner.FindFirst() then begin
-                                    //Line1
-                                    ICGenJnlLine.Init();
-                                    ICGenJnlLine."Journal Template Name" := 'GENERAL';
-                                    ICGenJnlLine."Journal Batch Name" := 'DEFAULT';
-                                    ICGenJnlLine."Line No." := NextLineNo;
-                                    ICGenJnlLine."Posting Date" := TempGenJournalLine."Posting Date";
-                                    ICGenJnlLine."External Document No." := TempGenJournalLine."Document No.";
-                                    ICGenJnlLine."Account Type" := TempGenJournalLine."Account Type"::Vendor;
-                                    ICGenJnlLine."Account No." := ICPartner."Vendor No.";
-                                    ICGenJnlLine."Currency Code" := TempGenJournalLine."Currency Code";
-                                    ICGenJnlLine."Currency Factor" := TempGenJournalLine."Currency Factor";
-                                    ICGenJnlLine.Insert();
-                                    ICGenJnlLine.Validate(Amount, -TempGenJournalLine.Amount);
-                                    //ICGenJnlLine."Dimension Set ID" := ??
-                                    ICGenJnlLine.Modify();
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."IC Bal. Account Type", TempGenJournalLine."IC Bal. Account No.", ICAllocation.Amount, ICAllocation."Bal. Dimension Set ID", ICEliminate, AtCompany);
+                                    until ICAllocation.Next() = 0;
+                                    ICAllocation.DeleteAll();
                                 end;
-
-                                // ICPartner.SetRange("Inbox Details", ); //ToCompany
-                                // if ICPartner.FindFirst() then begin
-                                //     //Line2
-                                //     ICGenJnlLine.Init();
-                                //     ICGenJnlLine."Journal Template Name" := 'GENERAL';
-                                //     ICGenJnlLine."Journal Batch Name" := 'DEFAULT';
-                                //     ICGenJnlLine."Line No." := NextLineNo;
-                                //     ICGenJnlLine."Posting Date" := TempGenJournalLine."Posting Date";
-                                //     ICGenJnlLine."External Document No." := TempGenJournalLine."Document No.";
-                                //     ICGenJnlLine."Account Type" := TempGenJournalLine."Account Type"::Customer;
-                                //     ICGenJnlLine."Account No." := ICPartner."Customer No.";
-                                //     ICGenJnlLine."Currency Code" := TempGenJournalLine."Currency Code";
-                                //     ICGenJnlLine."Currency Factor" := TempGenJournalLine."Currency Factor";
-                                //     ICGenJnlLine.Insert();
-                                //     ICGenJnlLine.Validate(Amount, TempGenJournalLine.Amount);    
-                                //     //ICGenJnlLine."Dimension Set ID" := ??
-                                //     ICGenJnlLine.Modify();                
-                                // end;
-
-                                FromCompany := ICTransPathD."To Company";
                             end;
-
-                        until ICTransPathD.Next() = 0;
-
+                        until ICTransPathDetail.Next() = 0;
                     end;
                 end;
             until Next() = 0;
         end;
     end;
 
+    local procedure InsertGenJnlLine_Company(var SourceGenJnLine: Record "Gen. Journal Line"; AccType: Enum "Gen. Journal Account Type"; AccNo: Code[20]; LineAmount: decimal; DimSetID: integer; ELIMINATION: boolean; AtCompany: Text[30])
+    var
+        ICGenBatch: Record "Gen. Journal Batch";
+        ICGenJnlLine: Record "Gen. Journal Line";
+        NextLineNo: Integer;
+        DimVal: Record "Dimension Value";
+        TempDimSetEntry1: Record "Dimension Set Entry" temporary;
+        TempDimSetEntry2: Record "Dimension Set Entry" temporary;
+        DimMgt: Codeunit DimensionManagement;
+        DefaultDim: Record "Default Dimension";
 
-    procedure GetDimensionSetIDFromCompany(var DimSetEntry: Record "Dimension Set Entry"; FromCompany: Text[30]): Integer
+    begin
+        ICGenBatch.ChangeCompany(AtCompany);
+        ICGenJnlLine.ChangeCompany(AtCompany);
+        TempDimSetEntry2.ChangeCompany(AtCompany);
+        DefaultDim.ChangeCompany(AtCompany);
+        DimVal.ChangeCompany(AtCompany);
+
+        ICGenBatch.Reset();
+        ICGenBatch.SetRange("Journal Template Name", 'GENERAL');
+        ICGenBatch.SetRange(Name, 'ICTRANS');
+        if not ICGenBatch.FindSet() then begin
+            ICGenBatch.Init();
+            ICGenBatch."Journal Template Name" := 'GENERAL';
+            ICGenBatch.Name := 'ICTRANS';
+            ICGenBatch."Posting No. Series" := 'GJNL-GEN';
+            ICGenBatch.Insert();
+        end;
+
+        ICGenJnlLine.Reset();
+        ICGenJnlLine.SetRange("Journal Template Name", 'GENERAL');
+        ICGenJnlLine.SetRange("Journal Batch Name", 'ICTRANS');
+        if ICGenJnlLine.FindLast() then
+            NextLineNo := ICGenJnlLine."Line No." + 10000
+        else
+            NextLineNo := 10000;
+
+        ICGenJnlLine.Init();
+        ICGenJnlLine."Journal Template Name" := 'GENERAL';
+        ICGenJnlLine."Journal Batch Name" := 'ICTRANS';
+        ICGenJnlLine."Line No." := NextLineNo;
+        ICGenJnlLine."Posting Date" := SourceGenJnLine."Posting Date";
+        ICGenJnlLine."Document No." := SourceGenJnLine."Document No.";
+        ICGenJnlLine."External Document No." := SourceGenJnLine."External Document No.";
+        ICGenJnlLine.Insert();
+        ICGenJnlLine."Account Type" := AccType;
+        ICGenJnlLine."Account No." := AccNo;
+        ICGenJnlLine."Currency Code" := SourceGenJnLine."Currency Code";
+        ICGenJnlLine."Currency Factor" := SourceGenJnLine."Currency Factor";
+        ICGenJnlLine.Description := SourceGenJnLine.Description;
+        ICGenJnlLine.Validate(Amount, LineAmount);
+
+        //Line Dimension
+        DefaultDim.Reset();
+        case AccType of
+            AccType::"G/L Account":
+                DefaultDim.SetRange("Table ID", 15);
+            AccType::Customer:
+                DefaultDim.SetRange("Table ID", 18);
+            AccType::Vendor:
+                DefaultDim.SetRange("Table ID", 23);
+        end;
+        DefaultDim.SetRange("No.", AccNo);
+        if DefaultDim.FindSet() then
+            repeat
+                TempDimSetEntry2.Init();
+                TempDimSetEntry2."Dimension Code" := DefaultDim."Dimension Code";
+                TempDimSetEntry2."Dimension Value Code" := DefaultDim."Dimension Value Code";
+                DimVal.Get(DefaultDim."Dimension Code", DefaultDim."Dimension Value Code");
+                TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                TempDimSetEntry2.Insert();
+            until DefaultDim.Next() = 0;
+
+        if DimSetID <> 0 then begin
+            DimMgt.GetDimensionSet(tempDimSetEntry1, DimSetID);
+            if tempDimSetEntry1.FindSet() then
+                repeat
+                    TempDimSetEntry2.SetRange("Dimension Code");
+                    if TempDimSetEntry2.FindSet() then begin
+                        TempDimSetEntry2."Dimension Value Code" := tempDimSetEntry1."Dimension Value Code";
+                        DimVal.Get(tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code");
+                        TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                        TempDimSetEntry2.Modify();
+                    end else begin
+                        TempDimSetEntry2.Init();
+                        TempDimSetEntry2."Dimension Code" := tempDimSetEntry1."Dimension Code";
+                        TempDimSetEntry2."Dimension Value Code" := tempDimSetEntry1."Dimension Value Code";
+                        DimVal.Get(tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code");
+                        TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                        TempDimSetEntry2.Insert();
+                    end;
+                until TempDimSetEntry1.Next() = 0;
+        end;
+
+        if ELIMINATION then begin
+            TempDimSetEntry2.Init();
+            TempDimSetEntry2."Dimension Code" := 'ELIMINATION';
+            TempDimSetEntry2."Dimension Value Code" := 'ELIMINATION';
+            DimVal.Get('ELIMINATION', 'ELIMINATION');
+            TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+            TempDimSetEntry2.Insert();
+        end;
+
+        ICGenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntry2, AtCompany);
+        ICGenJnlLine.Modify();
+    end;
+
+    local procedure GetDimensionSetID_Company(var DimSetEntry: Record "Dimension Set Entry"; AtCompany: Text[30]): Integer
     var
         DimSetEntry2: Record "Dimension Set Entry";
         DimSetTreeNode: Record "Dimension Set Tree Node";
         Found: Boolean;
     begin
-        DimSetEntry2.ChangeCompany(FromCompany);
-        DimSetTreeNode.ChangeCompany(FromCompany);
+        DimSetEntry2.ChangeCompany(AtCompany);
+        DimSetTreeNode.ChangeCompany(AtCompany);
 
         DimSetEntry2.Copy(DimSetEntry);
 
@@ -331,7 +375,7 @@ codeunit 50100 "General Function"
             end;
             DimSetTreeNode."In Use" := true;
             DimSetTreeNode.Modify();
-            InsertDimSetEntriesFromCompany(DimSetEntry, DimSetTreeNode."Dimension Set ID", FromCompany);
+            InsertDimSetEntries_Company(DimSetEntry, DimSetTreeNode."Dimension Set ID", AtCompany);
         end;
 
         DimSetEntry.Copy(DimSetEntry2);
@@ -339,11 +383,11 @@ codeunit 50100 "General Function"
         exit(DimSetTreeNode."Dimension Set ID");
     end;
 
-    local procedure InsertDimSetEntriesFromCompany(var DimSetEntry: Record "Dimension Set Entry"; NewID: Integer; FromCompany: Text[30])
+    local procedure InsertDimSetEntries_Company(var DimSetEntry: Record "Dimension Set Entry"; NewID: Integer; AtCompany: Text[30])
     var
         DimSetEntry2: Record "Dimension Set Entry";
     begin
-        DimSetEntry2.ChangeCompany(FromCompany);
+        DimSetEntry2.ChangeCompany(AtCompany);
         DimSetEntry2.LockTable();
         if DimSetEntry.FindSet then
             repeat

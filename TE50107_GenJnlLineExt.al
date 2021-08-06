@@ -21,9 +21,9 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
         {
             DataClassification = ToBeClassified;
             TableRelation =
-            IF ("Account Type" = CONST("G/L Account")) "G/L Account" WHERE("Account Type" = CONST(Posting), Blocked = CONST(false))
+            IF ("IC Bal. Account Type" = CONST("G/L Account")) "G/L Account" WHERE("Account Type" = CONST(Posting), Blocked = CONST(false), "Direct Posting" = const(true))
             ELSE
-            IF ("Account Type" = CONST("Bank Account")) "Bank Account";
+            IF ("IC Bal. Account Type" = CONST("Bank Account")) "Bank Account";
         }
     }
 
