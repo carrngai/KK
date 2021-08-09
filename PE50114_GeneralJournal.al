@@ -11,8 +11,11 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
         modify("Bal. Gen. Prod. Posting Group") { Visible = false; }
         modify(Correction) { Visible = false; }
         modify(Comment) { Visible = false; }
+        modify("Applies-to Doc. Type") { Visible = true; }
+        modify("Applies-to Doc. No.") { Visible = true; }
         addbefore("Bal. Account Type")
         {
+
             field("IC Path Code"; Rec."IC Path Code") //G014
             {
                 ToolTip = 'Specifies the value of the IC Path Code field';
