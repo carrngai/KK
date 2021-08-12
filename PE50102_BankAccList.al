@@ -20,4 +20,9 @@ pageextension 50102 BankAccListExt extends "Bank Account List"
 
     var
         myInt: Integer;
+
+    procedure ChangeToCompany(CompanyName: Code[50])
+    begin
+        Rec.ChangeCompany(CompanyName);
+    end;
 }

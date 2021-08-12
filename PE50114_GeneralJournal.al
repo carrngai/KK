@@ -44,7 +44,7 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
             action("IC Allocation") //G014
             {
                 ApplicationArea = all;
-                Caption = 'Allocations';
+                Caption = 'IC Allocations';
                 Image = Allocations;
                 Promoted = true;
                 PromotedCategory = Category10;
@@ -54,16 +54,14 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
                                 "Journal Line No." = FIELD("Line No.");
 
                 ToolTip = 'Allocate the amount on the selected journal line to the dimensions that you specify.';
-            }
-
-            action(ActionName)
-            {
-                ApplicationArea = All;
 
                 trigger OnAction()
                 begin
-
+                    if Rec."IC Path Code" = '' then
+                        Error('IC Path Code must not be blank');
                 end;
+
+
             }
         }
     }
