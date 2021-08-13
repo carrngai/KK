@@ -106,7 +106,19 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
         {
             DataClassification = ToBeClassified;
         }
+
+        // field(50105; "Netting Source Type"; Enum "Gen. Journal Source Type")
+        // {
+        //     DataClassification = ToBeClassified;
+        // }
+        field(50106; "Netting Source No."; Code[20])
+        {
+            Caption = 'Netting Source No.';
+            TableRelation = Customer;
+        }
+
     }
+
 
 
 

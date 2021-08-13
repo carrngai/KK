@@ -4,16 +4,12 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
     {
         // Add changes to page layout here
         modify("EU 3-Party Trade") { Visible = false; }
-        modify("Bal. Account Type") { Visible = false; }
-        modify("Bal. Account No.") { Visible = false; }
         modify("Bal. Gen. Bus. Posting Group") { Visible = false; }
         modify("Bal. Gen. Posting Type") { Visible = false; }
         modify("Bal. Gen. Prod. Posting Group") { Visible = false; }
         modify(Correction) { Visible = false; }
         modify(Comment) { Visible = false; }
-        modify("Applies-to Doc. Type") { Visible = true; }
-        modify("Applies-to Doc. No.") { Visible = true; }
-        addbefore("Bal. Account Type")
+        addbefore("Bal. Account type")
         {
 
             field("IC Path Code"; Rec."IC Path Code") //G014
@@ -31,6 +27,16 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
                 ToolTip = 'Specifies the value of the IC Bal. Account No. field';
                 ApplicationArea = All;
             }
+        }
+        addafter("Bal. Account No.")
+        {
+            field("Netting Source No."; Rec."Netting Source No.")
+            {
+                ToolTip = 'Specifies the value of the Source No. field';
+                ApplicationArea = All;
+                Editable = false;
+            }
+
         }
         modify(JournalLineDetails) { Visible = false; }
         modify(IncomingDocAttachFactBox) { Visible = false; }

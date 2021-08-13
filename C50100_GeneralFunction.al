@@ -76,7 +76,8 @@ codeunit 50100 "General Function"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnAfterInitGLEntry', '', true, true)]
     local procedure OnAfterInitGLEntry(var GLEntry: Record "G/L Entry"; GenJournalLine: Record "Gen. Journal Line")
     begin
-        GLEntry."Conso. Exch. Adj." := GenJournalLine."Conso. Exch. Adj."
+        GLEntry."Conso. Exch. Adj." := GenJournalLine."Conso. Exch. Adj."; //G017
+        GLEntry."Netting Source No." := GenJournalLine."Netting Source No."; //G025
     end;
     //G017--
 
