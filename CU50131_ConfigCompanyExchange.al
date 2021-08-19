@@ -1510,6 +1510,46 @@ codeunit 50131 "Config. Company Exchange"
         EXIT(ConfigPackageData.Value);
     end;
 
+    procedure ApplyCurrencyExchangeRates(CompanyCode: Text[30])
+    var
+        ExchangeRateMaster: Record "Exchange Rate Master";
+        CurrencyExchangeRate: Record "Currency Exchange Rate";
+        GLSetup: Record "General Ledger Setup";
+        LCYCode: Code[10];
+    begin
+        GLSetup.ChangeCompany(CompanyCode);
+        GLSetup.Get();
+        LCYCode := GLSetup."LCY Code";
+
+        ExchangeRateMaster.Reset();
+        ExchangeRateMaster.SetRange("Relational Currency Code", LCYCode);
+        if ExchangeRateMaster.FindSet() then
+            repeat
+                CurrencyExchangeRate.ChangeCompany(CompanyCode);
+                CurrencyExchangeRate.Reset();
+                CurrencyExchangeRate.SetRange("Starting Date", ExchangeRateMaster."Starting Date");
+                CurrencyExchangeRate.SetRange("Currency Code", ExchangeRateMaster."Relational Currency Code");
+                if CurrencyExchangeRate.FindFirst() then begin
+                    if CurrencyExchangeRate."Exchange Rate Amount" <> ExchangeRateMaster."Exchange Rate Amount" then
+                        CurrencyExchangeRate.Validate("Exchange Rate Amount", ExchangeRateMaster."Exchange Rate Amount");
+                    if CurrencyExchangeRate."Relational Exch. Rate Amount" <> ExchangeRateMaster."Relational Exch. Rate Amount" then
+                        CurrencyExchangeRate.Validate("Relational Exch. Rate Amount", ExchangeRateMaster."Relational Exch. Rate Amount");
+                    if CurrencyExchangeRate."Adjustment Exch. Rate Amount" <> ExchangeRateMaster."Adjustment Exch. Rate Amount" then
+                        CurrencyExchangeRate.Validate("Adjustment Exch. Rate Amount", ExchangeRateMaster."Adjustment Exch. Rate Amount");
+                    if CurrencyExchangeRate."Relational Adjmt Exch Rate Amt" <> ExchangeRateMaster."Relational Adjmt Exch Rate Amt" then
+                        CurrencyExchangeRate.Validate("Relational Adjmt Exch Rate Amt", ExchangeRateMaster."Relational Adjmt Exch Rate Amt");
+                    CurrencyExchangeRate.Modify(true);
+                end
+                else begin
+                    CurrencyExchangeRate.ChangeCompany(CompanyCode);
+                    CurrencyExchangeRate.Init();
+                    CurrencyExchangeRate.TransferFields(ExchangeRateMaster);
+                    CurrencyExchangeRate.Validate("Relational Currency Code", '');
+                    CurrencyExchangeRate.Insert();
+                end;
+            until ExchangeRateMaster.Next() = 0;
+    end;
+
     [IntegrationEvent(false, false)]
     procedure OnPreProcessPackage(var ConfigRecordForProcessing: Record "Config. Record For Processing"; var Subscriber: Variant)
     begin

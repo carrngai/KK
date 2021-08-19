@@ -118,6 +118,39 @@ pageextension 50131 ConfigPackageCardTEC extends "Config. Package Card"
                 end;
 
             }
+            action("Apply Currency Exchange Rates")
+            {
+                Caption = 'Apply Currency Exchange Rates';
+                Promoted = true;
+                PromotedIsBig = true;
+                Image = Export;
+                PromotedCategory = New;
+                ApplicationArea = all;
+                trigger OnAction()
+                var
+                    ConfigPackageTable: Record "Config. Package Table";
+                    ConfigCompanyExchange: Codeunit "Config. Company Exchange";
+                    ConfirmManagement: Codeunit "Confirm Management";
+                    Text003: Label 'Apply data from package %1?';
+                    CompanyTEC: Record "Company TEC";
+
+                begin
+                    Rec.TESTFIELD(Code);
+                    IF Confirm(STRSUBSTNO(Text003, Rec.Code), TRUE) THEN BEGIN
+                        CompanyTEC.Reset();
+                        CompanyTEC.SetRange(Select, true);
+
+                        If CompanyTEC.FindFirst() then begin
+                            repeat
+                                ConfigCompanyExchange.ApplyCurrencyExchangeRates(CompanyTEC."Company Name");
+                            until CompanyTEC.Next() = 0;
+                        end else
+                            Error('You Must Select Copy to Companies ');
+                    END;
+
+                end;
+
+            }
         }
     }
     var
