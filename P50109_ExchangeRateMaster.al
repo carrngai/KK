@@ -4,6 +4,8 @@ page 50109 "Exchange Rate Master"
     DataCaptionFields = "Currency Code";
     PageType = List;
     SourceTable = "Exchange Rate Master";
+    ApplicationArea = All;
+    UsageCategory = Administration;
 
     layout
     {
