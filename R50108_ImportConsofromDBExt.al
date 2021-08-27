@@ -455,7 +455,6 @@ report 50108 "Import Conso. from DB Ext"
         GLEntryNo: Integer;
         ConsPeriodSubsidiaryQst: Label 'The consolidation period %1 .. %2 is not within the fiscal year of one or more of the subsidiaries.\Do you want to proceed with the consolidation?', Comment = '%1 and %2 - request page values';
         ConsPeriodCompanyQst: Label 'The consolidation period %1 .. %2 is not within the fiscal year %3 .. %4 of the consolidated company %5.\Do you want to proceed with the consolidation?', Comment = '%1, %2, %3, %4 - request page values, %5 - company name';
-
         GenJnlLine: Record "Gen. Journal Line";//G017
         TempGenJnlLine: Record "Gen. Journal Line" temporary; //G017
         NextLineNo: Integer; //G017
