@@ -9,7 +9,7 @@ table 50109 "Exchange Rate Master"
         field(1; "Currency Code"; Code[10])
         {
             Caption = 'Currency Code';
-            Editable = false;
+            //Editable = false;
             NotBlank = true;
             TableRelation = Currency;
 

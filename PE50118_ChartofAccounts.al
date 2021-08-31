@@ -14,6 +14,10 @@ pageextension 50118 "Chart of Accounts Ext" extends "Chart of Accounts"
         }
         modify("Cost Type No.") { Visible = false; }
         modify("Default Deferral Template Code") { Visible = false; }
+        modify(Balance) { Visible = false; }
+        modify("Balance at Date") { Visible = true; }
+        modify("Direct Posting") { Visible = true; }
+
     }
 
     actions

@@ -50,6 +50,9 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify(Intrastat) { Visible = false; }
         modify("Purchase Orders") { Visible = false; }
         modify("Purchase Invoices") { Visible = false; }
+        modify(Action171) { Visible = false; }  //"IC Chart of Accounts"
+        modify(Action173) { Visible = false; }  //"IC Dimensions"
+        modify(Partners) { Caption = 'IC Partners'; }
 
 
         //Cost Accounting
