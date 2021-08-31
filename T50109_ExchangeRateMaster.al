@@ -13,12 +13,12 @@ table 50109 "Exchange Rate Master"
             NotBlank = true;
             TableRelation = Currency;
 
-            trigger OnValidate()
-            begin
-                if "Currency Code" = "Relational Currency Code" then
-                    Error(
-                      Text000, FieldCaption("Currency Code"), FieldCaption("Relational Currency Code"));
-            end;
+            // trigger OnValidate()
+            // begin
+            //     if "Currency Code" = "Relational Currency Code" then
+            //         Error(
+            //           Text000, FieldCaption("Currency Code"), FieldCaption("Relational Currency Code"));
+            // end;
         }
         field(2; "Starting Date"; Date)
         {
@@ -55,9 +55,9 @@ table 50109 "Exchange Rate Master"
 
             trigger OnValidate()
             begin
-                if "Currency Code" = "Relational Currency Code" then
-                    Error(
-                      Text000, FieldCaption("Currency Code"), FieldCaption("Relational Currency Code"));
+                // if "Currency Code" = "Relational Currency Code" then
+                //     Error(
+                //       Text000, FieldCaption("Currency Code"), FieldCaption("Relational Currency Code"));
             end;
         }
         field(6; "Relational Exch. Rate Amount"; Decimal)

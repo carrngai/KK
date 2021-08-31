@@ -78,6 +78,7 @@ codeunit 50100 "General Function"
     begin
         GLEntry."Conso. Exch. Adj." := GenJournalLine."Conso. Exch. Adj."; //G017
         GLEntry."Netting Source No." := GenJournalLine."Netting Source No."; //G025
+        GLEntry."Description 2" := GenJournalLine."Description 2";
     end;
     //G017--
 

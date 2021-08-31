@@ -19,6 +19,10 @@ tableextension 50106 "G/L Entry Ext" extends "G/L Entry"
             ELSE
             IF ("Source Type" = CONST(Vendor)) Vendor;
         }
+        field(50107; "Description 2"; Text[250])
+        {
+
+        }
     }
 
     var

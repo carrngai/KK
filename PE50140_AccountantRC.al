@@ -54,7 +54,6 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify(Action173) { Visible = false; }  //"IC Dimensions"
         modify(Partners) { Caption = 'IC Partners'; }
 
-
         //Cost Accounting
         modify("Cost Accounting") { Visible = false; } //group
         modify("Cost Types") { Visible = false; }
@@ -90,6 +89,7 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
 
         //Journal
         modify(Action1102601002) { Visible = false; }
+        modify(PostedGeneralJournals) { Visible = false; }
 
         //Cash Management
         modify("Cash Flow Forecasts") { Visible = false; }

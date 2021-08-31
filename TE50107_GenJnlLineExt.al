@@ -116,6 +116,10 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
             Caption = 'Netting Source No.';
             TableRelation = Customer;
         }
+        field(50107; "Description 2"; Text[250])
+        {
+
+        }
 
     }
 
