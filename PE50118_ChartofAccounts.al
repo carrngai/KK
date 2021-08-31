@@ -12,6 +12,8 @@ pageextension 50118 "Chart of Accounts Ext" extends "Chart of Accounts"
                 ApplicationArea = All;
             }
         }
+        modify("Cost Type No.") { Visible = false; }
+        modify("Default Deferral Template Code") { Visible = false; }
     }
 
     actions

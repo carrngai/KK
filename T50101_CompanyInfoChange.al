@@ -9,6 +9,14 @@ table 50101 "Company Information Change"
         {
             DataClassification = ToBeClassified;
             TableRelation = Company.Name;
+
+            trigger OnValidate()
+            var
+                l_company: Record Company;
+            begin
+                if l_company.Get(Company) then
+                    "Company Name" := l_company."Display Name";
+            end;
         }
         field(2; "Start Date"; Date)
         {

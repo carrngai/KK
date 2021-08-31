@@ -27,7 +27,7 @@ page 50103 "List of Director"
                     ToolTip = 'Specifies the value of the Line No. field';
                     ApplicationArea = All;
                     Editable = false;
-
+                    Visible = false;
                 }
                 field(Director; Rec.Director)
                 {

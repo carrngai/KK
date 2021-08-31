@@ -27,6 +27,7 @@ page 50102 "Holding Company/Investor"
                     ToolTip = 'Specifies the value of the Line No. field';
                     ApplicationArea = All;
                     Editable = false;
+                    Visible = false;
                 }
                 field("Holding Company/Investor"; Rec."Holding Company/Investor Name")
                 {

@@ -3,10 +3,14 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
     layout
     {
         // Add changes to page layout here
+        modify("Gen. Posting Type") { Visible = false; }
+        modify("Gen. Bus. Posting Group") { Visible = false; }
+        modify("Gen. Prod. Posting Group") { Visible = false; }
         modify("EU 3-Party Trade") { Visible = false; }
         modify("Bal. Gen. Bus. Posting Group") { Visible = false; }
         modify("Bal. Gen. Posting Type") { Visible = false; }
         modify("Bal. Gen. Prod. Posting Group") { Visible = false; }
+        modify("Deferral Code") { Visible = false; }
         modify(Correction) { Visible = false; }
         modify(Comment) { Visible = false; }
         addbefore("Bal. Account type")
@@ -40,11 +44,13 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
         }
         modify(JournalLineDetails) { Visible = false; }
         modify(IncomingDocAttachFactBox) { Visible = false; }
+        modify(Control1900919607) { Visible = true; }     //"Dimension Set Entries FactBox"
     }
 
     actions
     {
         // Add changes to page actions here
+        modify(IncomingDocument) { Visible = false; }
         addlast("&Line")
         {
             action("IC Allocation") //G014

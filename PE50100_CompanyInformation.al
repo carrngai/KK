@@ -3,6 +3,10 @@ pageextension 50100 CompanyInformationExt extends "Company Information"
     layout
     {
         // Add changes to page layout here
+        modify(GLN) { Visible = false; }
+        modify("Use GLN in Electronic Document") { Visible = false; }
+        modify("Industrial Classification") { Visible = false; }
+        modify("Phone No.") { Visible = false; }
         addlast(General)
         {
             field("Sort Code"; Rec."Sort Code")
