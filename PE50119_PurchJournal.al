@@ -8,6 +8,8 @@ pageextension 50119 "Purchase Journal Ext" extends "Purchase Journal"
         modify("Gen. Prod. Posting Group") { Visible = false; }
         modify(DocumentAmount) { Visible = false; }
         modify("Currency Code") { Visible = true; }
+        modify("Bal. Account Type") { Visible = false; }
+        modify("Bal. Account No.") { Visible = false; }
         modify("Bal. Gen. Posting Type") { Visible = false; }
         modify("Bal. Gen. Bus. Posting Group") { Visible = false; }
         modify("Bal. Gen. Prod. Posting Group") { Visible = false; }

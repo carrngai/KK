@@ -13,6 +13,8 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
         modify("Deferral Code") { Visible = false; }
         modify(Correction) { Visible = false; }
         modify(Comment) { Visible = false; }
+        modify("Bal. Account Type") { Visible = false; }
+        modify("Bal. Account No.") { Visible = false; }
         addbefore("Bal. Account type")
         {
 
@@ -32,13 +34,26 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
                 ApplicationArea = All;
             }
         }
-        addafter("Bal. Account No.")
+        addafter(ShortcutDimCode8)
         {
+            field("Bal. Account Type_"; Rec."Bal. Account Type")
+            {
+                ToolTip = 'Specifies the value of the Bal. Account Type field';
+                ApplicationArea = All;
+                Editable = false;
+            }
+            field("Bal. Account No._"; Rec."Bal. Account No.")
+            {
+                ToolTip = 'Specifies the value of the Bal. Account No. field';
+                ApplicationArea = All;
+                Editable = false;
+            }
             field("Netting Source No."; Rec."Netting Source No.")
             {
                 ToolTip = 'Specifies the value of the Source No. field';
                 ApplicationArea = All;
                 Editable = false;
+                Visible = false;
             }
 
         }
@@ -51,6 +66,11 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
     {
         // Add changes to page actions here
         modify(IncomingDocument) { Visible = false; }
+        modify("Test Report")
+        {
+            Promoted = true;
+            PromotedCategory = Category9;
+        }
         addlast("&Line")
         {
             action("IC Allocation") //G014

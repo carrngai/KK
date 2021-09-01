@@ -883,9 +883,10 @@ report 50103 "General Journal - Test Ext"
             }
         }
 
-        actions
-        {
-        }
+        trigger OnOpenPage()
+        begin
+            ShowDim := true;
+        end;
     }
 
     labels

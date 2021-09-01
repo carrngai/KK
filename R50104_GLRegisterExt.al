@@ -266,7 +266,39 @@ report 50104 "G/L Register Ext"
 
                 }
 
+                dataitem(DimensionLoop; "Integer") //G003
+                {
+                    DataItemTableView = SORTING(Number) WHERE(Number = FILTER(1 ..));
+                    column(DimText; DimText)
+                    {
+                    }
+                    column(Number_DimensionLoop; Number)
+                    {
+                    }
+                    column(DimensionsCaption; DimensionsCap)
+                    {
+                    }
 
+                    trigger OnAfterGetRecord()
+                    begin
+                        if Number = 1 then begin
+                            if not DimSetEntry.FindSet then
+                                CurrReport.Break();
+                        end else
+                            if not Continue then
+                                CurrReport.Break();
+
+                        DimText := GetDimensionText(DimSetEntry);
+                    end;
+
+                    trigger OnPreDataItem()
+                    begin
+                        if not ShowDim then
+                            CurrReport.Break();
+                        DimSetEntry.Reset();
+                        DimSetEntry.SetRange("Dimension Set ID", "G/L Entry"."Dimension Set ID")
+                    end;
+                }
                 trigger OnAfterGetRecord()
                 var
                     PurchInvLine: Record "Purch. Inv. Line";
@@ -460,6 +492,12 @@ report 50104 "G/L Register Ext"
                         ToolTip = 'Specifies if the report displays all lines in detail.';
                         Visible = false; //G003
                     }
+                    field(ShowDim; ShowDim) //G003
+                    {
+                        ApplicationArea = Dimensions;
+                        Caption = 'Show Dimensions';
+                        ToolTip = 'Specifies if you want dimensions information for the journal lines to be included in the report.';
+                    }
                     field(ShowPostingGroup; ShowPostingGroup) //G003
                     {
                         ApplicationArea = All;
@@ -482,6 +520,7 @@ report 50104 "G/L Register Ext"
         trigger OnOpenPage()
         begin
             AutoPrintSalesDoc := true;
+            ShowDim := true;
         end;
     }
 
@@ -516,6 +555,12 @@ report 50104 "G/L Register Ext"
         ExchRate: Decimal; //G003
         AutoPrintSalesDoc: Boolean; //G005
         PrintSalesDoc: Boolean; //G005
+        ShowDim: Boolean;//G005
+        DimText: Text[75];//G003
+        AllocationDimText: Text[75];//G003   
+        DimensionsCap: Label 'Dimensions';//G003  
+        DimSetEntry: Record "Dimension Set Entry";//G003  
+        Continue: Boolean;//G003
 
     trigger OnPreReport()
     begin
@@ -523,6 +568,7 @@ report 50104 "G/L Register Ext"
         TempPurchInvLinePrinted.DeleteAll();
         GLSetup.Get;
         PrintSalesDoc := false;
+        ShowDim := true;
     end;
 
     local procedure DetailsPrinted(PurchInvLine: Record "Purch. Inv. Line"): Boolean
@@ -605,6 +651,28 @@ report 50104 "G/L Register Ext"
         if HeaderCurrancyFactor = 0 then
             exit(1);
         exit(HeaderCurrancyFactor);
+    end;
+
+    local procedure GetDimensionText(var DimensionSetEntry: Record "Dimension Set Entry"): Text[75] //G003
+    var
+        DimensionText: Text[75];
+        Separator: Code[10];
+        DimValue: Text[45];
+    begin
+        Separator := '';
+        DimValue := '';
+        Continue := false;
+
+        repeat
+            DimValue := StrSubstNo('%1 - %2', DimensionSetEntry."Dimension Code", DimensionSetEntry."Dimension Value Code");
+            if MaxStrLen(DimensionText) < StrLen(DimensionText + Separator + DimValue) then begin
+                Continue := true;
+                exit(DimensionText);
+            end;
+            DimensionText := DimensionText + Separator + DimValue;
+            Separator := '; ';
+        until DimSetEntry.Next() = 0;
+        exit(DimensionText);
     end;
 }
 

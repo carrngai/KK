@@ -7,6 +7,8 @@ pageextension 50121 "Cash Receipt Journal Ext" extends "Cash Receipt Journal"
         modify("Gen. Bus. Posting Group") { Visible = false; }
         modify("Gen. Prod. Posting Group") { Visible = false; }
         modify("Currency Code") { Visible = true; }
+        modify("Bal. Account Type") { Visible = false; }
+        modify("Bal. Account No.") { Visible = false; }
         modify("Bal. Gen. Posting Type") { Visible = false; }
         modify("Bal. Gen. Bus. Posting Group") { Visible = false; }
         modify("Bal. Gen. Prod. Posting Group") { Visible = false; }
