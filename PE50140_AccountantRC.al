@@ -52,7 +52,6 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify("Purchase Invoices") { Visible = false; }
         modify(Action171) { Visible = false; }  //"IC Chart of Accounts"
         modify(Action173) { Visible = false; }  //"IC Dimensions"
-        modify(Partners) { Caption = 'IC Partners'; }
 
         //Cost Accounting
         modify("Cost Accounting") { Visible = false; } //group
@@ -69,6 +68,7 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify("Intrastat Journals") { Visible = false; }
         modify("General Journals") { Visible = false; }
         modify("Recurring General Journals") { Visible = false; }
+        modify(Partners) { Visible = false; }
         modify(Deferrals) { Visible = false; }
         modify(Action14) { Visible = false; } //'VAT Statements'
         modify("Bank Account Posting Groups") { Visible = false; }
@@ -90,6 +90,7 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         //Journal
         modify(Action1102601002) { Visible = false; }
         modify(PostedGeneralJournals) { Visible = false; }
+        modify(ICGeneralJournals) { Visible = false; }
 
         //Cash Management
         modify("Cash Flow Forecasts") { Visible = false; }
@@ -114,6 +115,33 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify(Insurance) { Visible = false; }
         modify("Insurance Journals") { Visible = false; }
         modify("Recurring Fixed Asset Journals") { Visible = false; }
+
+        addbefore(Action16)
+        {
+            group("IC")
+            {
+                Caption = 'Intercomapny';
+                action(Partners_)
+                {
+                    ApplicationArea = Intercompany;
+                    Caption = 'IC Partners';
+                    Promoted = true;
+                    PromotedCategory = Process;
+                    RunObject = Page "IC Partner List";
+                    ToolTip = 'Set up each company or department within the group of companies as an intercompany partner of type Vendor or Customer. Intercompany partners can then be inserted on regular sales and purchase documents or journal lines that are exchanged through the intercompany inbox/outbox system and posted to agreed accounts in an intercompany chart of accounts.';
+                }
+                action("IC Transaction Path")
+                {
+                    ApplicationArea = All;
+                    RunObject = page "IC Transaction Path";
+                }
+                action("IC Transaction Account Mapping")
+                {
+                    ApplicationArea = All;
+                    RunObject = page "IC Transaction Account Mapping";
+                }
+            }
+        }
 
         //Posted Document
         modify("Posted Sales Invoices") { Visible = false; }

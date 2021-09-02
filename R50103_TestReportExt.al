@@ -128,11 +128,17 @@ report 50103 "General Journal - Test Ext"
                     column(GenPostType_GenJnlLine; "Gen. Posting Type")
                     {
                     }
-                    column(GenBusPosGroup_GenJnlLine; "Gen. Bus. Posting Group")
+                    // column(GenBusPosGroup_GenJnlLine; "Gen. Bus. Posting Group")
+                    column(GenBusPosGroup_GenJnlLine; "VAT Bus. Posting Group") //G002
                     {
                     }
-                    column(GenProdPostGroup_GenJnlLine; "Gen. Prod. Posting Group")
+                    // column(GenProdPostGroup_GenJnlLine; "Gen. Prod. Posting Group")
+                    column(GenProdPostGroup_GenJnlLine; "VAT Prod. Posting Group") //G002
                     {
+                    }
+                    column(VAT_Amount; "VAT Amount")
+                    {
+
                     }
                     column(Amount_GenJnlLine; Amount)
                     {

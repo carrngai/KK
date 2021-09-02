@@ -46,6 +46,11 @@ pageextension 50122 "Payment Journal Ext" extends "Payment Journal"
         modify(CreditTransferRegEntries) { Visible = false; Promoted = false; }
         modify(CreditTransferRegisters) { Visible = false; Promoted = false; }
         modify(CalculatePostingDate) { Visible = false; }
+        modify("Test Report")
+        {
+            Promoted = true;
+            PromotedCategory = Category8;
+        }
     }
 
     var

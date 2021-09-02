@@ -22,6 +22,11 @@ pageextension 50121 "Cash Receipt Journal Ext" extends "Cash Receipt Journal"
     {
         // Add changes to page actions here
         modify(IncomingDoc) { Visible = false; }
+        modify("Test Report")
+        {
+            Promoted = true;
+            PromotedCategory = Category6;
+        }
     }
 
     var

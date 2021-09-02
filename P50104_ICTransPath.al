@@ -11,6 +11,11 @@ page 50104 "IC Transaction Path"
         {
             repeater(GroupName)
             {
+                field("From Company"; Rec."From Company")
+                {
+                    ToolTip = 'Specifies the value of the From Company field';
+                    ApplicationArea = All;
+                }
                 field("Path Code"; Rec."Path Code")
                 {
                     ToolTip = 'Specifies the value of the Path Code field';
@@ -21,12 +26,6 @@ page 50104 "IC Transaction Path"
                     ToolTip = 'Specifies the value of the Description field';
                     ApplicationArea = All;
                 }
-                field("From Company"; Rec."From Company")
-                {
-                    ToolTip = 'Specifies the value of the From Company field';
-                    ApplicationArea = All;
-                }
-
             }
         }
     }

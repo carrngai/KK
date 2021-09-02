@@ -113,10 +113,12 @@ report 50104 "G/L Register Ext"
                 column(G_L_Entry__Gen__Posting_Type_; "Gen. Posting Type")
                 {
                 }
-                column(G_L_Entry__Gen__Bus__Posting_Group_; "Gen. Bus. Posting Group")
+                // column(G_L_Entry__Gen__Bus__Posting_Group_; "Gen. Bus. Posting Group")
+                column(G_L_Entry__Gen__Bus__Posting_Group_; "VAT Bus. Posting Group") //G003
                 {
                 }
-                column(G_L_Entry__Gen__Prod__Posting_Group_; "Gen. Prod. Posting Group")
+                // column(G_L_Entry__Gen__Prod__Posting_Group_; "Gen. Prod. Posting Group")
+                column(G_L_Entry__Gen__Prod__Posting_Group_; "VAT Prod. Posting Group") //G003
                 {
                 }
                 column(G_L_Entry_Amount; Amount)

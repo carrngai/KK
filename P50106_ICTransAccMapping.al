@@ -63,11 +63,13 @@ page 50106 "IC Transaction Account Mapping"
             {
                 ApplicationArea = all;
                 SubPageLink = "Dimension Set ID" = field("Dimension Set ID");
+                Caption = 'Dimensions';
             }
             part("Bal. Dimensions Set"; "Dimension Set Entries FactBox")
             {
                 ApplicationArea = all;
                 SubPageLink = "Dimension Set ID" = field("Bal. Dimension Set ID");
+                Caption = 'Bal. Dimensions';
             }
         }
     }
