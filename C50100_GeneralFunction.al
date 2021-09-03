@@ -74,13 +74,39 @@ codeunit 50100 "General Function"
 
     //G017++
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnAfterInitGLEntry', '', true, true)]
-    local procedure OnAfterInitGLEntry(var GLEntry: Record "G/L Entry"; GenJournalLine: Record "Gen. Journal Line")
+    local procedure OnAfterInitGLEntry_NewFieldsMapping(var GLEntry: Record "G/L Entry"; GenJournalLine: Record "Gen. Journal Line")
     begin
         GLEntry."Conso. Exch. Adj." := GenJournalLine."Conso. Exch. Adj."; //G017
         GLEntry."Netting Source No." := GenJournalLine."Netting Source No."; //G025
         GLEntry."Description 2" := GenJournalLine."Description 2";
     end;
     //G017--
+
+    //Carry Invoice/Cr. Memo No. to CLE++
+    // [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterModifyEvent', '', true, true)] //cannot update from RenumberDocNo
+    // local procedure OnAfterValidateEvent_InvNotoCLE(var REC: Record "Gen. Journal Line"; xRec: record "Gen. Journal Line"; RunTrigger: Boolean)
+    // begin
+    //     Rec."Creditor No." := REC."Document No.";
+    // end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post", 'OnBeforeCode', '', true, true)]
+    local procedure OnBeforeCode(var GenJournalLine: Record "Gen. Journal Line"; var HideDialog: Boolean)
+    begin
+        with GenJournalLine do begin
+            GenJournalLine."Creditor No." := GenJournalLine."Document No.";
+            //    GenJournalLine.Modify(); 
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnAfterInitCustLedgEntry', '', true, true)]
+    local procedure OnAfterInitCustLedgEntry_InvNotoCLE(var CustLedgerEntry: Record "Cust. Ledger Entry"; GenJournalLine: Record "Gen. Journal Line")
+    begin
+        CustLedgerEntry."Pre-Assigned No." := GenJournalLine."Creditor No.";
+        GenJournalLine."Creditor No." := '';
+        //Creditor No. not from OnBeforeCode
+        // GenJournalLine.Modify();
+    end;
+    //--
 
     //G014++
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnBeforeProcessLines', '', true, true)]

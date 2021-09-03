@@ -7,6 +7,14 @@ pageextension 50122 "Payment Journal Ext" extends "Payment Journal"
         modify("Gen. Bus. Posting Group") { Visible = false; }
         modify("Gen. Prod. Posting Group") { Visible = false; }
         modify("Currency Code") { Visible = true; }
+        addafter("Credit Amount")
+        {
+            field("Amount (LCY)_"; Rec."Amount (LCY)")
+            {
+                ToolTip = 'Specifies the value of the Amount (LCY) field';
+                ApplicationArea = All;
+            }
+        }
         modify("Bal. Account Type") { Visible = false; }
         modify("Bal. Account No.") { Visible = false; }
         modify("Bal. Gen. Posting Type") { Visible = false; }
@@ -50,6 +58,11 @@ pageextension 50122 "Payment Journal Ext" extends "Payment Journal"
         {
             Promoted = true;
             PromotedCategory = Category8;
+        }
+        modify("Renumber Document Numbers")
+        {
+            Promoted = true;
+            PromotedCategory = Process;
         }
     }
 

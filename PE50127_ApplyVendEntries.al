@@ -3,6 +3,7 @@ pageextension 50127 "Apply Vendor Entries Ext" extends "Apply Vendor Entries"
     layout
     {
         // Add changes to page layout here
+        modify("External Document No.") { Visible = true; }
         modify("Pmt. Disc. Amount") { Visible = false; }
         modify("Pmt. Disc. Tolerance Date") { Visible = false; }
         modify("Pmt. Discount Date") { Visible = false; }

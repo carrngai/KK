@@ -2,6 +2,14 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
 {
     fields
     {
+        // modify("Document No.")
+        // {
+        //     trigger OnAfterValidate() //cannot update from RenumberDocNo
+        //     begin
+        //         "Creditor No." := "Document No.";
+        //     end;
+        // }
+
         // Add changes to table fields here
         field(50100; "Conso. Exch. Adj."; Boolean) //G017
         {
@@ -120,10 +128,12 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
         {
 
         }
-
     }
 
-
+    // trigger OnAfterModify() //cannot update from RenumberDocNo
+    // begin
+    //     "Creditor No." := "Document No.";
+    // end;
 
 
 }

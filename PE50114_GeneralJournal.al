@@ -6,6 +6,14 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
         modify("Gen. Posting Type") { Visible = false; }
         modify("Gen. Bus. Posting Group") { Visible = false; }
         modify("Gen. Prod. Posting Group") { Visible = false; }
+        addafter("Credit Amount")
+        {
+            field("Amount (LCY)_"; Rec."Amount (LCY)")
+            {
+                ToolTip = 'Specifies the value of the Amount (LCY) field';
+                ApplicationArea = All;
+            }
+        }
         modify("EU 3-Party Trade") { Visible = false; }
         modify("Bal. Gen. Bus. Posting Group") { Visible = false; }
         modify("Bal. Gen. Posting Type") { Visible = false; }
@@ -66,6 +74,11 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
     {
         // Add changes to page actions here
         modify(IncomingDocument) { Visible = false; }
+        modify("Renumber Document Numbers")
+        {
+            Promoted = true;
+            PromotedCategory = Process;
+        }
         modify("Test Report")
         {
             Promoted = true;

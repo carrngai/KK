@@ -120,7 +120,7 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         {
             group("IC")
             {
-                Caption = 'Intercomapny';
+                Caption = 'Intercompany';
                 action(Partners_)
                 {
                     ApplicationArea = Intercompany;
