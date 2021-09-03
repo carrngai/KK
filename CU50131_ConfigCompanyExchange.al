@@ -138,6 +138,75 @@ codeunit 50131 "Config. Company Exchange"
         EXIT(l_booImported);
     end;
 
+    [Scope('Personalization')]
+    procedure fn_ExportRecordsFromCompanyPerTable(PackageCode: Code[20]; var ConfigPackageTable: Record "Config. Package Table"): Boolean
+    var
+        RecordRef: RecordRef;
+        FieldRef: FieldRef;
+        l_booImported: Boolean;
+        l_intTotalRecord: Integer;
+        l_intTotalField: Integer;
+        l_intTableID: Integer;
+    begin
+        CLEAR(l_intTotalRecord);
+        CLEAR(l_intTableID);
+        CLEAR(l_booImported);
+        SelectedConfigPackage.GET(PackageCode);
+        //SelectedConfigPackage.TESTFIELD("Copy to Company");
+
+        //Count total records of all selected tables in current company;
+        l_intTotalRecord := ConfigPackageTable.COUNT;
+
+        IF NOT HideDialog THEN
+            ConfigProgressBar.Init(l_intTotalRecord, 1, ImportPackageTxt);
+
+        //Import data from each table
+        IF ConfigPackageTable.FINDSET THEN
+            REPEAT
+                l_intTableID := ConfigPackageTable."Table ID";
+                RecordRef.OPEN(ConfigPackageTable."Table ID");
+                fn_ExportDataFromCompany(PackageCode, l_intTableID, RecordRef);
+                RecordRef.CLOSE;
+
+                CASE TRUE OF // Dimensions
+                    ConfigMgt.IsDefaultDimTable(l_intTableID):
+                        BEGIN
+                            ConfigPackageRecord.SETRANGE("Package Code", PackageCode);
+                            ConfigPackageRecord.SETRANGE("Table ID", l_intTableID);
+                            IF ConfigPackageRecord.FINDSET THEN
+                                REPEAT
+                                    ConfigPackageData.GET(
+                                      ConfigPackageRecord."Package Code", ConfigPackageRecord."Table ID",
+                                      ConfigPackageRecord."No.", GetPrimaryKeyFieldNumber(l_intTableID));
+                                    ConfigPackageMgt.UpdateDefaultDimValues(ConfigPackageRecord, COPYSTR(ConfigPackageData.Value, 1, 20));
+                                UNTIL ConfigPackageRecord.NEXT = 0;
+                        END;
+                    ConfigMgt.IsDimSetIDTable(l_intTableID):
+                        BEGIN
+                            ConfigPackageRecord.SETRANGE("Package Code", PackageCode);
+                            ConfigPackageRecord.SETRANGE("Table ID", l_intTableID);
+                            IF ConfigPackageRecord.FINDSET THEN
+                                REPEAT
+                                    ConfigPackageMgt.HandlePackageDataDimSetIDForRecord(ConfigPackageRecord);
+                                UNTIL ConfigPackageRecord.NEXT = 0;
+                        END;
+                END;
+
+            UNTIL ConfigPackageTable.NEXT = 0;
+
+        IF NOT HideDialog THEN
+            ConfigProgressBar.Close;
+
+        ConfigPackageMgt.UpdateConfigLinePackageData(SelectedConfigPackage.Code);
+
+        // autoapply configuration lines
+        ConfigPackageMgt.ApplyConfigTables(SelectedConfigPackage);
+
+        l_booImported := TRUE;
+
+        EXIT(l_booImported);
+    end;
+
     procedure fn_ExportDataFromCompany(PackageCode: Code[20]; TableID: Integer; RecordRef: RecordRef)
     var
         ConfigXMLExchange: Codeunit "Config. XML Exchange";
@@ -1528,7 +1597,7 @@ codeunit 50131 "Config. Company Exchange"
                 CurrencyExchangeRate.ChangeCompany(CompanyCode);
                 CurrencyExchangeRate.Reset();
                 CurrencyExchangeRate.SetRange("Starting Date", ExchangeRateMaster."Starting Date");
-                CurrencyExchangeRate.SetRange("Currency Code", ExchangeRateMaster."Relational Currency Code");
+                CurrencyExchangeRate.SetRange("Currency Code", ExchangeRateMaster."Currency Code");
                 if CurrencyExchangeRate.FindFirst() then begin
                     if CurrencyExchangeRate."Exchange Rate Amount" <> ExchangeRateMaster."Exchange Rate Amount" then
                         CurrencyExchangeRate.Validate("Exchange Rate Amount", ExchangeRateMaster."Exchange Rate Amount");
