@@ -65,7 +65,7 @@ pageextension 50142 ConfigPackageSubformExt extends "Config. Package Subform"
                                     ConfigPackage.Modify();
 
                                     ConfigCompanyExchange.fn_ApplyCompanyPackage(ConfigPackage, ConfigPackageTable, TRUE);
-                                    ConfigCompanyExchange.fn_ExportRecordsFromCompany(ConfigPackage.Code);
+                                    ConfigCompanyExchange.fn_ExportRecordsFromCompanyPerTable(ConfigPackage.Code, ConfigPackageTable);
                                     ConfigPackage."Copy to Company" := '';
                                     ConfigPackage.Modify();
                                 //ConfigCompanyExchange.FunHideDialog();
@@ -73,14 +73,14 @@ pageextension 50142 ConfigPackageSubformExt extends "Config. Package Subform"
 
                                 until CompanyTEC.Next() = 0;
 
-                                CompanyTEC.Reset();
-                                CompanyTEC.SetRange(Select, true);
-                                If CompanyTEC.FindFirst() then begin
-                                    repeat
-                                        CompanyTEC.Select := false;
-                                        CompanyTEC.Modify();
-                                    until CompanyTEC.Next() = 0;
-                                end;
+                                // CompanyTEC.Reset();
+                                // CompanyTEC.SetRange(Select, true);
+                                // If CompanyTEC.FindFirst() then begin
+                                //     repeat
+                                //         CompanyTEC.Select := false;
+                                //         CompanyTEC.Modify();
+                                //     until CompanyTEC.Next() = 0;
+                                // end;
                             end else
                                 Error('You Must Select Copy to Companies ');
                         END;
