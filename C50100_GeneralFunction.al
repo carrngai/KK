@@ -83,30 +83,27 @@ codeunit 50100 "General Function"
     //G017--
 
     //Carry Invoice/Cr. Memo No. to CLE++
-    // [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterModifyEvent', '', true, true)] //cannot update from RenumberDocNo
-    // local procedure OnAfterValidateEvent_InvNotoCLE(var REC: Record "Gen. Journal Line"; xRec: record "Gen. Journal Line"; RunTrigger: Boolean)
-    // begin
-    //     Rec."Creditor No." := REC."Document No.";
-    // end;
-
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post", 'OnBeforeCode', '', true, true)]
-    local procedure OnBeforeCode(var GenJournalLine: Record "Gen. Journal Line"; var HideDialog: Boolean)
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnBeforeModifyEvent', '', true, true)] //cannot update from RenumberDocNo
+    local procedure OnBeforeModifyEvent_InvNotoCLE(var REC: Record "Gen. Journal Line"; xRec: record "Gen. Journal Line"; RunTrigger: Boolean)
     begin
-        with GenJournalLine do begin
-            GenJournalLine."Creditor No." := GenJournalLine."Document No.";
-            //    GenJournalLine.Modify(); 
+        REC."Pre-Assigned No." := REC."Document No.";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnBeforeRenumberDocNoOnLines', '', true, true)]
+    local procedure OnBeforeRenumberDocNoOnLines(var DocNo: Code[20]; var GenJnlLine2: Record "Gen. Journal Line"; var IsHandled: Boolean)
+    begin
+        with GenJnlLine2 do begin
+            GenJnlLine2."Pre-Assigned No." := DocNo;
         end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnAfterInitCustLedgEntry', '', true, true)]
     local procedure OnAfterInitCustLedgEntry_InvNotoCLE(var CustLedgerEntry: Record "Cust. Ledger Entry"; GenJournalLine: Record "Gen. Journal Line")
     begin
-        CustLedgerEntry."Pre-Assigned No." := GenJournalLine."Creditor No.";
-        GenJournalLine."Creditor No." := '';
-        //Creditor No. not from OnBeforeCode
-        // GenJournalLine.Modify();
+        if (GenJournalLine."Document Type" = GenJournalLine."Document Type"::Invoice) OR (GenJournalLine."Document Type" = GenJournalLine."Document Type"::"Credit Memo") then
+            CustLedgerEntry."Pre-Assigned No." := GenJournalLine."Pre-Assigned No.";
     end;
-    //--
+    //Carry Invoice/Cr. Memo No. to CLE--
 
     //G014++
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnBeforeProcessLines', '', true, true)]

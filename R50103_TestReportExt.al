@@ -847,6 +847,7 @@ report 50103 "General Journal - Test Ext"
                 }
             }
 
+
             trigger OnPreDataItem()
             begin
                 GLSetup.Get();
@@ -859,6 +860,7 @@ report 50103 "General Journal - Test Ext"
                 "Gen. Journal Line".CopyFilter("Journal Template Name", "Journal Template Name");
             end;
         }
+
     }
 
     requestpage
@@ -888,11 +890,6 @@ report 50103 "General Journal - Test Ext"
                 }
             }
         }
-
-        trigger OnOpenPage()
-        begin
-            ShowDim := true;
-        end;
     }
 
     labels
@@ -1053,6 +1050,11 @@ report 50103 "General Journal - Test Ext"
         ShowPostingGroup: Boolean; //G002
         CLEexist: Boolean; //G002
         VLEexist: Boolean; //G002
+
+    trigger OnInitReport()
+    begin
+        ShowDim := true;
+    end;
 
     local procedure CheckRecurringLine(GenJnlLine2: Record "Gen. Journal Line")
     begin

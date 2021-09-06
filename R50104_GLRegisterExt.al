@@ -217,13 +217,13 @@ report 50104 "G/L Register Ext"
                         begin
                             "Detailed Cust. Ledg. Entry".SetFilter("Cust. Ledger Entry No.", '<>%1', "Cust. Ledger Entry"."Entry No.");
                         end;
-
-                        trigger OnAfterGetRecord()
-                        begin
-                            if ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::Invoice) OR ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::"Credit Memo") then
-                                PrintSalesDoc := true;
-                        end;
                     }
+
+                    trigger OnAfterGetRecord()
+                    begin
+                        if ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::Invoice) OR ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::"Credit Memo") then
+                            PrintSalesDoc := true;
+                    end;
                 }
                 dataitem("Vendor Ledger Entry"; "Vendor Ledger Entry") //G003
                 {
@@ -519,11 +519,6 @@ report 50104 "G/L Register Ext"
         {
         }
 
-        trigger OnOpenPage()
-        begin
-            AutoPrintSalesDoc := true;
-            ShowDim := true;
-        end;
     }
 
     labels
@@ -564,13 +559,18 @@ report 50104 "G/L Register Ext"
         DimSetEntry: Record "Dimension Set Entry";//G003  
         Continue: Boolean;//G003
 
+    trigger OnInitReport()
+    begin
+        AutoPrintSalesDoc := true;
+        ShowDim := true;
+    end;
+
     trigger OnPreReport()
     begin
         GLRegFilter := "G/L Register".GetFilters();
         TempPurchInvLinePrinted.DeleteAll();
         GLSetup.Get;
         PrintSalesDoc := false;
-        ShowDim := true;
     end;
 
     local procedure DetailsPrinted(PurchInvLine: Record "Purch. Inv. Line"): Boolean

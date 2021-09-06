@@ -44,7 +44,7 @@ report 50106 "G/L Sales Document"
                 column(G_L_Entry__Document_Type_; "Document Type")
                 {
                 }
-                column(G_L_Entry__Document_No__; "Document No.")
+                column(G_L_Entry__Document_No__; DocNo) //G006
                 {
                 }
                 column(G_L_Entry__G_L_Account_No__; "G/L Account No.")
@@ -151,10 +151,14 @@ report 50106 "G/L Sales Document"
                     Clear(FCYCode);
                     Clear(ARAmt);
                     Clear(CurrancyFactor);
+                    DocNo := "G/L Entry"."Document No.";
 
                     TempDocLine.DeleteAll();
 
                     if l_CLE.Get("Entry No.") then begin
+
+                        if l_CLE."Pre-Assigned No." <> '' then
+                            DocNo := l_CLE."Pre-Assigned No.";
 
                         if g_Cust.Get("Source No.") then begin
                             FormatAddr.Customer(CustAddr[1], g_Cust);
@@ -289,6 +293,7 @@ report 50106 "G/L Sales Document"
         CustAddr: array[1, 8] of Text[100];
         CompanyAddr: array[1, 8] of Text[100];
         CompanyInfo: Record "Company Information";
+        DocNo: Code[20];
     //G006--
 
     trigger OnPreReport()

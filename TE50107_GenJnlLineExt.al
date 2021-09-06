@@ -2,14 +2,6 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
 {
     fields
     {
-        // modify("Document No.")
-        // {
-        //     trigger OnAfterValidate() //cannot update from RenumberDocNo
-        //     begin
-        //         "Creditor No." := "Document No.";
-        //     end;
-        // }
-
         // Add changes to table fields here
         field(50100; "Conso. Exch. Adj."; Boolean) //G017
         {
@@ -114,26 +106,13 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
         {
             DataClassification = ToBeClassified;
         }
-
-        // field(50105; "Netting Source Type"; Enum "Gen. Journal Source Type")
-        // {
-        //     DataClassification = ToBeClassified;
-        // }
         field(50106; "Netting Source No."; Code[20])
         {
             Caption = 'Netting Source No.';
             TableRelation = Customer;
         }
-        field(50107; "Description 2"; Text[250])
-        {
-
-        }
+        field(50107; "Description 2"; Text[250]) { }
+        field(50108; "Pre-Assigned No."; Code[20]) { }
     }
-
-    // trigger OnAfterModify() //cannot update from RenumberDocNo
-    // begin
-    //     "Creditor No." := "Document No.";
-    // end;
-
 
 }
