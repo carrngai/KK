@@ -233,14 +233,14 @@ codeunit 50100 "General Function"
                                 if ICAllocation.FindSet() then begin
                                     repeat
                                         ICEliminate := false;
-                                        If ICTransMapping.Get(TempGenJournalLine."IC Path Code",
-                                                                TempGenJournalLine."Account Type",
-                                                                TempGenJournalLine."Account No.",
-                                                                TempGenJournalLine."Dimension Set ID",
-                                                                TempGenJournalLine."IC Bal. Account Type",
-                                                                TempGenJournalLine."IC Bal. Account No.",
-                                                                ICAllocation."Bal. Dimension Set ID") then
-                                            ICEliminate := ICTransMapping.Elimination;
+                                        // If ICTransMapping.Get(TempGenJournalLine."IC Path Code",
+                                        //                         TempGenJournalLine."Account Type",
+                                        //                         TempGenJournalLine."Account No.",
+                                        //                         TempGenJournalLine."Dimension Set ID",
+                                        //                         TempGenJournalLine."IC Bal. Account Type",
+                                        //                         TempGenJournalLine."IC Bal. Account No.",
+                                        //                         ICAllocation."Bal. Dimension Set ID") then
+                                        //     ICEliminate := ICTransMapping.Elimination;
 
                                         InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."IC Bal. Account Type", TempGenJournalLine."IC Bal. Account No.", ICAllocation.Amount, ICAllocation."Bal. Dimension Set ID", ICEliminate, AtCompany);
                                     until ICAllocation.Next() = 0;
@@ -248,14 +248,14 @@ codeunit 50100 "General Function"
                                 end else begin
                                     //If there is no allocation
                                     ICEliminate := false;
-                                    If ICTransMapping.Get(TempGenJournalLine."IC Path Code",
-                                                            TempGenJournalLine."Account Type",
-                                                            TempGenJournalLine."Account No.",
-                                                            TempGenJournalLine."Dimension Set ID",
-                                                            TempGenJournalLine."IC Bal. Account Type",
-                                                            TempGenJournalLine."IC Bal. Account No.",
-                                                            TempGenJournalLine."Dimension Set ID") then
-                                        ICEliminate := ICTransMapping.Elimination;
+                                    // If ICTransMapping.Get(TempGenJournalLine."IC Path Code",
+                                    //                         TempGenJournalLine."Account Type",
+                                    //                         TempGenJournalLine."Account No.",
+                                    //                         TempGenJournalLine."Dimension Set ID",
+                                    //                         TempGenJournalLine."IC Bal. Account Type",
+                                    //                         TempGenJournalLine."IC Bal. Account No.",
+                                    //                         TempGenJournalLine."Dimension Set ID") then
+                                    //     ICEliminate := ICTransMapping.Elimination;
 
                                     InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."IC Bal. Account Type", TempGenJournalLine."IC Bal. Account No.", TempGenJournalLine.Amount, TempGenJournalLine."Dimension Set ID", ICEliminate, AtCompany);
                                 end;

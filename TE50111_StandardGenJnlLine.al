@@ -1,12 +1,8 @@
-tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
+tableextension 50111 "Stand. Gen. Jnl. Line Ext" extends "Standard General Journal Line"
 {
     fields
     {
         // Add changes to table fields here
-        field(50100; "Conso. Exch. Adj."; Boolean) //G017
-        {
-            DataClassification = ToBeClassified;
-        }
         field(50101; "IC Path Code"; Code[20]) //G014
         {
             DataClassification = ToBeClassified;
@@ -98,18 +94,8 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
                 end;
             end;
         }
-
-        field(50104; "IC From Customer"; Boolean) //G0014
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(50106; "Netting Source No."; Code[20])
-        {
-            Caption = 'Netting Source No.';
-            TableRelation = Customer;
-        }
-        field(50107; "Description 2"; Text[250]) { }
-        field(50108; "Pre-Assigned No."; Code[20]) { }
     }
 
+    var
+        myInt: Integer;
 }

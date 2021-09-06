@@ -23,13 +23,18 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
         modify(Comment) { Visible = false; }
         modify("Bal. Account Type") { Visible = false; }
         modify("Bal. Account No.") { Visible = false; }
-        addbefore("Bal. Account type")
+        addafter(ShortcutDimCode8)
         {
-
             field("IC Path Code"; Rec."IC Path Code") //G014
             {
                 ToolTip = 'Specifies the value of the IC Path Code field';
                 ApplicationArea = All;
+
+                trigger OnValidate()
+                begin
+                    EnableICALlocationAction;
+                    CurrPage.SaveRecord();
+                end;
             }
             field("IC Bal. Account Type"; Rec."IC Bal. Account Type") //G014
             {
@@ -40,10 +45,13 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
             {
                 ToolTip = 'Specifies the value of the IC Bal. Account No. field';
                 ApplicationArea = All;
+                trigger OnValidate()
+                begin
+                    EnableICALlocationAction;
+                    CurrPage.SaveRecord();
+                end;
             }
-        }
-        addafter(ShortcutDimCode8)
-        {
+
             field("Bal. Account Type_"; Rec."Bal. Account Type")
             {
                 ToolTip = 'Specifies the value of the Bal. Account Type field';
@@ -63,7 +71,6 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
                 Editable = false;
                 Visible = false;
             }
-
         }
         modify(JournalLineDetails) { Visible = false; }
         modify(IncomingDocAttachFactBox) { Visible = false; }
@@ -84,6 +91,8 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
             Promoted = true;
             PromotedCategory = Category9;
         }
+        modify(Approvals) { Promoted = false; }
+
         addlast("&Line")
         {
             action("IC Allocation") //G014
@@ -97,18 +106,44 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
                 RunPageLink = "Journal Template Name" = FIELD("Journal Template Name"),
                                 "Journal Batch Name" = FIELD("Journal Batch Name"),
                                 "Journal Line No." = FIELD("Line No.");
+                Enabled = ICEnable;
 
                 ToolTip = 'Allocate the amount on the selected journal line to the dimensions that you specify.';
 
                 trigger OnAction()
+                var
+                    l_ICAccMapping: Record "IC Transaction Account Mapping";
+                    l_ICAllocation: Record "IC Gen. Jnl. Allocation";
                 begin
-                    if Rec."IC Path Code" = '' then
-                        Error('IC Path Code must not be blank');
+                    //If IC Allication is blank, create set from Mapping
                 end;
-
-
             }
         }
     }
 
+    var
+        ICEnable: Boolean;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        EnableICALlocationAction;
+    end;
+
+    trigger OnModifyRecord(): Boolean
+    begin
+        EnableICALlocationAction;
+    end;
+
+    trigger OnNewRecord(BelowxRec: Boolean)
+    begin
+        EnableICALlocationAction;
+    end;
+
+    local procedure EnableICALlocationAction()
+    begin
+        if (Rec."IC Path Code" <> '') and (Rec."IC Bal. Account No." <> '') then
+            ICEnable := true
+        else
+            ICEnable := false;
+    end;
 }

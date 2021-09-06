@@ -49,11 +49,11 @@ page 50106 "IC Transaction Account Mapping"
                     ApplicationArea = All;
                 }
 
-                field(Elimination; Rec.Elimination)
-                {
-                    ToolTip = 'Specifies the value of the Elimination field';
-                    ApplicationArea = All;
-                }
+                // field(Elimination; Rec.Elimination)
+                // {
+                //     ToolTip = 'Specifies the value of the Elimination field';
+                //     ApplicationArea = All;
+                // }
 
             }
         }
