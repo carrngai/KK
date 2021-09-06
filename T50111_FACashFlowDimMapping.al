@@ -1,4 +1,4 @@
-table 50107 "FA Cash Flow Dimension Mapping"
+table 50111 "FA Cash Flow Dimension Mapping"
 {
     DataClassification = ToBeClassified;
 

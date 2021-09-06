@@ -62,16 +62,6 @@ table 50106 "IC Transaction Account Mapping"
                 end;
             end;
         }
-        field(4; "Dimension Set ID"; Integer)
-        {
-            Caption = 'Dimension Set ID';
-            Editable = false;
-            TableRelation = "Dimension Set Entry";
-            trigger OnLookup()
-            begin
-                ShowDimensions();
-            end;
-        }
         field(5; "Bal. Account Type"; Enum "Gen. Journal Account Type")
         {
             DataClassification = ToBeClassified;
@@ -124,27 +114,22 @@ table 50106 "IC Transaction Account Mapping"
                 end;
             end;
         }
-        field(7; "Bal. Dimension Set ID"; Integer)
+        field(8; ID; Integer)
         {
-            Caption = 'Dimension Set ID';
-            Editable = false;
-            TableRelation = "Dimension Set Entry";
-            trigger OnLookup()
-            begin
-                ShowDimensions2();
-            end;
+            AutoIncrement = true;
+            Caption = 'ID';
+            NotBlank = true;
         }
-        // field(8; "Elimination"; Boolean)
-        // {
-        //     DataClassification = ToBeClassified;
-        // }
     }
 
     keys
     {
-        key(Key1; "Path Code", "Account Type", "Account No.", "Dimension Set ID", "Bal. Account Type", "Bal. Account No.", "Bal. Dimension Set ID")
+        key(Key1; ID)
         {
             Clustered = true;
+        }
+        key(Key2; "Path Code", "Account Type", "Account No.", "Bal. Account Type", "Bal. Account No.")
+        {
         }
     }
 
@@ -169,112 +154,6 @@ table 50106 "IC Transaction Account Mapping"
     trigger OnRename()
     begin
 
-    end;
-
-    procedure ShowDimensions()
-    begin
-        "Dimension Set ID" :=
-          EditDimensionSet_Company(
-            "Dimension Set ID", StrSubstNo('%1 %2 %3', 'MASTER COMPANY', "Account Type", "Account No."), 'MASTER COMPANY');
-    end;
-
-    procedure ShowDimensions2()
-    begin
-        "Bal. Dimension Set ID" :=
-          EditDimensionSet_Company(
-            "Bal. Dimension Set ID", StrSubstNo('%1 %2 %3', 'MASTER COMPANY', "Bal. Account Type", "Bal. Account No."), 'MASTER COMPANY');
-    end;
-
-    local procedure EditDimensionSet_Company(DimSetID: Integer; NewCaption: Text[250]; AtCompany: Text[30]): Integer
-    var
-        DimSetEntry: Record "Dimension Set Entry";
-        EditDimSetEntries: Page "Edit Dimension Set Entries";
-        NewDimSetID: Integer;
-    begin
-        DimSetEntry.ChangeCompany(AtCompany);
-
-        NewDimSetID := DimSetID;
-        DimSetEntry.Reset();
-        DimSetEntry.FilterGroup(2);
-        DimSetEntry.SetRange("Dimension Set ID", DimSetID);
-        DimSetEntry.FilterGroup(0);
-        EditDimSetEntries.SetTableView(DimSetEntry);
-        EditDimSetEntries.SetFormCaption(NewCaption);
-        EditDimSetEntries.RunModal();
-        NewDimSetID := GetDimensionSetID_Company(DimSetEntry, AtCompany);
-        exit(NewDimSetID);
-    end;
-
-    local procedure GetDimensionSetID_Company(var DimSetEntry: Record "Dimension Set Entry"; AtCompany: Text[30]): Integer
-    var
-        DimSetEntry2: Record "Dimension Set Entry";
-        DimSetTreeNode: Record "Dimension Set Tree Node";
-        Found: Boolean;
-    begin
-        DimSetEntry2.ChangeCompany(AtCompany);
-        DimSetTreeNode.ChangeCompany(AtCompany);
-
-        DimSetEntry2.Copy(DimSetEntry);
-
-        if DimSetEntry."Dimension Set ID" > 0 then
-            DimSetEntry.SetRange("Dimension Set ID", DimSetEntry."Dimension Set ID");
-
-        DimSetEntry.SetCurrentKey("Dimension Value ID");
-        DimSetEntry.SetFilter("Dimension Code", '<>%1', '');
-        DimSetEntry.SetFilter("Dimension Value Code", '<>%1', '');
-
-        if not DimSetEntry.FindSet then begin
-            DimSetEntry.Copy(DimSetEntry2);
-            exit(0);
-        end;
-
-        Found := true;
-        DimSetTreeNode."Dimension Set ID" := 0;
-        repeat
-            DimSetEntry.TestField("Dimension Value ID");
-            if Found then
-                if not DimSetTreeNode.Get(DimSetTreeNode."Dimension Set ID", DimSetEntry."Dimension Value ID") then begin
-                    Found := false;
-                    DimSetTreeNode.LockTable();
-                end;
-
-            if not Found then begin
-                DimSetTreeNode."Parent Dimension Set ID" := DimSetTreeNode."Dimension Set ID";
-                DimSetTreeNode."Dimension Value ID" := DimSetEntry."Dimension Value ID";
-                DimSetTreeNode."Dimension Set ID" := 0;
-                DimSetTreeNode."In Use" := false;
-                if not DimSetTreeNode.Insert(true) then
-                    DimSetTreeNode.Get(DimSetTreeNode."Parent Dimension Set ID", DimSetTreeNode."Dimension Value ID");
-            end;
-        until DimSetEntry.Next() = 0;
-        if not DimSetTreeNode."In Use" then begin
-            if Found then begin
-                DimSetTreeNode.LockTable();
-                DimSetTreeNode.Get(DimSetTreeNode."Parent Dimension Set ID", DimSetTreeNode."Dimension Value ID");
-            end;
-            DimSetTreeNode."In Use" := true;
-            DimSetTreeNode.Modify();
-            InsertDimSetEntries_Company(DimSetEntry, DimSetTreeNode."Dimension Set ID", AtCompany);
-        end;
-
-        DimSetEntry.Copy(DimSetEntry2);
-
-        exit(DimSetTreeNode."Dimension Set ID");
-    end;
-
-    local procedure InsertDimSetEntries_Company(var DimSetEntry: Record "Dimension Set Entry"; NewID: Integer; AtCompany: Text[30])
-    var
-        DimSetEntry2: Record "Dimension Set Entry";
-    begin
-        DimSetEntry2.ChangeCompany(AtCompany);
-        DimSetEntry2.LockTable();
-        if DimSetEntry.FindSet then
-            repeat
-                DimSetEntry2 := DimSetEntry;
-                DimSetEntry2."Dimension Set ID" := NewID;
-                DimSetEntry2."Global Dimension No." := DimSetEntry2.GetGlobalDimNo();
-                DimSetEntry2.Insert();
-            until DimSetEntry.Next() = 0;
     end;
 
 }

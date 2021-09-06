@@ -5,6 +5,7 @@ page 50106 "IC Transaction Account Mapping"
     ApplicationArea = All;
     UsageCategory = Lists;
     SourceTable = "IC Transaction Account Mapping";
+    SourceTableView = sorting("Path Code", "Account Type", "Account No.", "Bal. Account Type", "Bal. Account No.") order(ascending);
 
     layout
     {
@@ -12,6 +13,12 @@ page 50106 "IC Transaction Account Mapping"
         {
             repeater(GroupName)
             {
+                field(ID; Rec.ID)
+                {
+                    ToolTip = 'Specifies the value of the ID field';
+                    ApplicationArea = All;
+                    Visible = false;
+                }
                 field("Path Code"; Rec."Path Code")
                 {
                     ToolTip = 'Specifies the value of the Path Code field';
@@ -27,11 +34,6 @@ page 50106 "IC Transaction Account Mapping"
                     ToolTip = 'Specifies the value of the Account No. field';
                     ApplicationArea = All;
                 }
-                field("Dimension Set ID"; Rec."Dimension Set ID")
-                {
-                    ToolTip = 'Specifies the value of the Dimension Set ID field';
-                    ApplicationArea = All;
-                }
                 field("Bal. Account Type"; Rec."Bal. Account Type")
                 {
                     ToolTip = 'Specifies the value of the Bal. Account Type field';
@@ -42,34 +44,23 @@ page 50106 "IC Transaction Account Mapping"
                     ToolTip = 'Specifies the value of the Bal. Account No. field';
                     ApplicationArea = All;
                 }
-
-                field("Bal. Dimension Set ID"; Rec."Bal. Dimension Set ID")
-                {
-                    ToolTip = 'Specifies the value of the Bal. Dimension Set ID field';
-                    ApplicationArea = All;
-                }
-
-                // field(Elimination; Rec.Elimination)
-                // {
-                //     ToolTip = 'Specifies the value of the Elimination field';
-                //     ApplicationArea = All;
-                // }
-
             }
         }
         area(Factboxes)
         {
-            part("Dimensions Set"; "Dimension Set Entries FactBox")
+            part(DimensionFB; "IC Trans. Acc. Dim. FactBox")
             {
                 ApplicationArea = all;
-                SubPageLink = "Dimension Set ID" = field("Dimension Set ID");
-                Caption = 'Dimensions';
+                Caption = 'Dimension';
+                SubPageLink = ID = field(ID),
+                                "Type ID" = const(1);
             }
-            part("Bal. Dimensions Set"; "Dimension Set Entries FactBox")
+            part(BalDimensionFB; "IC Trans. Acc. Dim. FactBox")
             {
                 ApplicationArea = all;
-                SubPageLink = "Dimension Set ID" = field("Bal. Dimension Set ID");
-                Caption = 'Bal. Dimensions';
+                Caption = 'Bal. Dimension';
+                SubPageLink = ID = field(ID),
+                                "Type ID" = const(2);
             }
         }
     }
@@ -86,13 +77,9 @@ page 50106 "IC Transaction Account Mapping"
                 Image = Dimensions;
                 Promoted = true;
                 PromotedCategory = Process;
-                ToolTip = 'View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.';
-
-                trigger OnAction()
-                begin
-                    rec.ShowDimensions();
-                    CurrPage.SaveRecord;
-                end;
+                RunObject = page "IC Trans. Account Mapping Dim.";
+                RunPageLink = "ID" = field(ID),
+                            "Type ID" = const(1);
             }
             action("Bal. Dimensions")
             {
@@ -102,13 +89,9 @@ page 50106 "IC Transaction Account Mapping"
                 Image = Dimensions;
                 Promoted = true;
                 PromotedCategory = Process;
-                ToolTip = 'View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.';
-
-                trigger OnAction()
-                begin
-                    rec.ShowDimensions2();
-                    CurrPage.SaveRecord;
-                end;
+                RunObject = page "IC Trans. Account Mapping Dim.";
+                RunPageLink = "ID" = field(ID),
+                            "Type ID" = const(2);
             }
 
         }
