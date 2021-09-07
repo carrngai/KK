@@ -202,16 +202,16 @@ codeunit 50100 "General Function"
                                 ICPartner.SetRange("Inbox Details", FromCompany);
                                 if ICPartner.FindFirst() then
                                     if TempGenJournalLine."IC From Customer" then
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", -TempGenJournalLine.Amount, 0, true, AtCompany)
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", TempGenJournalLine.Amount, 0, true, AtCompany)
                                     else
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", -TempGenJournalLine.Amount, 0, true, AtCompany);
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", TempGenJournalLine.Amount, 0, true, AtCompany);
                                 //IC_Line2
                                 ICPartner.SetRange("Inbox Details", NextCompany);
                                 if ICPartner.FindFirst() then
                                     if TempGenJournalLine."IC From Customer" then
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", TempGenJournalLine.Amount, 0, true, AtCompany)
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", -TempGenJournalLine.Amount, 0, true, AtCompany)
                                     else
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", TempGenJournalLine.Amount, 0, true, AtCompany);
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", -TempGenJournalLine.Amount, 0, true, AtCompany);
 
                                 FromCompany := AtCompany;
                             end else begin
@@ -221,9 +221,9 @@ codeunit 50100 "General Function"
                                 ICPartner.SetRange("Inbox Details", FromCompany);
                                 if ICPartner.FindFirst() then
                                     if TempGenJournalLine."IC From Customer" then
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", -TempGenJournalLine.Amount, 0, true, AtCompany)
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", TempGenJournalLine.Amount, 0, true, AtCompany)
                                     else
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", -TempGenJournalLine.Amount, 0, true, AtCompany);
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", TempGenJournalLine.Amount, 0, true, AtCompany);
 
                                 //Allocation Line         
                                 ICAllocation.Reset();
@@ -242,7 +242,7 @@ codeunit 50100 "General Function"
                                         //                         ICAllocation."Bal. Dimension Set ID") then
                                         //     ICEliminate := ICTransMapping.Elimination;
 
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."IC Bal. Account Type", TempGenJournalLine."IC Bal. Account No.", ICAllocation.Amount, ICAllocation."Bal. Dimension Set ID", ICEliminate, AtCompany);
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."IC Bal. Account Type", TempGenJournalLine."IC Bal. Account No.", -ICAllocation.Amount, ICAllocation."Bal. Dimension Set ID", ICEliminate, AtCompany);
                                     until ICAllocation.Next() = 0;
                                     ICAllocation.DeleteAll();
                                 end else begin
@@ -257,7 +257,7 @@ codeunit 50100 "General Function"
                                     //                         TempGenJournalLine."Dimension Set ID") then
                                     //     ICEliminate := ICTransMapping.Elimination;
 
-                                    InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."IC Bal. Account Type", TempGenJournalLine."IC Bal. Account No.", TempGenJournalLine.Amount, TempGenJournalLine."Dimension Set ID", ICEliminate, AtCompany);
+                                    InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."IC Bal. Account Type", TempGenJournalLine."IC Bal. Account No.", -TempGenJournalLine.Amount, TempGenJournalLine."Dimension Set ID", ICEliminate, AtCompany);
                                 end;
                             end;
                         until ICTransPathDetail.Next() = 0;
@@ -320,6 +320,7 @@ codeunit 50100 "General Function"
         ICGenJnlLine.Validate(Amount, LineAmount);
 
         //Line Dimension
+        //1. From Default Dimension
         DefaultDim.Reset();
         case AccType of
             AccType::"G/L Account":
@@ -330,6 +331,7 @@ codeunit 50100 "General Function"
                 DefaultDim.SetRange("Table ID", 23);
         end;
         DefaultDim.SetRange("No.", AccNo);
+        DefaultDim.SetFilter("Dimension Value Code", '<>%1', '');
         if DefaultDim.FindSet() then
             repeat
                 TempDimSetEntry2.Init();
@@ -337,18 +339,21 @@ codeunit 50100 "General Function"
                 TempDimSetEntry2."Dimension Value Code" := DefaultDim."Dimension Value Code";
                 DimVal.Get(DefaultDim."Dimension Code", DefaultDim."Dimension Value Code");
                 TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                TempDimSetEntry2."Global Dimension No." := DimVal."Global Dimension No.";
                 TempDimSetEntry2.Insert();
             until DefaultDim.Next() = 0;
 
+        //2. From Journal Line Dimension
         if DimSetID <> 0 then begin
             DimMgt.GetDimensionSet(tempDimSetEntry1, DimSetID);
             if tempDimSetEntry1.FindSet() then
                 repeat
-                    TempDimSetEntry2.SetRange("Dimension Code");
+                    TempDimSetEntry2.SetRange("Dimension Code", tempDimSetEntry1."Dimension Code");
                     if TempDimSetEntry2.FindSet() then begin
                         TempDimSetEntry2."Dimension Value Code" := tempDimSetEntry1."Dimension Value Code";
                         DimVal.Get(tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code");
                         TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                        TempDimSetEntry2."Global Dimension No." := DimVal."Global Dimension No.";
                         TempDimSetEntry2.Modify();
                     end else begin
                         TempDimSetEntry2.Init();
@@ -356,21 +361,31 @@ codeunit 50100 "General Function"
                         TempDimSetEntry2."Dimension Value Code" := tempDimSetEntry1."Dimension Value Code";
                         DimVal.Get(tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code");
                         TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                        TempDimSetEntry2."Global Dimension No." := DimVal."Global Dimension No.";
                         TempDimSetEntry2.Insert();
                     end;
                 until TempDimSetEntry1.Next() = 0;
         end;
 
-        if ELIMINATION then begin
-            TempDimSetEntry2.Init();
-            TempDimSetEntry2."Dimension Code" := 'ELIMINATION';
-            TempDimSetEntry2."Dimension Value Code" := 'ELIMINATION';
-            DimVal.Get('ELIMINATION', 'ELIMINATION');
-            TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
-            TempDimSetEntry2.Insert();
-        end;
+        // if ELIMINATION then begin
+        //     TempDimSetEntry2.Init();
+        //     TempDimSetEntry2."Dimension Code" := 'ELIMINATION';
+        //     TempDimSetEntry2."Dimension Value Code" := 'ELIMINATION';
+        //     DimVal.Get('ELIMINATION', 'ELIMINATION');
+        //     TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+        //     TempDimSetEntry2.Insert();
+        // end;
 
         ICGenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntry2, AtCompany);
+
+        TempDimSetEntry2.SetFilter("Global Dimension No.", '1');
+        if TempDimSetEntry2.FindSet() then
+            ICGenJnlLine."Shortcut Dimension 1 Code" := TempDimSetEntry2."Dimension Value Code";
+
+        TempDimSetEntry2.SetFilter("Global Dimension No.", '2');
+        if TempDimSetEntry2.FindSet() then
+            ICGenJnlLine."Shortcut Dimension 2 Code" := TempDimSetEntry2."Dimension Value Code";
+
         ICGenJnlLine.Modify();
     end;
 

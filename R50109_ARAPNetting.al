@@ -4,11 +4,15 @@ report 50109 ARAPNetting
     UsageCategory = Tasks;
     ApplicationArea = All;
     ProcessingOnly = true;
+    Permissions = tabledata "Dimension Set Tree Node" = RIMD,
+                    tabledata "Dimension Set Entry" = RIMD;
 
     dataset
     {
         dataitem(Company; Company)
         {
+            RequestFilterFields = Name;
+
             trigger OnAfterGetRecord()
             var
                 BU: Record "Business Unit";

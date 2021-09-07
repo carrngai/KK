@@ -37,13 +37,18 @@ table 50108 "IC Gen. Jnl. Allocation"
 
         field(6; "Bal. Dimension Set ID"; Integer)
         {
-            Caption = 'Dimension Set ID';
+            Caption = 'Bal. Dimension Set ID';
             Editable = false;
             TableRelation = "Dimension Set Entry";
 
             trigger OnLookup()
             begin
                 ShowDimensions();
+            end;
+
+            trigger OnValidate()
+            begin
+                DimMgt.UpdateGlobalDimFromDimSetID("Bal. Dimension Set ID", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
             end;
         }
         field(7; "Shortcut Dimension 1 Code"; Code[20])
@@ -99,23 +104,21 @@ table 50108 "IC Gen. Jnl. Allocation"
         Text000: Label '%1 cannot be used in allocations when they are completed on the general journal line.';
         GLAcc: Record "G/L Account";
         GenJnlLine: Record "Gen. Journal Line";
-        GenBusPostingGrp: Record "Gen. Business Posting Group";
-        GenProdPostingGrp: Record "Gen. Product Posting Group";
         DimMgt: Codeunit DimensionManagement;
 
 
-    procedure CreateDim(Type1: Integer; No1: Code[20])
-    var
-        TableID: array[10] of Integer;
-        No: array[10] of Code[20];
-    begin
-        TableID[1] := Type1;
-        No[1] := No1;
-        "Shortcut Dimension 1 Code" := '';
-        "Shortcut Dimension 2 Code" := '';
-        "Bal. Dimension Set ID" :=
-          DimMgt.GetRecDefaultDimID(Rec, CurrFieldNo, TableID, No, '', "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code", 0, 0);
-    end;
+    // procedure CreateDim(Type1: Integer; No1: Code[20])
+    // var
+    //     TableID: array[10] of Integer;
+    //     No: array[10] of Code[20];
+    // begin
+    //     TableID[1] := Type1;
+    //     No[1] := No1;
+    //     "Shortcut Dimension 1 Code" := '';
+    //     "Shortcut Dimension 2 Code" := '';
+    //     "Bal. Dimension Set ID" :=
+    //       DimMgt.GetRecDefaultDimID(Rec, CurrFieldNo, TableID, No, '', "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code", 0, 0);
+    // end;
 
     procedure ValidateShortcutDimCode(FieldNumber: Integer; var ShortcutDimCode: Code[20])
     begin

@@ -152,10 +152,84 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
 
                 trigger OnAction()
                 var
-                    l_ICAccMapping: Record "IC Transaction Account Mapping";
                     l_ICAllocation: Record "IC Gen. Jnl. Allocation";
+                    l_ICAccMapping: Record "IC Transaction Account Mapping";
+                    l_ICAccMappingDim: Record "IC Trans. Account Mapping Dim.";
+                    l_ICAccMappingDim2: Record "IC Trans. Account Mapping Dim.";
+                    TempDimSetEntry: Record "Dimension Set Entry" temporary;
+                    TempDimSetEntry2: Record "Dimension Set Entry" temporary;
+                    DimMgmt: Codeunit DimensionManagement;
+                    DimVal: Record "Dimension Value";
+                    NextLineNo: Integer;
                 begin
-                    //If IC Allication is blank, create set from Mapping
+                    NextLineNo := 10000;
+
+                    l_ICAllocation.Reset();
+                    l_ICAllocation.SetRange("Journal Template Name", Rec."Journal Template Name");
+                    l_ICAllocation.SetRange("Journal Batch Name", Rec."Journal Batch Name");
+                    l_ICAllocation.SetRange("Journal Line No.", rec."Line No.");
+                    l_ICAllocation.SetFilter(Amount, '<>%1', 0);
+                    if NOT l_ICAllocation.FindSet() then begin
+
+                        l_ICAllocation.SetFilter(Amount, '%1', 0);
+                        l_ICAllocation.DeleteAll();
+
+                        l_ICAccMapping.Reset();
+                        l_ICAccMapping.SetRange("Account Type", Rec."Account Type");
+                        l_ICAccMapping.SetRange("Account No.", Rec."Account No.");
+                        l_ICAccMapping.SetRange("Bal. Account Type", Rec."IC Bal. Account Type");
+                        l_ICAccMapping.SetRange("Bal. Account No.", Rec."IC Bal. Account No.");
+                        if l_ICAccMapping.FindSet() then begin
+                            repeat
+
+                                TempDimSetEntry.DeleteAll();
+                                l_ICAccMappingDim.Reset();
+                                l_ICAccMappingDim.SetRange(ID, l_ICAccMapping.ID);
+                                l_ICAccMappingDim.SetRange("Type ID", 1);
+                                if l_ICAccMappingDim.FindSet() then begin
+                                    repeat
+                                        TempDimSetEntry.Init();
+                                        TempDimSetEntry."Dimension Code" := l_ICAccMappingDim."Dimension Code";
+                                        TempDimSetEntry."Dimension Value Code" := l_ICAccMappingDim."Dimension Value Code";
+                                        DimVal.Get(l_ICAccMappingDim."Dimension Code", l_ICAccMappingDim."Dimension Value Code");
+                                        TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
+                                        TempDimSetEntry.Insert();
+                                    until l_ICAccMappingDim.Next() = 0;
+                                end;
+
+                                if rec."Dimension Set ID" = DimMgmt.GetDimensionSetID(TempDimSetEntry) then begin //Jnl Line Dimension ID match with mapping 
+
+                                    TempDimSetEntry2.DeleteAll();
+                                    l_ICAccMappingDim2.Reset();
+                                    l_ICAccMappingDim2.SetRange(ID, l_ICAccMapping.ID);
+                                    l_ICAccMappingDim2.SetRange("Type ID", 2);
+                                    if l_ICAccMappingDim2.FindSet() then begin
+                                        repeat
+                                            TempDimSetEntry2.Init();
+                                            TempDimSetEntry2."Dimension Code" := l_ICAccMappingDim2."Dimension Code";
+                                            TempDimSetEntry2."Dimension Value Code" := l_ICAccMappingDim2."Dimension Value Code";
+                                            DimVal.Get(l_ICAccMappingDim2."Dimension Code", l_ICAccMappingDim2."Dimension Value Code");
+                                            TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
+                                            TempDimSetEntry2.Insert();
+                                        until l_ICAccMappingDim2.Next() = 0;
+                                    end;
+
+                                    l_ICAllocation.Init();
+                                    l_ICAllocation."Journal Template Name" := Rec."Journal Template Name";
+                                    l_ICAllocation."Journal Batch Name" := Rec."Journal Batch Name";
+                                    l_ICAllocation."Journal Line No." := Rec."Line No.";
+                                    l_ICAllocation."Line No." := NextLineNo;
+                                    // l_ICAllocation."Bal. Dimension Set ID" := DimMgmt.GetDimensionSetID(TempDimSetEntry2);
+                                    l_ICAllocation.Validate("Bal. Dimension Set ID", DimMgmt.GetDimensionSetID(TempDimSetEntry2));
+                                    l_ICAllocation.Insert();
+
+                                    NextLineNo += 10000;
+
+                                end;
+
+                            until l_ICAccMapping.Next() = 0;
+                        end;
+                    end;
                 end;
             }
         }
