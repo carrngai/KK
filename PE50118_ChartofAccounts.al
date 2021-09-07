@@ -17,12 +17,33 @@ pageextension 50118 "Chart of Accounts Ext" extends "Chart of Accounts"
         modify(Balance) { Visible = false; }
         modify("Balance at Date") { Visible = true; }
         modify("Direct Posting") { Visible = true; }
-
     }
 
     actions
     {
         // Add changes to page actions here
+        modify("General Journal") { Promoted = false; }
+        addbefore("Close Income Statement")
+        {
+            action(ARAPNetting)
+            {
+                ApplicationArea = All;
+                RunObject = report ARAPNetting;
+                Caption = 'AR/AP Netting';
+                Promoted = true;
+                PromotedCategory = Process;
+                Image = MoveNegativeLines;
+            }
+            action(ExchNetting)
+            {
+                ApplicationArea = All;
+                RunObject = report "Exch. Rate Gain/Loss Netting";
+                Caption = 'Exch. Rate Gain/Loss Netting';
+                Promoted = true;
+                PromotedCategory = Process;
+                Image = MoveNegativeLines;
+            }
+        }
     }
 
     var

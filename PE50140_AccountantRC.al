@@ -27,6 +27,8 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify("Calc. and Pos&t VAT Settlement") { Visible = false; }
         modify(Action60) { Visible = false; }
         modify("Cash Flow") { Visible = false; }
+        modify("Intrastat &Journal") { Visible = false; }
+        modify("Payment Reconciliation Journals") { Visible = false; }
 
         modify("G/L Journal Entry") { Visible = true; }
         modify("Payment Journal Entry") { Visible = true; }
@@ -139,6 +141,11 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
                 {
                     ApplicationArea = All;
                     RunObject = page "IC Transaction Account Mapping";
+                }
+                action("Business Unit")
+                {
+                    ApplicationArea = All;
+                    RunObject = page "Business Unit List";
                 }
             }
         }

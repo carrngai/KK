@@ -29,12 +29,6 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
             {
                 ToolTip = 'Specifies the value of the IC Path Code field';
                 ApplicationArea = All;
-
-                trigger OnValidate()
-                begin
-                    EnableICALlocationAction;
-                    CurrPage.SaveRecord();
-                end;
             }
             field("IC Bal. Account Type"; Rec."IC Bal. Account Type") //G014
             {
@@ -45,10 +39,56 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
             {
                 ToolTip = 'Specifies the value of the IC Bal. Account No. field';
                 ApplicationArea = All;
+
+                trigger OnLookup(var Text: Text): Boolean
+                var
+                    ICPathDetail: Record "IC Transaction Path Details";
+                    Company2: Code[50];
+                    GLAcc2: Record "G/L Account";
+                    GLList2: Page "G/L Account List";
+                    BankAcc2: Record "Bank Account";
+                    BankList2: Page "Bank Account List";
+                begin
+                    ICPathDetail.Reset();
+                    ICPathDetail.SetRange("Path Code", Rec."IC Path Code");
+                    if ICPathDetail.FindLast() then
+                        Company2 := ICPathDetail."To Company"
+                    else
+                        Error('IC Path Detail not found');
+
+                    IF Rec."IC Bal. Account Type" = Rec."IC Bal. Account Type"::"Bank Account" then begin
+                        BankAcc2.ChangeCompany(Company2);
+                        BankList2.ChangeToCompany(Company2);
+                        BankList2.SetTableView(BankAcc2);
+                        BankList2.Editable := false;
+                        BankList2.LookupMode := true;
+                        if BankList2.RunModal() = Action::LookupOK then begin
+                            BankList2.GetRecord(BankAcc2);
+                            Rec."IC Bal. Account No." := BankAcc2."No.";
+                            ICEnable := true;
+                        end;
+                    end;
+
+                    IF Rec."IC Bal. Account Type" = Rec."IC Bal. Account Type"::"G/L Account" then begin
+                        GLAcc2.ChangeCompany(Company2);
+                        GLAcc2.SetRange("Account Type", GLAcc2."Account Type"::Posting);
+                        GLAcc2.SetRange("Direct Posting", true);
+                        GLList2.ChangeToCompany(Company2);
+                        GLList2.Editable := false;
+                        GLList2.SetTableView(GLAcc2);
+                        GLList2.LookupMode := true;
+                        if GLList2.RunModal() = Action::LookupOK then begin
+                            GLList2.GetRecord(GLAcc2);
+                            Rec."IC Bal. Account No." := GLAcc2."No.";
+                            ICEnable := true;
+                        end;
+                    end;
+                end;
+
                 trigger OnValidate()
                 begin
-                    EnableICALlocationAction;
-                    CurrPage.SaveRecord();
+                    EnableICALlocationAction();
+                    CurrPage.Update(true);
                 end;
             }
 
@@ -56,7 +96,7 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
             {
                 ToolTip = 'Specifies the value of the Bal. Account Type field';
                 ApplicationArea = All;
-                Editable = false;
+                // Editable = false;
             }
             field("Bal. Account No._"; Rec."Bal. Account No.")
             {
@@ -141,7 +181,7 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
 
     local procedure EnableICALlocationAction()
     begin
-        if (Rec."IC Path Code" <> '') and (Rec."IC Bal. Account No." <> '') then
+        if (Rec."IC Bal. Account No." <> '') then
             ICEnable := true
         else
             ICEnable := false;

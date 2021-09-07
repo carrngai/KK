@@ -3,6 +3,7 @@ pageextension 50111 "Business Unit List Ext" extends "Business Unit List"
     layout
     {
         // Add changes to page layout here
+        modify(Name) { Visible = true; }
         addafter("Last Run")
         {
 
@@ -44,15 +45,20 @@ pageextension 50111 "Business Unit List Ext" extends "Business Unit List"
                 ApplicationArea = all;
                 Image = Calculate;
                 RunObject = report "Calculate BU Average Rate";
+                Promoted = true;
+                PromotedCategory = Process;
             }
         }
         addafter("Run Consolidation")
         {
-            action("Run Consolidation Ext")
+            action("Run Consolidation_")
             {
                 ApplicationArea = all;
                 Image = ImportDatabase;
                 RunObject = report "Import Conso. from DB Ext";
+                Caption = 'Run Conslidation';
+                Promoted = true;
+                PromotedCategory = Process;
             }
         }
         modify("Run Consolidation")

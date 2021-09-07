@@ -57,6 +57,8 @@ pageextension 50110 "Business Unit Card Ext" extends "Business Unit Card"
                 ApplicationArea = all;
                 Image = Calculate;
                 RunObject = report "Calculate BU Average Rate";
+                Promoted = true;
+                PromotedCategory = Category4;
             }
         }
         addafter("Run Consolidation")
