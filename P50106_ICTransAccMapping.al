@@ -5,7 +5,7 @@ page 50106 "IC Transaction Account Mapping"
     ApplicationArea = All;
     UsageCategory = Lists;
     SourceTable = "IC Transaction Account Mapping";
-    SourceTableView = sorting("Path Code", "Account Type", "Account No.", "Bal. Account Type", "Bal. Account No.") order(ascending);
+    SourceTableView = sorting("Path Code", "Bal. Account Type", "Bal. Account No.") order(ascending);
 
     layout
     {
@@ -24,16 +24,6 @@ page 50106 "IC Transaction Account Mapping"
                     ToolTip = 'Specifies the value of the Path Code field';
                     ApplicationArea = All;
                 }
-                field("Account Type"; Rec."Account Type")
-                {
-                    ToolTip = 'Specifies the value of the Account Type field';
-                    ApplicationArea = All;
-                }
-                field("Account No."; Rec."Account No.")
-                {
-                    ToolTip = 'Specifies the value of the Account No. field';
-                    ApplicationArea = All;
-                }
                 field("Bal. Account Type"; Rec."Bal. Account Type")
                 {
                     ToolTip = 'Specifies the value of the Bal. Account Type field';
@@ -48,19 +38,11 @@ page 50106 "IC Transaction Account Mapping"
         }
         area(Factboxes)
         {
-            part(DimensionFB; "IC Trans. Acc. Dim. FactBox")
-            {
-                ApplicationArea = all;
-                Caption = 'Dimension';
-                SubPageLink = ID = field(ID),
-                                "Type ID" = const(1);
-            }
             part(BalDimensionFB; "IC Trans. Acc. Dim. FactBox")
             {
                 ApplicationArea = all;
                 Caption = 'Bal. Dimension';
-                SubPageLink = ID = field(ID),
-                                "Type ID" = const(2);
+                SubPageLink = ID = field(ID);
             }
         }
     }
@@ -69,18 +51,6 @@ page 50106 "IC Transaction Account Mapping"
     {
         area(Navigation)
         {
-            action(Dimensions)
-            {
-                AccessByPermission = TableData Dimension = R;
-                ApplicationArea = Dimensions;
-                Caption = 'Dimensions';
-                Image = Dimensions;
-                Promoted = true;
-                PromotedCategory = Process;
-                RunObject = page "IC Trans. Account Mapping Dim.";
-                RunPageLink = "ID" = field(ID),
-                            "Type ID" = const(1);
-            }
             action("Bal. Dimensions")
             {
                 AccessByPermission = TableData Dimension = R;
@@ -90,8 +60,7 @@ page 50106 "IC Transaction Account Mapping"
                 Promoted = true;
                 PromotedCategory = Process;
                 RunObject = page "IC Trans. Account Mapping Dim.";
-                RunPageLink = "ID" = field(ID),
-                            "Type ID" = const(2);
+                RunPageLink = "ID" = field(ID);
             }
 
         }

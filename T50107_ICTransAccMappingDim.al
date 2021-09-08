@@ -9,13 +9,7 @@ table 50107 "IC Trans. Account Mapping Dim."
         {
             DataClassification = ToBeClassified;
         }
-        field(50101; "Type ID"; Integer)
-        {
-            DataClassification = ToBeClassified;
-            //1 for Account Type
-            //2 for Bal. Account Type
-        }
-        field(50102; "Dimension Code"; Code[20])
+        field(50101; "Dimension Code"; Code[20])
         {
             Caption = 'Dimension Code';
             NotBlank = true;
@@ -28,7 +22,7 @@ table 50107 "IC Trans. Account Mapping Dim."
                     Validate("Dimension Value Code", '');
             end;
         }
-        field(50103; "Dimension Value Code"; Code[20])
+        field(50102; "Dimension Value Code"; Code[20])
         {
             Caption = 'Dimension Value Code';
             TableRelation = "Dimension Value".Code WHERE("Dimension Code" = FIELD("Dimension Code"));
@@ -42,7 +36,7 @@ table 50107 "IC Trans. Account Mapping Dim."
 
     keys
     {
-        key(Key1; "ID", "Type ID", "Dimension Code")
+        key(Key1; "ID", "Dimension Code")
         {
             Clustered = true;
         }

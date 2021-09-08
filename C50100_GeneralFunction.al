@@ -119,10 +119,6 @@ codeunit 50100 "General Function"
             SetRange("Journal Batch Name", "Journal Batch Name");
             Find('-');
             repeat
-                //Check IC Bal. Account No.
-                if (GenJournalLine."IC Path Code" <> '') AND ("IC Bal. Account No." = '') then
-                    Error('Line No. %1 : IC Bal. Account No. must have a value.', GenJournalLine."Line No.");
-
                 //Check Allocated Amount
                 TotalAllocatedAmt := 0;
                 if (GenJournalLine."IC Path Code" <> '') then begin
@@ -136,28 +132,8 @@ codeunit 50100 "General Function"
                         until ICAllocation.Next() = 0;
                         if TotalAllocatedAmt <> GenJournalLine.Amount then
                             Error('Line No. %1 : Allocated Amount(%2) is not equal to Journal Line Amount(%3).', GenJournalLine."Line No.", TotalAllocatedAmt, GenJournalLine.Amount);
-                    end; // there can be no allocation
+                    end;
                 end;
-
-                //Check IC direction
-                if (GenJournalLine."IC Path Code" <> '') then begin
-                    l_GenJnlLine.Reset();
-                    l_GenJnlLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
-                    l_GenJnlLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
-                    l_GenJnlLine.SetRange("Document No.", GenJournalLine."Document No.");
-                    l_GenJnlLine.SetFilter("Line No.", '<>%1', GenJournalLine."Line No.");
-                    if l_GenJnlLine.FindFirst() then
-                        if (l_GenJnlLine."Account Type" = l_GenJnlLine."Account Type"::Customer) then begin
-                            GenJournalLine."IC From Customer" := true;
-                            GenJournalLine.Modify();
-                        end else
-                            if (l_GenJnlLine."Account Type" = l_GenJnlLine."Account Type"::Vendor) then begin
-                                GenJournalLine."IC From Customer" := false;
-                                GenJournalLine.Modify();
-                            end else
-                                Error('Line No. %1 : Account Type must be Customer/Vendor.', l_GenJnlLine."Line No.");
-                end;
-
             until Next() = 0;
         end;
     end;
@@ -201,17 +177,17 @@ codeunit 50100 "General Function"
                                 ICPartner.ChangeCompany(AtCompany);
                                 ICPartner.SetRange("Inbox Details", FromCompany);
                                 if ICPartner.FindFirst() then
-                                    if TempGenJournalLine."IC From Customer" then
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", TempGenJournalLine.Amount, 0, true, AtCompany)
+                                    if TempGenJournalLine."Account Type" = TempGenJournalLine."Account Type"::Customer then
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", -TempGenJournalLine.Amount, 0, false, AtCompany)
                                     else
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", TempGenJournalLine.Amount, 0, true, AtCompany);
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", -TempGenJournalLine.Amount, 0, false, AtCompany);
                                 //IC_Line2
                                 ICPartner.SetRange("Inbox Details", NextCompany);
                                 if ICPartner.FindFirst() then
-                                    if TempGenJournalLine."IC From Customer" then
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", -TempGenJournalLine.Amount, 0, true, AtCompany)
+                                    if TempGenJournalLine."Account Type" = TempGenJournalLine."Account Type"::Customer then
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", TempGenJournalLine.Amount, 0, false, AtCompany)
                                     else
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", -TempGenJournalLine.Amount, 0, true, AtCompany);
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", TempGenJournalLine.Amount, 0, false, AtCompany);
 
                                 FromCompany := AtCompany;
                             end else begin
@@ -220,10 +196,10 @@ codeunit 50100 "General Function"
                                 ICPartner.ChangeCompany(AtCompany);
                                 ICPartner.SetRange("Inbox Details", FromCompany);
                                 if ICPartner.FindFirst() then
-                                    if TempGenJournalLine."IC From Customer" then
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", TempGenJournalLine.Amount, 0, true, AtCompany)
+                                    if TempGenJournalLine."Account Type" = TempGenJournalLine."Account Type"::Customer then
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", -TempGenJournalLine.Amount, 0, false, AtCompany)
                                     else
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", TempGenJournalLine.Amount, 0, true, AtCompany);
+                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Customer, ICPartner."Customer No.", -TempGenJournalLine.Amount, 0, false, AtCompany);
 
                                 //Allocation Line         
                                 ICAllocation.Reset();
@@ -232,32 +208,9 @@ codeunit 50100 "General Function"
                                 ICAllocation.SetRange("Journal Line No.", TempGenJournalLine."Line No.");
                                 if ICAllocation.FindSet() then begin
                                     repeat
-                                        ICEliminate := false;
-                                        // If ICTransMapping.Get(TempGenJournalLine."IC Path Code",
-                                        //                         TempGenJournalLine."Account Type",
-                                        //                         TempGenJournalLine."Account No.",
-                                        //                         TempGenJournalLine."Dimension Set ID",
-                                        //                         TempGenJournalLine."IC Bal. Account Type",
-                                        //                         TempGenJournalLine."IC Bal. Account No.",
-                                        //                         ICAllocation."Bal. Dimension Set ID") then
-                                        //     ICEliminate := ICTransMapping.Elimination;
-
-                                        InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."IC Bal. Account Type", TempGenJournalLine."IC Bal. Account No.", -ICAllocation.Amount, ICAllocation."Bal. Dimension Set ID", ICEliminate, AtCompany);
+                                        InsertGenJnlLine_Company(TempGenJournalLine, ICAllocation."IC Bal. Account Type", ICAllocation."IC Bal. Account No.", ICAllocation.Amount, ICAllocation."Bal. Dimension Set ID", false, AtCompany);
                                     until ICAllocation.Next() = 0;
                                     ICAllocation.DeleteAll();
-                                end else begin
-                                    //If there is no allocation
-                                    ICEliminate := false;
-                                    // If ICTransMapping.Get(TempGenJournalLine."IC Path Code",
-                                    //                         TempGenJournalLine."Account Type",
-                                    //                         TempGenJournalLine."Account No.",
-                                    //                         TempGenJournalLine."Dimension Set ID",
-                                    //                         TempGenJournalLine."IC Bal. Account Type",
-                                    //                         TempGenJournalLine."IC Bal. Account No.",
-                                    //                         TempGenJournalLine."Dimension Set ID") then
-                                    //     ICEliminate := ICTransMapping.Elimination;
-
-                                    InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."IC Bal. Account Type", TempGenJournalLine."IC Bal. Account No.", -TempGenJournalLine.Amount, TempGenJournalLine."Dimension Set ID", ICEliminate, AtCompany);
                                 end;
                             end;
                         until ICTransPathDetail.Next() = 0;

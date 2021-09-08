@@ -12,10 +12,10 @@ report 50107 "Calculate BU Average Rate"
             var
                 l_BU: Record "Business Unit";
             begin
-                l_BU.CopyFilters("Business Unit");
-                l_BU.SetRange("Currency Exchange Rate Table", "Currency Exchange Rate Table"::"Business Unit");
-                if l_BU.FindSet() then
-                    Error('All BU(s) must get Currency Exchange Rate Table from current(Local) company');
+                // l_BU.CopyFilters("Business Unit");
+                // l_BU.SetRange("Currency Exchange Rate Table", "Currency Exchange Rate Table"::"Business Unit");
+                // if l_BU.FindSet() then
+                //     Error('All BU(s) must get Currency Exchange Rate Table from current(Local) company');
 
                 CheckConsolidDates(ConsolidStartDate, ConsolidEndDate);
             end;

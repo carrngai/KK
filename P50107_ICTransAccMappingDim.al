@@ -16,12 +16,6 @@ page 50107 "IC Trans. Account Mapping Dim."
                     ApplicationArea = all;
                     Visible = false;
                 }
-                field("Type ID"; Rec."Type ID")
-                {
-                    ApplicationArea = all;
-                    Visible = false;
-                    ToolTip = 'Input 1 for Account Type and 2 for Bal. Account Type';
-                }
                 field("Dimension Code"; Rec."Dimension Code")
                 {
                     ApplicationArea = all;

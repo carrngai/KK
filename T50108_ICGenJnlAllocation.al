@@ -24,8 +24,103 @@ table 50108 "IC Gen. Jnl. Allocation"
         {
             Caption = 'Line No.';
         }
+        field(5; "IC Bal. Account Type"; Enum "Gen. Journal Account Type") //G014
+        {
+            DataClassification = ToBeClassified;
+            ValuesAllowed = 0, 3;
 
-        field(5; Amount; Decimal)
+            trigger OnValidate()
+            begin
+                if "IC Bal. Account Type" <> xRec."IC Bal. Account Type" then
+                    "IC Bal. Account No." := '';
+            end;
+        }
+        field(6; "IC Bal. Account No."; Code[20]) //G014
+        {
+            DataClassification = ToBeClassified;
+            // TableRelation =
+            // IF ("IC Bal. Account Type" = CONST("G/L Account")) "G/L Account" WHERE("Account Type" = CONST(Posting), Blocked = CONST(false), "Direct Posting" = const(true))
+            // ELSE
+            // IF ("IC Bal. Account Type" = CONST("Bank Account")) "Bank Account";
+
+            trigger OnLookup()
+            var
+                ICPathDetail: Record "IC Transaction Path Details";
+                l_GenJnlLine: Record "Gen. Journal Line";
+                Company2: Code[50];
+                GLAcc2: Record "G/L Account";
+                GLList2: Page "G/L Account List";
+                BankAcc2: Record "Bank Account";
+                BankList2: Page "Bank Account List";
+            begin
+                l_GenJnlLine.Get("Journal Template Name", "Journal Batch Name", "Journal Line No.");
+
+                ICPathDetail.Reset();
+                ICPathDetail.SetRange("Path Code", l_GenJnlLine."IC Path Code");
+                if ICPathDetail.FindLast() then
+                    Company2 := ICPathDetail."To Company"
+                else
+                    Error('IC Path Detail not found');
+
+                IF Rec."IC Bal. Account Type" = Rec."IC Bal. Account Type"::"Bank Account" then begin
+                    BankAcc2.ChangeCompany(Company2);
+                    BankList2.ChangeToCompany(Company2);
+                    BankList2.SetTableView(BankAcc2);
+                    BankList2.Editable := false;
+                    BankList2.LookupMode := true;
+                    if BankList2.RunModal() = Action::LookupOK then begin
+                        BankList2.GetRecord(BankAcc2);
+                        Rec."IC Bal. Account No." := BankAcc2."No.";
+                    end;
+                end;
+
+                IF Rec."IC Bal. Account Type" = Rec."IC Bal. Account Type"::"G/L Account" then begin
+                    GLAcc2.ChangeCompany(Company2);
+                    GLAcc2.SetRange("Account Type", GLAcc2."Account Type"::Posting);
+                    GLAcc2.SetRange("Direct Posting", true);
+                    GLList2.ChangeToCompany(Company2);
+                    GLList2.Editable := false;
+                    GLList2.SetTableView(GLAcc2);
+                    GLList2.LookupMode := true;
+                    if GLList2.RunModal() = Action::LookupOK then begin
+                        GLList2.GetRecord(GLAcc2);
+                        Rec."IC Bal. Account No." := GLAcc2."No.";
+                    end;
+                end;
+            end;
+
+            trigger OnValidate()
+            var
+                ICPathDetail: Record "IC Transaction Path Details";
+                l_GenJnlLine: Record "Gen. Journal Line";
+                Company2: Code[50];
+                GLAcc2: Record "G/L Account";
+                BankAcc2: Record "Bank Account";
+
+            begin
+                l_GenJnlLine.Get("Journal Template Name", "Journal Batch Name", "Journal Line No.");
+
+                ICPathDetail.Reset();
+                ICPathDetail.SetRange("Path Code", l_GenJnlLine."IC Path Code");
+                if ICPathDetail.FindLast() then
+                    Company2 := ICPathDetail."To Company"
+                else
+                    Error('IC Path Detail not found');
+
+                IF Rec."IC Bal. Account Type" = Rec."IC Bal. Account Type"::"Bank Account" then begin
+                    BankAcc2.ChangeCompany(Company2);
+                    if NOT BankAcc2.Get(Rec."IC Bal. Account No.") then
+                        Error('Bank Account %1 does not exisit in Company %2', Rec."IC Bal. Account No.", Company2)
+                end;
+
+                IF Rec."IC Bal. Account Type" = Rec."IC Bal. Account Type"::"G/L Account" then begin
+                    GLAcc2.ChangeCompany(Company2);
+                    if NOT GLAcc2.Get(Rec."IC Bal. Account No.") then
+                        Error('G/L Account %1 does not exisit in Company %2', Rec."IC Bal. Account No.", Company2);
+                end;
+            end;
+        }
+        field(7; Amount; Decimal)
         {
             Caption = 'Amount';
 
@@ -35,7 +130,7 @@ table 50108 "IC Gen. Jnl. Allocation"
             end;
         }
 
-        field(6; "Bal. Dimension Set ID"; Integer)
+        field(8; "Bal. Dimension Set ID"; Integer)
         {
             Caption = 'Bal. Dimension Set ID';
             Editable = false;
@@ -51,7 +146,7 @@ table 50108 "IC Gen. Jnl. Allocation"
                 DimMgt.UpdateGlobalDimFromDimSetID("Bal. Dimension Set ID", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
             end;
         }
-        field(7; "Shortcut Dimension 1 Code"; Code[20])
+        field(9; "Shortcut Dimension 1 Code"; Code[20])
         {
             CaptionClass = '1,2,1';
             Caption = 'Shortcut Dimension 1 Code';
@@ -63,7 +158,7 @@ table 50108 "IC Gen. Jnl. Allocation"
                 Modify;
             end;
         }
-        field(8; "Shortcut Dimension 2 Code"; Code[20])
+        field(10; "Shortcut Dimension 2 Code"; Code[20])
         {
             CaptionClass = '1,2,2';
             Caption = 'Shortcut Dimension 2 Code';
