@@ -29,6 +29,25 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
             {
                 ToolTip = 'Specifies the value of the IC Path Code field';
                 ApplicationArea = All;
+
+                trigger OnLookup(var Text: Text): Boolean
+                var
+                    ICPath: Record "IC Transaction Path";
+                    ICPath_: Page "IC Transaction Path";
+                begin
+                    ICPath.SetFilter("From Company", CompanyName);
+                    ICPath_.SetTableView(ICPath);
+                    ICPath_.LookupMode := true;
+                    if ICPath_.RunModal() = Action::LookupOK then begin
+                        ICPath_.GetRecord(ICPath);
+                        Rec."IC Path Code" := ICPath."Path Code";
+                        if Rec.CheckICPathCode(Rec) then begin
+                            Rec.InsertICDefaultLine(Rec);
+                            Rec.Validate("IC Path Code", ICPath."Path Code"); //trigger InsertICAllocation
+                        end;
+                    end;
+                    CurrPage.Update();
+                end;
             }
 
             field("Bal. Account Type_"; Rec."Bal. Account Type")

@@ -195,7 +195,7 @@ report 50109 ARAPNetting
                                 GenJnlLine.Validate("Bal. Account No.", l_VendPostGrp."Payables Account");
                                 GenJnlLine.Validate(Amount, l_SumAR);
                             end;
-                            GenJnlLine.Description := StrSubstNo('NET-ARAPting %1/%2 on %3-Reverse', l_SumAR, l_SumAP, AsofDate);
+                            GenJnlLine.Description := StrSubstNo('ARAP Netting %1/%2 on %3-Reverse', l_SumAR, l_SumAP, AsofDate);
                             GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntry, Company.Name);
                             GenJnlLine.Modify();
                             NextLineNo := NextLineNo + 10000;
