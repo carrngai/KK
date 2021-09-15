@@ -1,4 +1,4 @@
-pageextension 50135 "Stand. Gen. Jnl. Subform Ext" extends "Standard Gen. Journal Subform"
+pageextension 50132 "Stand. Gen. Jnl. Subform Ext" extends "Standard Gen. Journal Subform"
 {
     layout
     {

@@ -1,7 +1,7 @@
 page 50108 "IC Gen. Jnl. Allocations"
 {
     AutoSplitKey = true;
-    Caption = 'Allocations';
+    Caption = 'IC Allocations';
     DataCaptionFields = "Journal Batch Name";
     PageType = Worksheet;
     PromotedActionCategories = 'New,Process,Report,Line,Account';
@@ -18,11 +18,13 @@ page 50108 "IC Gen. Jnl. Allocations"
                 {
                     ToolTip = 'Specifies the value of the IC Bal. Account Type field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("IC Bal. Account No."; Rec."IC Bal. Account No.")
                 {
                     ToolTip = 'Specifies the value of the IC Bal. Account No. field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
 
                 field(Amount; Rec.Amount)

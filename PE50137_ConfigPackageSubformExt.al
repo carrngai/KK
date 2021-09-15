@@ -1,4 +1,4 @@
-pageextension 50142 ConfigPackageSubformExt extends "Config. Package Subform"
+pageextension 50137 ConfigPackageSubformExt extends "Config. Package Subform"
 {
     actions
     {
@@ -8,7 +8,7 @@ pageextension 50142 ConfigPackageSubformExt extends "Config. Package Subform"
             {
                 action("Import from Company")
                 {
-                    Caption = '2. Import Package Records from Company';
+                    Caption = 'Import Package Records from Company';
                     Promoted = true;
                     Image = Import;
                     PromotedIsBig = true;
@@ -22,7 +22,7 @@ pageextension 50142 ConfigPackageSubformExt extends "Config. Package Subform"
                         CompanyTEC: Record "Company TEC";
                     begin
                         CurrPage.SetSelectionFilter(ConfigPackageTable);
-                        ConfigPackage.Get("Package Code");
+                        ConfigPackage.Get(Rec."Package Code");
                         CompanyTEC.Reset();
                         CompanyTEC.SetRange(Select, true);
 
@@ -34,9 +34,9 @@ pageextension 50142 ConfigPackageSubformExt extends "Config. Package Subform"
                     end;
 
                 }
-                action("Export to Selected Company")
+                action("Apply to Selected Company")
                 {
-                    Caption = '3. Export to Selected Companies';
+                    Caption = 'Apply to Selected Companies';
                     Promoted = true;
                     PromotedIsBig = true;
                     Image = Export;
@@ -54,7 +54,7 @@ pageextension 50142 ConfigPackageSubformExt extends "Config. Package Subform"
                     begin
                         //Error('hi');
                         CurrPage.SetSelectionFilter(ConfigPackageTable2);
-                        ConfigPackage.Get("Package Code");
+                        ConfigPackage.Get(Rec."Package Code");
                         ConfigPackage.TESTFIELD(Code);
                         IF Confirm(STRSUBSTNO(Text003, ConfigPackage.Code), TRUE) THEN BEGIN
                             CompanyTEC.Reset();

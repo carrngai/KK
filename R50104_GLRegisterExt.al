@@ -152,6 +152,9 @@ report 50104 "G/L Register Ext"
                 column(G_L_Entry_Amount_Control41Caption; G_L_Entry_Amount_Control41CaptionLbl)
                 {
                 }
+                column(ICPathCode_GLEntry; "IC Path Code")
+                {
+                }
 
                 dataitem("Purch. Inv. Line"; "Purch. Inv. Line")
                 {

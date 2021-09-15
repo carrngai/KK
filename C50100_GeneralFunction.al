@@ -78,6 +78,7 @@ codeunit 50100 "General Function"
     begin
         GLEntry."Conso. Exch. Adj." := GenJournalLine."Conso. Exch. Adj."; //G017
         GLEntry."Netting Source No." := GenJournalLine."Netting Source No."; //G025
+        GLEntry."IC Path Code" := GenJournalLine."IC Path Code"; //G014
         GLEntry."Description 2" := GenJournalLine."Description 2";
     end;
     //G017--
@@ -111,6 +112,7 @@ codeunit 50100 "General Function"
     var
         ICAllocation: Record "IC Gen. Jnl. Allocation";
         TotalAllocatedAmt: Decimal;
+        ICTransPath: Record "IC Transaction Path";
         l_GenJnlLine: Record "Gen. Journal Line";
     begin
         with GenJournalLine do begin
@@ -119,9 +121,9 @@ codeunit 50100 "General Function"
             SetRange("Journal Batch Name", "Journal Batch Name");
             Find('-');
             repeat
-                //Check Allocated Amount
-                TotalAllocatedAmt := 0;
                 if (GenJournalLine."IC Path Code" <> '') then begin
+                    //Check Allocated Amount
+                    TotalAllocatedAmt := 0;
                     ICAllocation.Reset();
                     ICAllocation.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
                     ICAllocation.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
@@ -133,7 +135,21 @@ codeunit 50100 "General Function"
                         if TotalAllocatedAmt <> GenJournalLine.Amount then
                             Error('Line No. %1 : Allocated Amount(%2) is not equal to Journal Line Amount(%3).', GenJournalLine."Line No.", TotalAllocatedAmt, GenJournalLine.Amount);
                     end;
+
+                    //Check Bal. Account and IC Allocation Bal. Account same as setup
+                    ICTransPath.Get(GenJournalLine."IC Path Code");
+                    l_GenJnlLine.Reset();
+                    l_GenJnlLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
+                    l_GenJnlLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
+                    l_GenJnlLine.SetRange("Document No.", GenJournalLine."Document No.");
+                    l_GenJnlLine.SetRange("Account Type", ICTransPath."Account Type");
+                    l_GenJnlLine.SetRange("Account No.", ICTransPath."Account No.");
+                    if not l_GenJnlLine.FindSet() then
+                        Error('Document No. %1: %2 %3 must be the balance account for IC Path %4', GenJournalLine."Document No.", ICTransPath."Account Type", ICTransPath."Account No.", GenJournalLine."IC Path Code");
                 end;
+
+
+
             until Next() = 0;
         end;
     end;

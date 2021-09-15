@@ -1,5 +1,7 @@
-pageextension 50131 ConfigPackageCardTEC extends "Config. Package Card"
+pageextension 50136 ConfigPackageCardTEC extends "Config. Package Card"
 {
+    PromotedActionCategories = 'New,Process,Report,Manage,Package,Master Company Function';
+
     layout
     {
         addlast(General)
@@ -17,34 +19,13 @@ pageextension 50131 ConfigPackageCardTEC extends "Config. Package Card"
         {
             group("Master Company Function")
             {
-                action("Select Companies")
-                {
-                    Caption = '1. Select Copy To Companies';
-                    Promoted = true;
-                    Image = Company;
-                    PromotedIsBig = true;
-                    PromotedCategory = Category4;
-                    ApplicationArea = all;
-                    trigger OnAction()
-                    var
-                        SelectCompanyTEC: Page SelectCompanyTEC;
-                        CompanyTEC: Record "Company TEC";
-                    begin
-                        SelectCompanyTEC.RUNMODAL;
-
-                    end;
-
-
-                }
-
-
                 action("Import from Company")
                 {
-                    Caption = '2. Import Package Records from Company';
+                    Caption = 'Import Package Records from Company';
                     Promoted = true;
                     Image = Import;
                     PromotedIsBig = true;
-                    PromotedCategory = Category4;
+                    PromotedCategory = Category6;
                     ApplicationArea = all;
                     trigger OnAction()
                     var
@@ -62,13 +43,34 @@ pageextension 50131 ConfigPackageCardTEC extends "Config. Package Card"
                     end;
 
                 }
-                action("Export to Selected Company")
+
+                action("Select Companies")
                 {
-                    Caption = '3. Export to Selected Companies';
+                    Caption = 'Select Copy To Companies';
+                    Promoted = true;
+                    Image = Company;
+                    PromotedIsBig = true;
+                    PromotedCategory = Category6;
+                    ApplicationArea = all;
+                    trigger OnAction()
+                    var
+                        SelectCompanyTEC: Page SelectCompanyTEC;
+                        CompanyTEC: Record "Company TEC";
+                    begin
+                        SelectCompanyTEC.RUNMODAL;
+
+                    end;
+
+
+                }
+
+                action("Apply to Selected Company")
+                {
+                    Caption = 'Apply to Selected Companies';
                     Promoted = true;
                     PromotedIsBig = true;
                     Image = Export;
-                    PromotedCategory = Category4;
+                    PromotedCategory = Category6;
                     ApplicationArea = all;
                     trigger OnAction()
                     var
@@ -120,13 +122,13 @@ pageextension 50131 ConfigPackageCardTEC extends "Config. Package Card"
                     end;
 
                 }
-                action("Apply Currency Exchange Rates")
+                action("Apply Exch. Rate Master to Selected Company")
                 {
-                    Caption = '4. Apply Currency Exchange Rates';
+                    Caption = 'Apply Exch. Rate Master to Selected Companies';
                     Promoted = true;
                     PromotedIsBig = true;
                     Image = Export;
-                    PromotedCategory = Category4;
+                    PromotedCategory = Category6;
                     ApplicationArea = all;
                     trigger OnAction()
                     var

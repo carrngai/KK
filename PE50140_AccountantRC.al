@@ -174,5 +174,18 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
             }
         }
 
+        addfirst(SetupAndExtensions)
+        {
+            action(Companies)
+            {
+                ApplicationArea = all;
+                RunObject = page Companies;
+            }
+            action("Config. Packages")
+            {
+                ApplicationArea = all;
+                RunObject = page "Config. Packages";
+            }
+        }
     }
 }

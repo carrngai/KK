@@ -1,4 +1,4 @@
-pageextension 50132 "Vendor List Ext" extends "Vendor List"
+pageextension 50131 "Vendor List Ext" extends "Vendor List"
 {
     layout
     {

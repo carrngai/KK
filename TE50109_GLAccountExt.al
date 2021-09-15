@@ -5,13 +5,14 @@ tableextension 50109 "G/L Account Ext" extends "G/L Account"
         // Add changes to table fields here
         field(50100; "Netting Type"; Option) //G025
         {
-            OptionMembers = " ","AR","AP","Exch. Rate Gain","Exch. Rate Loss";
+            OptionMembers = " ","AR","AP","Exch. Rate Gain","Exch. Rate Loss","Unrealized Exch. Rate Gain","Unrealized Exch. Rate Loss";
 
             trigger OnValidate()
             var
                 l_COA: Record "G/L Account";
             begin
-                if ("Netting Type" = "Netting Type"::"Exch. Rate Gain") or ("Netting Type" = "Netting Type"::"Exch. Rate Loss") then begin
+                if ("Netting Type" = "Netting Type"::"Exch. Rate Gain") or ("Netting Type" = "Netting Type"::"Exch. Rate Loss") or
+                ("Netting Type" = "Netting Type"::"Unrealized Exch. Rate Gain") or ("Netting Type" = "Netting Type"::"Unrealized Exch. Rate Loss") then begin
                     l_COA.Reset();
                     l_COA.SetRange("Netting Type", "Netting Type");
                     if l_COA.FindSet() then

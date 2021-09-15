@@ -11,6 +11,241 @@
       <rd:DataSourceID>e2a6ee56-494c-419f-8b71-474bffb4bb50</rd:DataSourceID>
     </DataSource>
   </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+      <Fields>
+        <Field Name="COMPANYNAME">
+          <DataField>COMPANYNAME</DataField>
+        </Field>
+        <Field Name="LCYCode">
+          <DataField>LCYCode</DataField>
+        </Field>
+        <Field Name="ShowLines">
+          <DataField>ShowLines</DataField>
+        </Field>
+        <Field Name="G_L_Register__TABLECAPTION__________GLRegFilter">
+          <DataField>G_L_Register__TABLECAPTION__________GLRegFilter</DataField>
+        </Field>
+        <Field Name="GLRegFilter">
+          <DataField>GLRegFilter</DataField>
+        </Field>
+        <Field Name="G_L_Register__No__">
+          <DataField>G_L_Register__No__</DataField>
+        </Field>
+        <Field Name="G_L_RegisterCaption">
+          <DataField>G_L_RegisterCaption</DataField>
+        </Field>
+        <Field Name="CurrReport_PAGENOCaption">
+          <DataField>CurrReport_PAGENOCaption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Posting_Date_Caption">
+          <DataField>G_L_Entry__Posting_Date_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Document_Type_Caption">
+          <DataField>G_L_Entry__Document_Type_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Document_No__Caption">
+          <DataField>G_L_Entry__Document_No__Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__G_L_Account_No__Caption">
+          <DataField>G_L_Entry__G_L_Account_No__Caption</DataField>
+        </Field>
+        <Field Name="GLAcc_NameCaption">
+          <DataField>GLAcc_NameCaption</DataField>
+        </Field>
+        <Field Name="G_L_Entry_DescriptionCaption">
+          <DataField>G_L_Entry_DescriptionCaption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__VAT_Amount_Caption">
+          <DataField>G_L_Entry__VAT_Amount_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Posting_Type_Caption">
+          <DataField>G_L_Entry__Gen__Posting_Type_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Bus__Posting_Group_Caption">
+          <DataField>G_L_Entry__Gen__Bus__Posting_Group_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Prod__Posting_Group_Caption">
+          <DataField>G_L_Entry__Gen__Prod__Posting_Group_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry_AmountCaption">
+          <DataField>G_L_Entry_AmountCaption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Entry_No__Caption">
+          <DataField>G_L_Entry__Entry_No__Caption</DataField>
+        </Field>
+        <Field Name="G_L_Register__No__Caption">
+          <DataField>G_L_Register__No__Caption</DataField>
+        </Field>
+        <Field Name="TotalCaption">
+          <DataField>TotalCaption</DataField>
+        </Field>
+        <Field Name="ShowPostingGroup">
+          <DataField>ShowPostingGroup</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Posting_Date_">
+          <DataField>G_L_Entry__Posting_Date_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Document_Type_">
+          <DataField>G_L_Entry__Document_Type_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Document_No__">
+          <DataField>G_L_Entry__Document_No__</DataField>
+        </Field>
+        <Field Name="G_L_Entry__G_L_Account_No__">
+          <DataField>G_L_Entry__G_L_Account_No__</DataField>
+        </Field>
+        <Field Name="GLAcc_Name">
+          <DataField>GLAcc_Name</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Description">
+          <DataField>G_L_Entry_Description</DataField>
+        </Field>
+        <Field Name="G_L_Entry__VAT_Amount_">
+          <DataField>G_L_Entry__VAT_Amount_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__VAT_Amount_Format">
+          <DataField>G_L_Entry__VAT_Amount_Format</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Posting_Type_">
+          <DataField>G_L_Entry__Gen__Posting_Type_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Bus__Posting_Group_">
+          <DataField>G_L_Entry__Gen__Bus__Posting_Group_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Prod__Posting_Group_">
+          <DataField>G_L_Entry__Gen__Prod__Posting_Group_</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Amount">
+          <DataField>G_L_Entry_Amount</DataField>
+        </Field>
+        <Field Name="G_L_Entry_AmountFormat">
+          <DataField>G_L_Entry_AmountFormat</DataField>
+        </Field>
+        <Field Name="DrAmt">
+          <DataField>DrAmt</DataField>
+        </Field>
+        <Field Name="DrAmtFormat">
+          <DataField>DrAmtFormat</DataField>
+        </Field>
+        <Field Name="CrAmt">
+          <DataField>CrAmt</DataField>
+        </Field>
+        <Field Name="CrAmtFormat">
+          <DataField>CrAmtFormat</DataField>
+        </Field>
+        <Field Name="TransNo">
+          <DataField>TransNo</DataField>
+        </Field>
+        <Field Name="ShowApplied">
+          <DataField>ShowApplied</DataField>
+        </Field>
+        <Field Name="FCYCode">
+          <DataField>FCYCode</DataField>
+        </Field>
+        <Field Name="ExchRate">
+          <DataField>ExchRate</DataField>
+        </Field>
+        <Field Name="ExchRateFormat">
+          <DataField>ExchRateFormat</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Entry_No__">
+          <DataField>G_L_Entry__Entry_No__</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Amount_Control41">
+          <DataField>G_L_Entry_Amount_Control41</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Amount_Control41Format">
+          <DataField>G_L_Entry_Amount_Control41Format</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Amount_Control41Caption">
+          <DataField>G_L_Entry_Amount_Control41Caption</DataField>
+        </Field>
+        <Field Name="ICPathCode_GLEntry">
+          <DataField>ICPathCode_GLEntry</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_Description">
+          <DataField>Purch__Inv__Line_Description</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_Amount">
+          <DataField>Purch__Inv__Line_Amount</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_AmountFormat">
+          <DataField>Purch__Inv__Line_AmountFormat</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_Document_No_">
+          <DataField>Purch__Inv__Line_Document_No_</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_Line_No_">
+          <DataField>Purch__Inv__Line_Line_No_</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_No_">
+          <DataField>Purch__Inv__Line_No_</DataField>
+        </Field>
+        <Field Name="DocumentNo_AppliedCLE">
+          <DataField>DocumentNo_AppliedCLE</DataField>
+        </Field>
+        <Field Name="ExternalDocumentNo_AppliedCLE">
+          <DataField>ExternalDocumentNo_AppliedCLE</DataField>
+        </Field>
+        <Field Name="Description_AppliedCLE">
+          <DataField>Description_AppliedCLE</DataField>
+        </Field>
+        <Field Name="CurrencyCode_AppliedCLE">
+          <DataField>CurrencyCode_AppliedCLE</DataField>
+        </Field>
+        <Field Name="Amount_AppliedCLE">
+          <DataField>Amount_AppliedCLE</DataField>
+        </Field>
+        <Field Name="Amount_AppliedCLEFormat">
+          <DataField>Amount_AppliedCLEFormat</DataField>
+        </Field>
+        <Field Name="AmountLCY_AppliedCLE">
+          <DataField>AmountLCY_AppliedCLE</DataField>
+        </Field>
+        <Field Name="AmountLCY_AppliedCLEFormat">
+          <DataField>AmountLCY_AppliedCLEFormat</DataField>
+        </Field>
+        <Field Name="DocumentNo_AppliedVLE">
+          <DataField>DocumentNo_AppliedVLE</DataField>
+        </Field>
+        <Field Name="ExternalDocumentNo_AppliedVLE">
+          <DataField>ExternalDocumentNo_AppliedVLE</DataField>
+        </Field>
+        <Field Name="Description_AppliedVLE">
+          <DataField>Description_AppliedVLE</DataField>
+        </Field>
+        <Field Name="CurrencyCode_AppliedVLE">
+          <DataField>CurrencyCode_AppliedVLE</DataField>
+        </Field>
+        <Field Name="Amount_AppliedVLE">
+          <DataField>Amount_AppliedVLE</DataField>
+        </Field>
+        <Field Name="Amount_AppliedVLEFormat">
+          <DataField>Amount_AppliedVLEFormat</DataField>
+        </Field>
+        <Field Name="AmountLCY_AppliedVLE">
+          <DataField>AmountLCY_AppliedVLE</DataField>
+        </Field>
+        <Field Name="AmountLCY_AppliedVLEFormat">
+          <DataField>AmountLCY_AppliedVLEFormat</DataField>
+        </Field>
+        <Field Name="DimText">
+          <DataField>DimText</DataField>
+        </Field>
+        <Field Name="Number_DimensionLoop">
+          <DataField>Number_DimensionLoop</DataField>
+        </Field>
+        <Field Name="DimensionsCaption">
+          <DataField>DimensionsCaption</DataField>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -28,34 +263,37 @@
                   <Width>81.45115pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>151.84485pt</Width>
+                  <Width>125pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>35pt</Width>
+                  <Width>30pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>35pt</Width>
+                  <Width>30pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>35pt</Width>
+                  <Width>30pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>70pt</Width>
+                  <Width>50pt</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>19.84252pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>62pt</Width>
+                  <Width>65pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>62pt</Width>
+                  <Width>65pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>44.87223pt</Width>
+                  <Width>44pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>68pt</Width>
+                  <Width>65pt</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>70.86614pt</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -426,6 +664,39 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox11">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox11</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -780,6 +1051,39 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox49</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox14">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox14</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -1161,6 +1465,39 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox33">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox33</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -1495,6 +1832,36 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox187</rd:DefaultName>
+                          <Style>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox37">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox37</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -1912,6 +2279,36 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox38">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox38</rd:DefaultName>
+                          <Style>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -2319,6 +2716,38 @@
                             </Paragraph>
                           </Paragraphs>
                           <ZIndex>78</ZIndex>
+                          <Style>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox43">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>IC Path Code</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI Semibold</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox43</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Bottom</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -2787,6 +3216,43 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox33</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox46">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox46</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -3299,6 +3765,45 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox50">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox50</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -3449,7 +3954,6 @@
                           <ZIndex>4</ZIndex>
                           <Style>
                             <VerticalAlign>Top</VerticalAlign>
-                            <PaddingLeft>3pt</PaddingLeft>
                             <PaddingRight>3pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
@@ -3479,7 +3983,6 @@
                           <ZIndex>3</ZIndex>
                           <Style>
                             <VerticalAlign>Top</VerticalAlign>
-                            <PaddingLeft>3pt</PaddingLeft>
                             <PaddingRight>3pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
@@ -3509,7 +4012,6 @@
                           <ZIndex>2</ZIndex>
                           <Style>
                             <VerticalAlign>Top</VerticalAlign>
-                            <PaddingLeft>3pt</PaddingLeft>
                             <PaddingRight>3pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
@@ -3703,6 +4205,38 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
+                          <Style>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="ICPathCode_GLEntry">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!ICPathCode_GLEntry.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>ICPathCode_GLEntry</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -4041,6 +4575,38 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="ICPathCode_GLEntry2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!ICPathCode_GLEntry.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>ICPathCode_GLEntry</rd:DefaultName>
+                          <Style>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -4123,6 +4689,36 @@
                     <TablixCell />
                     <TablixCell />
                     <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox53">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox53</rd:DefaultName>
+                          <Style>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -4203,6 +4799,36 @@
                     <TablixCell />
                     <TablixCell />
                     <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox57">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox57</rd:DefaultName>
+                          <Style>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -4685,6 +5311,44 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox60">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox60</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>0.5pt</Width>
+                            </BottomBorder>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -5087,6 +5751,36 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox61">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox61</rd:DefaultName>
+                          <Style>
+                            <VerticalAlign>Top</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -5137,16 +5831,16 @@
                                 <Width>81.45115pt</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>151.84484pt</Width>
+                                <Width>265pt</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>35pt</Width>
+                                <Width>19.84252pt</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>70pt</Width>
+                                <Width>130pt</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>70.00001pt</Width>
+                                <Width>108.99998pt</Width>
                               </TablixColumn>
                             </TablixColumns>
                             <TablixRows>
@@ -5328,6 +6022,8 @@
                                         <rd:DefaultName>Textbox2</rd:DefaultName>
                                         <Style>
                                           <VerticalAlign>Middle</VerticalAlign>
+                                          <PaddingLeft>3pt</PaddingLeft>
+                                          <PaddingRight>3pt</PaddingRight>
                                         </Style>
                                       </Textbox>
                                     </CellContents>
@@ -5780,7 +6476,7 @@
                             </Border>
                           </Style>
                         </Tablix>
-                        <ColSpan>7</ColSpan>
+                        <ColSpan>12</ColSpan>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />
@@ -5789,9 +6485,14 @@
                     <TablixCell />
                     <TablixCell />
                     <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox59">
+                        <Textbox Name="Textbox71">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -5808,137 +6509,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox59</rd:DefaultName>
-                          <Style>
-                            <VerticalAlign>Top</VerticalAlign>
-                            <PaddingLeft>3pt</PaddingLeft>
-                            <PaddingRight>3pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox1437">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontFamily>Segoe UI</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox1437</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <VerticalAlign>Top</VerticalAlign>
-                            <PaddingLeft>3pt</PaddingLeft>
-                            <PaddingRight>3pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox1438">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontFamily>Segoe UI</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox1438</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <VerticalAlign>Top</VerticalAlign>
-                            <PaddingLeft>3pt</PaddingLeft>
-                            <PaddingRight>3pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox62">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontFamily>Segoe UI</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox62</rd:DefaultName>
-                          <Style>
-                            <VerticalAlign>Top</VerticalAlign>
-                            <PaddingLeft>3pt</PaddingLeft>
-                            <PaddingRight>3pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox63">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontFamily>Segoe UI</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox63</rd:DefaultName>
+                          <rd:DefaultName>Textbox71</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -6421,6 +6992,43 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox79">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox79</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -6815,12 +7423,44 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox92">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox92</rd:DefaultName>
+                          <Style>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -6917,14 +7557,14 @@
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
             <Height>7.10614cm</Height>
-            <Width>787.79339pt</Width>
+            <Width>798.94245pt</Width>
             <Style />
           </Tablix>
         </ReportItems>
-        <Height>7.25293cm</Height>
+        <Height>7.22647cm</Height>
         <Style />
       </Body>
-      <Width>787.79339pt</Width>
+      <Width>28.18491cm</Width>
       <Page>
         <PageHeader>
           <Height>1.86973cm</Height>
@@ -6951,9 +7591,9 @@
                 </Paragraph>
               </Paragraphs>
               <Top>0.45861cm</Top>
-              <Left>21.63458cm</Left>
+              <Left>21.83964cm</Left>
               <Height>0.38806cm</Height>
-              <Width>6.15702cm</Width>
+              <Width>6.34528cm</Width>
               <Style>
                 <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
@@ -7027,9 +7667,9 @@
                 </Paragraph>
               </Paragraphs>
               <Top>0.02778in</Top>
-              <Left>21.63458cm</Left>
+              <Left>21.83964cm</Left>
               <Height>9.99981pt</Height>
-              <Width>6.15702cm</Width>
+              <Width>6.34528cm</Width>
               <ZIndex>3</ZIndex>
               <Style>
                 <VerticalAlign>Middle</VerticalAlign>
@@ -7057,9 +7697,9 @@
                 </Paragraph>
               </Paragraphs>
               <Top>0.84667cm</Top>
-              <Left>21.63458cm</Left>
+              <Left>21.83964cm</Left>
               <Height>0.38806cm</Height>
-              <Width>6.15702cm</Width>
+              <Width>6.34528cm</Width>
               <ZIndex>4</ZIndex>
               <Style>
                 <VerticalAlign>Middle</VerticalAlign>
@@ -7087,9 +7727,9 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox41</rd:DefaultName>
-              <Left>21.63458cm</Left>
+              <Left>21.83964cm</Left>
               <Height>2.00016pt</Height>
-              <Width>6.15702cm</Width>
+              <Width>6.34528cm</Width>
               <ZIndex>5</ZIndex>
               <Style>
                 <Border>
@@ -7168,6 +7808,12 @@
       </Page>
     </ReportSection>
   </ReportSections>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>4</NumberOfColumns>
+      <NumberOfRows>2</NumberOfRows>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -7207,236 +7853,4 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>ed5b179c-7d30-4db5-93e0-4a640929a11e</rd:ReportID>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Fields>
-        <Field Name="COMPANYNAME">
-          <DataField>COMPANYNAME</DataField>
-        </Field>
-        <Field Name="LCYCode">
-          <DataField>LCYCode</DataField>
-        </Field>
-        <Field Name="ShowLines">
-          <DataField>ShowLines</DataField>
-        </Field>
-        <Field Name="G_L_Register__TABLECAPTION__________GLRegFilter">
-          <DataField>G_L_Register__TABLECAPTION__________GLRegFilter</DataField>
-        </Field>
-        <Field Name="GLRegFilter">
-          <DataField>GLRegFilter</DataField>
-        </Field>
-        <Field Name="G_L_Register__No__">
-          <DataField>G_L_Register__No__</DataField>
-        </Field>
-        <Field Name="G_L_RegisterCaption">
-          <DataField>G_L_RegisterCaption</DataField>
-        </Field>
-        <Field Name="CurrReport_PAGENOCaption">
-          <DataField>CurrReport_PAGENOCaption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Posting_Date_Caption">
-          <DataField>G_L_Entry__Posting_Date_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Document_Type_Caption">
-          <DataField>G_L_Entry__Document_Type_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Document_No__Caption">
-          <DataField>G_L_Entry__Document_No__Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__G_L_Account_No__Caption">
-          <DataField>G_L_Entry__G_L_Account_No__Caption</DataField>
-        </Field>
-        <Field Name="GLAcc_NameCaption">
-          <DataField>GLAcc_NameCaption</DataField>
-        </Field>
-        <Field Name="G_L_Entry_DescriptionCaption">
-          <DataField>G_L_Entry_DescriptionCaption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__VAT_Amount_Caption">
-          <DataField>G_L_Entry__VAT_Amount_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Posting_Type_Caption">
-          <DataField>G_L_Entry__Gen__Posting_Type_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Bus__Posting_Group_Caption">
-          <DataField>G_L_Entry__Gen__Bus__Posting_Group_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Prod__Posting_Group_Caption">
-          <DataField>G_L_Entry__Gen__Prod__Posting_Group_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry_AmountCaption">
-          <DataField>G_L_Entry_AmountCaption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Entry_No__Caption">
-          <DataField>G_L_Entry__Entry_No__Caption</DataField>
-        </Field>
-        <Field Name="G_L_Register__No__Caption">
-          <DataField>G_L_Register__No__Caption</DataField>
-        </Field>
-        <Field Name="TotalCaption">
-          <DataField>TotalCaption</DataField>
-        </Field>
-        <Field Name="ShowPostingGroup">
-          <DataField>ShowPostingGroup</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Posting_Date_">
-          <DataField>G_L_Entry__Posting_Date_</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Document_Type_">
-          <DataField>G_L_Entry__Document_Type_</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Document_No__">
-          <DataField>G_L_Entry__Document_No__</DataField>
-        </Field>
-        <Field Name="G_L_Entry__G_L_Account_No__">
-          <DataField>G_L_Entry__G_L_Account_No__</DataField>
-        </Field>
-        <Field Name="GLAcc_Name">
-          <DataField>GLAcc_Name</DataField>
-        </Field>
-        <Field Name="G_L_Entry_Description">
-          <DataField>G_L_Entry_Description</DataField>
-        </Field>
-        <Field Name="G_L_Entry__VAT_Amount_">
-          <DataField>G_L_Entry__VAT_Amount_</DataField>
-        </Field>
-        <Field Name="G_L_Entry__VAT_Amount_Format">
-          <DataField>G_L_Entry__VAT_Amount_Format</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Posting_Type_">
-          <DataField>G_L_Entry__Gen__Posting_Type_</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Bus__Posting_Group_">
-          <DataField>G_L_Entry__Gen__Bus__Posting_Group_</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Prod__Posting_Group_">
-          <DataField>G_L_Entry__Gen__Prod__Posting_Group_</DataField>
-        </Field>
-        <Field Name="G_L_Entry_Amount">
-          <DataField>G_L_Entry_Amount</DataField>
-        </Field>
-        <Field Name="G_L_Entry_AmountFormat">
-          <DataField>G_L_Entry_AmountFormat</DataField>
-        </Field>
-        <Field Name="DrAmt">
-          <DataField>DrAmt</DataField>
-        </Field>
-        <Field Name="DrAmtFormat">
-          <DataField>DrAmtFormat</DataField>
-        </Field>
-        <Field Name="CrAmt">
-          <DataField>CrAmt</DataField>
-        </Field>
-        <Field Name="CrAmtFormat">
-          <DataField>CrAmtFormat</DataField>
-        </Field>
-        <Field Name="TransNo">
-          <DataField>TransNo</DataField>
-        </Field>
-        <Field Name="ShowApplied">
-          <DataField>ShowApplied</DataField>
-        </Field>
-        <Field Name="FCYCode">
-          <DataField>FCYCode</DataField>
-        </Field>
-        <Field Name="ExchRate">
-          <DataField>ExchRate</DataField>
-        </Field>
-        <Field Name="ExchRateFormat">
-          <DataField>ExchRateFormat</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Entry_No__">
-          <DataField>G_L_Entry__Entry_No__</DataField>
-        </Field>
-        <Field Name="G_L_Entry_Amount_Control41">
-          <DataField>G_L_Entry_Amount_Control41</DataField>
-        </Field>
-        <Field Name="G_L_Entry_Amount_Control41Format">
-          <DataField>G_L_Entry_Amount_Control41Format</DataField>
-        </Field>
-        <Field Name="G_L_Entry_Amount_Control41Caption">
-          <DataField>G_L_Entry_Amount_Control41Caption</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_Description">
-          <DataField>Purch__Inv__Line_Description</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_Amount">
-          <DataField>Purch__Inv__Line_Amount</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_AmountFormat">
-          <DataField>Purch__Inv__Line_AmountFormat</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_Document_No_">
-          <DataField>Purch__Inv__Line_Document_No_</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_Line_No_">
-          <DataField>Purch__Inv__Line_Line_No_</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_No_">
-          <DataField>Purch__Inv__Line_No_</DataField>
-        </Field>
-        <Field Name="DocumentNo_AppliedCLE">
-          <DataField>DocumentNo_AppliedCLE</DataField>
-        </Field>
-        <Field Name="ExternalDocumentNo_AppliedCLE">
-          <DataField>ExternalDocumentNo_AppliedCLE</DataField>
-        </Field>
-        <Field Name="Description_AppliedCLE">
-          <DataField>Description_AppliedCLE</DataField>
-        </Field>
-        <Field Name="CurrencyCode_AppliedCLE">
-          <DataField>CurrencyCode_AppliedCLE</DataField>
-        </Field>
-        <Field Name="Amount_AppliedCLE">
-          <DataField>Amount_AppliedCLE</DataField>
-        </Field>
-        <Field Name="Amount_AppliedCLEFormat">
-          <DataField>Amount_AppliedCLEFormat</DataField>
-        </Field>
-        <Field Name="AmountLCY_AppliedCLE">
-          <DataField>AmountLCY_AppliedCLE</DataField>
-        </Field>
-        <Field Name="AmountLCY_AppliedCLEFormat">
-          <DataField>AmountLCY_AppliedCLEFormat</DataField>
-        </Field>
-        <Field Name="DocumentNo_AppliedVLE">
-          <DataField>DocumentNo_AppliedVLE</DataField>
-        </Field>
-        <Field Name="ExternalDocumentNo_AppliedVLE">
-          <DataField>ExternalDocumentNo_AppliedVLE</DataField>
-        </Field>
-        <Field Name="Description_AppliedVLE">
-          <DataField>Description_AppliedVLE</DataField>
-        </Field>
-        <Field Name="CurrencyCode_AppliedVLE">
-          <DataField>CurrencyCode_AppliedVLE</DataField>
-        </Field>
-        <Field Name="Amount_AppliedVLE">
-          <DataField>Amount_AppliedVLE</DataField>
-        </Field>
-        <Field Name="Amount_AppliedVLEFormat">
-          <DataField>Amount_AppliedVLEFormat</DataField>
-        </Field>
-        <Field Name="AmountLCY_AppliedVLE">
-          <DataField>AmountLCY_AppliedVLE</DataField>
-        </Field>
-        <Field Name="AmountLCY_AppliedVLEFormat">
-          <DataField>AmountLCY_AppliedVLEFormat</DataField>
-        </Field>
-        <Field Name="DimText">
-          <DataField>DimText</DataField>
-        </Field>
-        <Field Name="Number_DimensionLoop">
-          <DataField>Number_DimensionLoop</DataField>
-        </Field>
-        <Field Name="DimensionsCaption">
-          <DataField>DimensionsCaption</DataField>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-    </DataSet>
-  </DataSets>
 </Report>

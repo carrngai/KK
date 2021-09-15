@@ -14,9 +14,15 @@ tableextension 50106 "G/L Entry Ext" extends "G/L Entry"
             ELSE
             IF ("Source Type" = CONST(Vendor)) Vendor;
         }
+        field(50103; "IC Path Code"; Code[20]) //G014
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "IC Transaction Path"."Path Code";
+        }
         field(50107; "Description 2"; Text[250])
         {
         }
+
     }
 
     var

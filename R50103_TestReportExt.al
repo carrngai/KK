@@ -182,6 +182,9 @@ report 50103 "General Journal - Test Ext"
                     column(TotalLCYCaption; AmountLCYCap)
                     {
                     }
+                    column(ICPathCode_GenJournalLine; "IC Path Code") //G002
+                    {
+                    }
                     dataitem(AppliedCLE; "Cust. Ledger Entry") //G002
                     {
                         DataItemLink = "Applies-to ID" = Field("Document No."), "Customer No." = Field("Account No.");
@@ -223,7 +226,7 @@ report 50103 "General Journal - Test Ext"
                             CLEexist := true;
                         end;
                     }
-                    dataitem(AppliedVLE; "Vendor Ledger Entry")
+                    dataitem(AppliedVLE; "Vendor Ledger Entry") //G002
                     {
                         DataItemLink = "Applies-to ID" = Field("Document No."), "Vendor No." = Field("Account No.");
                         column(AppliestoID_AppliedVLE; "Applies-to ID")
@@ -297,6 +300,66 @@ report 50103 "General Journal - Test Ext"
                             DimSetEntry.Reset();
                             DimSetEntry.SetRange("Dimension Set ID", "Gen. Journal Line"."Dimension Set ID")
                         end;
+                    }
+                    dataitem("IC Gen. Jnl. Allocation"; "IC Gen. Jnl. Allocation") //G002
+                    {
+                        DataItemLink = "Journal Template Name" = FIELD("Journal Template Name"), "Journal Batch Name" = FIELD("Journal Batch Name"), "Journal Line No." = FIELD("Line No.");
+                        DataItemTableView = SORTING("Journal Template Name", "Journal Batch Name", "Journal Line No.", "Line No.");
+                        column(JournalBatchName_ICGenJnlAllocation; "Journal Batch Name")
+                        {
+                        }
+                        column(JournalLineNo_ICGenJnlAllocation; "Journal Line No.")
+                        {
+                        }
+                        column(LineNo_ICGenJnlAllocation; "Line No.")
+                        {
+                        }
+                        column(ICBalAccountType_ICGenJnlAllocation; "IC Bal. Account Type")
+                        {
+                        }
+                        column(ICBalAccountNo_ICGenJnlAllocation; "IC Bal. Account No.")
+                        {
+                        }
+                        column(Amount_ICGenJnlAllocation; Amount)
+                        {
+                        }
+                        column(BalDimensionSetID_ICGenJnlAllocation; "Bal. Dimension Set ID")
+                        {
+                        }
+
+                        dataitem(IC_DimensionLoopAllocations; "Integer") //G002
+                        {
+                            DataItemTableView = SORTING(Number) WHERE(Number = FILTER(1 ..));
+                            column(IC_AllocationDimText; AllocationDimText)
+                            {
+                            }
+                            column(IC_Number_DimensionLoopAllocations; Number)
+                            {
+                            }
+                            column(IC_DimensionAllocationsCaption; ICDimensionAllocationsCap)
+                            {
+                            }
+
+                            trigger OnAfterGetRecord()
+                            begin
+                                if Number = 1 then begin
+                                    if not DimSetEntry.FindFirst then
+                                        CurrReport.Break();
+                                end else
+                                    if not Continue then
+                                        CurrReport.Break();
+
+                                AllocationDimText := GetDimensionText(DimSetEntry);
+                            end;
+
+                            trigger OnPreDataItem()
+                            begin
+                                if not ShowDim then
+                                    CurrReport.Break();
+                                DimSetEntry.Reset();
+                                DimSetEntry.SetRange("Dimension Set ID", "IC Gen. Jnl. Allocation"."Bal. Dimension Set ID")
+                            end;
+                        }
                     }
                     dataitem("Gen. Jnl. Allocation"; "Gen. Jnl. Allocation")
                     {
@@ -1047,6 +1110,7 @@ report 50103 "General Journal - Test Ext"
         NetChangeinJnlCap: Label 'Net Change in Jnl.';
         BalafterPostingCap: Label 'Balance after Posting';
         DimensionAllocationsCap: Label 'Allocation Dimensions';
+        ICDimensionAllocationsCap: Label 'IC Dimensions';
         ShowPostingGroup: Boolean; //G002
         CLEexist: Boolean; //G002
         VLEexist: Boolean; //G002
