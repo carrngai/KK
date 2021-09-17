@@ -10,16 +10,6 @@ pageextension 50132 "Stand. Gen. Jnl. Subform Ext" extends "Standard Gen. Journa
                 ToolTip = 'Specifies the value of the IC Path Code field';
                 ApplicationArea = All;
             }
-            field("IC Bal. Account Type"; Rec."IC Bal. Account Type")
-            {
-                ToolTip = 'Specifies the value of the IC Bal. Account Type field';
-                ApplicationArea = All;
-            }
-            field("IC Bal. Account No."; Rec."IC Bal. Account No.")
-            {
-                ToolTip = 'Specifies the value of the IC Bal. Account No. field';
-                ApplicationArea = All;
-            }
         }
         modify("ShortcutDimCode[3]") { Visible = true; }
         modify("ShortcutDimCode[4]") { Visible = true; }
