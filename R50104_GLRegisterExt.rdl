@@ -11,241 +11,6 @@
       <rd:DataSourceID>e2a6ee56-494c-419f-8b71-474bffb4bb50</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="COMPANYNAME">
-          <DataField>COMPANYNAME</DataField>
-        </Field>
-        <Field Name="LCYCode">
-          <DataField>LCYCode</DataField>
-        </Field>
-        <Field Name="ShowLines">
-          <DataField>ShowLines</DataField>
-        </Field>
-        <Field Name="G_L_Register__TABLECAPTION__________GLRegFilter">
-          <DataField>G_L_Register__TABLECAPTION__________GLRegFilter</DataField>
-        </Field>
-        <Field Name="GLRegFilter">
-          <DataField>GLRegFilter</DataField>
-        </Field>
-        <Field Name="G_L_Register__No__">
-          <DataField>G_L_Register__No__</DataField>
-        </Field>
-        <Field Name="G_L_RegisterCaption">
-          <DataField>G_L_RegisterCaption</DataField>
-        </Field>
-        <Field Name="CurrReport_PAGENOCaption">
-          <DataField>CurrReport_PAGENOCaption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Posting_Date_Caption">
-          <DataField>G_L_Entry__Posting_Date_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Document_Type_Caption">
-          <DataField>G_L_Entry__Document_Type_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Document_No__Caption">
-          <DataField>G_L_Entry__Document_No__Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__G_L_Account_No__Caption">
-          <DataField>G_L_Entry__G_L_Account_No__Caption</DataField>
-        </Field>
-        <Field Name="GLAcc_NameCaption">
-          <DataField>GLAcc_NameCaption</DataField>
-        </Field>
-        <Field Name="G_L_Entry_DescriptionCaption">
-          <DataField>G_L_Entry_DescriptionCaption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__VAT_Amount_Caption">
-          <DataField>G_L_Entry__VAT_Amount_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Posting_Type_Caption">
-          <DataField>G_L_Entry__Gen__Posting_Type_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Bus__Posting_Group_Caption">
-          <DataField>G_L_Entry__Gen__Bus__Posting_Group_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Prod__Posting_Group_Caption">
-          <DataField>G_L_Entry__Gen__Prod__Posting_Group_Caption</DataField>
-        </Field>
-        <Field Name="G_L_Entry_AmountCaption">
-          <DataField>G_L_Entry_AmountCaption</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Entry_No__Caption">
-          <DataField>G_L_Entry__Entry_No__Caption</DataField>
-        </Field>
-        <Field Name="G_L_Register__No__Caption">
-          <DataField>G_L_Register__No__Caption</DataField>
-        </Field>
-        <Field Name="TotalCaption">
-          <DataField>TotalCaption</DataField>
-        </Field>
-        <Field Name="ShowPostingGroup">
-          <DataField>ShowPostingGroup</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Posting_Date_">
-          <DataField>G_L_Entry__Posting_Date_</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Document_Type_">
-          <DataField>G_L_Entry__Document_Type_</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Document_No__">
-          <DataField>G_L_Entry__Document_No__</DataField>
-        </Field>
-        <Field Name="G_L_Entry__G_L_Account_No__">
-          <DataField>G_L_Entry__G_L_Account_No__</DataField>
-        </Field>
-        <Field Name="GLAcc_Name">
-          <DataField>GLAcc_Name</DataField>
-        </Field>
-        <Field Name="G_L_Entry_Description">
-          <DataField>G_L_Entry_Description</DataField>
-        </Field>
-        <Field Name="G_L_Entry__VAT_Amount_">
-          <DataField>G_L_Entry__VAT_Amount_</DataField>
-        </Field>
-        <Field Name="G_L_Entry__VAT_Amount_Format">
-          <DataField>G_L_Entry__VAT_Amount_Format</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Posting_Type_">
-          <DataField>G_L_Entry__Gen__Posting_Type_</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Bus__Posting_Group_">
-          <DataField>G_L_Entry__Gen__Bus__Posting_Group_</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Gen__Prod__Posting_Group_">
-          <DataField>G_L_Entry__Gen__Prod__Posting_Group_</DataField>
-        </Field>
-        <Field Name="G_L_Entry_Amount">
-          <DataField>G_L_Entry_Amount</DataField>
-        </Field>
-        <Field Name="G_L_Entry_AmountFormat">
-          <DataField>G_L_Entry_AmountFormat</DataField>
-        </Field>
-        <Field Name="DrAmt">
-          <DataField>DrAmt</DataField>
-        </Field>
-        <Field Name="DrAmtFormat">
-          <DataField>DrAmtFormat</DataField>
-        </Field>
-        <Field Name="CrAmt">
-          <DataField>CrAmt</DataField>
-        </Field>
-        <Field Name="CrAmtFormat">
-          <DataField>CrAmtFormat</DataField>
-        </Field>
-        <Field Name="TransNo">
-          <DataField>TransNo</DataField>
-        </Field>
-        <Field Name="ShowApplied">
-          <DataField>ShowApplied</DataField>
-        </Field>
-        <Field Name="FCYCode">
-          <DataField>FCYCode</DataField>
-        </Field>
-        <Field Name="ExchRate">
-          <DataField>ExchRate</DataField>
-        </Field>
-        <Field Name="ExchRateFormat">
-          <DataField>ExchRateFormat</DataField>
-        </Field>
-        <Field Name="G_L_Entry__Entry_No__">
-          <DataField>G_L_Entry__Entry_No__</DataField>
-        </Field>
-        <Field Name="G_L_Entry_Amount_Control41">
-          <DataField>G_L_Entry_Amount_Control41</DataField>
-        </Field>
-        <Field Name="G_L_Entry_Amount_Control41Format">
-          <DataField>G_L_Entry_Amount_Control41Format</DataField>
-        </Field>
-        <Field Name="G_L_Entry_Amount_Control41Caption">
-          <DataField>G_L_Entry_Amount_Control41Caption</DataField>
-        </Field>
-        <Field Name="ICPathCode_GLEntry">
-          <DataField>ICPathCode_GLEntry</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_Description">
-          <DataField>Purch__Inv__Line_Description</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_Amount">
-          <DataField>Purch__Inv__Line_Amount</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_AmountFormat">
-          <DataField>Purch__Inv__Line_AmountFormat</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_Document_No_">
-          <DataField>Purch__Inv__Line_Document_No_</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_Line_No_">
-          <DataField>Purch__Inv__Line_Line_No_</DataField>
-        </Field>
-        <Field Name="Purch__Inv__Line_No_">
-          <DataField>Purch__Inv__Line_No_</DataField>
-        </Field>
-        <Field Name="DocumentNo_AppliedCLE">
-          <DataField>DocumentNo_AppliedCLE</DataField>
-        </Field>
-        <Field Name="ExternalDocumentNo_AppliedCLE">
-          <DataField>ExternalDocumentNo_AppliedCLE</DataField>
-        </Field>
-        <Field Name="Description_AppliedCLE">
-          <DataField>Description_AppliedCLE</DataField>
-        </Field>
-        <Field Name="CurrencyCode_AppliedCLE">
-          <DataField>CurrencyCode_AppliedCLE</DataField>
-        </Field>
-        <Field Name="Amount_AppliedCLE">
-          <DataField>Amount_AppliedCLE</DataField>
-        </Field>
-        <Field Name="Amount_AppliedCLEFormat">
-          <DataField>Amount_AppliedCLEFormat</DataField>
-        </Field>
-        <Field Name="AmountLCY_AppliedCLE">
-          <DataField>AmountLCY_AppliedCLE</DataField>
-        </Field>
-        <Field Name="AmountLCY_AppliedCLEFormat">
-          <DataField>AmountLCY_AppliedCLEFormat</DataField>
-        </Field>
-        <Field Name="DocumentNo_AppliedVLE">
-          <DataField>DocumentNo_AppliedVLE</DataField>
-        </Field>
-        <Field Name="ExternalDocumentNo_AppliedVLE">
-          <DataField>ExternalDocumentNo_AppliedVLE</DataField>
-        </Field>
-        <Field Name="Description_AppliedVLE">
-          <DataField>Description_AppliedVLE</DataField>
-        </Field>
-        <Field Name="CurrencyCode_AppliedVLE">
-          <DataField>CurrencyCode_AppliedVLE</DataField>
-        </Field>
-        <Field Name="Amount_AppliedVLE">
-          <DataField>Amount_AppliedVLE</DataField>
-        </Field>
-        <Field Name="Amount_AppliedVLEFormat">
-          <DataField>Amount_AppliedVLEFormat</DataField>
-        </Field>
-        <Field Name="AmountLCY_AppliedVLE">
-          <DataField>AmountLCY_AppliedVLE</DataField>
-        </Field>
-        <Field Name="AmountLCY_AppliedVLEFormat">
-          <DataField>AmountLCY_AppliedVLEFormat</DataField>
-        </Field>
-        <Field Name="DimText">
-          <DataField>DimText</DataField>
-        </Field>
-        <Field Name="Number_DimensionLoop">
-          <DataField>Number_DimensionLoop</DataField>
-        </Field>
-        <Field Name="DimensionsCaption">
-          <DataField>DimensionsCaption</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -7808,12 +7573,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -7853,4 +7612,239 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>ed5b179c-7d30-4db5-93e0-4a640929a11e</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="COMPANYNAME">
+          <DataField>COMPANYNAME</DataField>
+        </Field>
+        <Field Name="LCYCode">
+          <DataField>LCYCode</DataField>
+        </Field>
+        <Field Name="ShowLines">
+          <DataField>ShowLines</DataField>
+        </Field>
+        <Field Name="G_L_Register__TABLECAPTION__________GLRegFilter">
+          <DataField>G_L_Register__TABLECAPTION__________GLRegFilter</DataField>
+        </Field>
+        <Field Name="GLRegFilter">
+          <DataField>GLRegFilter</DataField>
+        </Field>
+        <Field Name="G_L_Register__No__">
+          <DataField>G_L_Register__No__</DataField>
+        </Field>
+        <Field Name="G_L_RegisterCaption">
+          <DataField>G_L_RegisterCaption</DataField>
+        </Field>
+        <Field Name="CurrReport_PAGENOCaption">
+          <DataField>CurrReport_PAGENOCaption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Posting_Date_Caption">
+          <DataField>G_L_Entry__Posting_Date_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Document_Type_Caption">
+          <DataField>G_L_Entry__Document_Type_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Document_No__Caption">
+          <DataField>G_L_Entry__Document_No__Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__G_L_Account_No__Caption">
+          <DataField>G_L_Entry__G_L_Account_No__Caption</DataField>
+        </Field>
+        <Field Name="GLAcc_NameCaption">
+          <DataField>GLAcc_NameCaption</DataField>
+        </Field>
+        <Field Name="G_L_Entry_DescriptionCaption">
+          <DataField>G_L_Entry_DescriptionCaption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__VAT_Amount_Caption">
+          <DataField>G_L_Entry__VAT_Amount_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Posting_Type_Caption">
+          <DataField>G_L_Entry__Gen__Posting_Type_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Bus__Posting_Group_Caption">
+          <DataField>G_L_Entry__Gen__Bus__Posting_Group_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Prod__Posting_Group_Caption">
+          <DataField>G_L_Entry__Gen__Prod__Posting_Group_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Entry_AmountCaption">
+          <DataField>G_L_Entry_AmountCaption</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Entry_No__Caption">
+          <DataField>G_L_Entry__Entry_No__Caption</DataField>
+        </Field>
+        <Field Name="G_L_Register__No__Caption">
+          <DataField>G_L_Register__No__Caption</DataField>
+        </Field>
+        <Field Name="TotalCaption">
+          <DataField>TotalCaption</DataField>
+        </Field>
+        <Field Name="ShowPostingGroup">
+          <DataField>ShowPostingGroup</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Posting_Date_">
+          <DataField>G_L_Entry__Posting_Date_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Document_Type_">
+          <DataField>G_L_Entry__Document_Type_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Document_No__">
+          <DataField>G_L_Entry__Document_No__</DataField>
+        </Field>
+        <Field Name="G_L_Entry__G_L_Account_No__">
+          <DataField>G_L_Entry__G_L_Account_No__</DataField>
+        </Field>
+        <Field Name="GLAcc_Name">
+          <DataField>GLAcc_Name</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Description">
+          <DataField>G_L_Entry_Description</DataField>
+        </Field>
+        <Field Name="G_L_Entry__VAT_Amount_">
+          <DataField>G_L_Entry__VAT_Amount_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__VAT_Amount_Format">
+          <DataField>G_L_Entry__VAT_Amount_Format</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Posting_Type_">
+          <DataField>G_L_Entry__Gen__Posting_Type_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Bus__Posting_Group_">
+          <DataField>G_L_Entry__Gen__Bus__Posting_Group_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Gen__Prod__Posting_Group_">
+          <DataField>G_L_Entry__Gen__Prod__Posting_Group_</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Amount">
+          <DataField>G_L_Entry_Amount</DataField>
+        </Field>
+        <Field Name="G_L_Entry_AmountFormat">
+          <DataField>G_L_Entry_AmountFormat</DataField>
+        </Field>
+        <Field Name="DrAmt">
+          <DataField>DrAmt</DataField>
+        </Field>
+        <Field Name="DrAmtFormat">
+          <DataField>DrAmtFormat</DataField>
+        </Field>
+        <Field Name="CrAmt">
+          <DataField>CrAmt</DataField>
+        </Field>
+        <Field Name="CrAmtFormat">
+          <DataField>CrAmtFormat</DataField>
+        </Field>
+        <Field Name="TransNo">
+          <DataField>TransNo</DataField>
+        </Field>
+        <Field Name="ShowApplied">
+          <DataField>ShowApplied</DataField>
+        </Field>
+        <Field Name="FCYCode">
+          <DataField>FCYCode</DataField>
+        </Field>
+        <Field Name="ExchRate">
+          <DataField>ExchRate</DataField>
+        </Field>
+        <Field Name="ExchRateFormat">
+          <DataField>ExchRateFormat</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Entry_No__">
+          <DataField>G_L_Entry__Entry_No__</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Amount_Control41">
+          <DataField>G_L_Entry_Amount_Control41</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Amount_Control41Format">
+          <DataField>G_L_Entry_Amount_Control41Format</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Amount_Control41Caption">
+          <DataField>G_L_Entry_Amount_Control41Caption</DataField>
+        </Field>
+        <Field Name="ICPathCode_GLEntry">
+          <DataField>ICPathCode_GLEntry</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_Description">
+          <DataField>Purch__Inv__Line_Description</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_Amount">
+          <DataField>Purch__Inv__Line_Amount</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_AmountFormat">
+          <DataField>Purch__Inv__Line_AmountFormat</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_Document_No_">
+          <DataField>Purch__Inv__Line_Document_No_</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_Line_No_">
+          <DataField>Purch__Inv__Line_Line_No_</DataField>
+        </Field>
+        <Field Name="Purch__Inv__Line_No_">
+          <DataField>Purch__Inv__Line_No_</DataField>
+        </Field>
+        <Field Name="DocumentNo_AppliedCLE">
+          <DataField>DocumentNo_AppliedCLE</DataField>
+        </Field>
+        <Field Name="ExternalDocumentNo_AppliedCLE">
+          <DataField>ExternalDocumentNo_AppliedCLE</DataField>
+        </Field>
+        <Field Name="Description_AppliedCLE">
+          <DataField>Description_AppliedCLE</DataField>
+        </Field>
+        <Field Name="CurrencyCode_AppliedCLE">
+          <DataField>CurrencyCode_AppliedCLE</DataField>
+        </Field>
+        <Field Name="Amount_AppliedCLE">
+          <DataField>Amount_AppliedCLE</DataField>
+        </Field>
+        <Field Name="Amount_AppliedCLEFormat">
+          <DataField>Amount_AppliedCLEFormat</DataField>
+        </Field>
+        <Field Name="AmountLCY_AppliedCLE">
+          <DataField>AmountLCY_AppliedCLE</DataField>
+        </Field>
+        <Field Name="AmountLCY_AppliedCLEFormat">
+          <DataField>AmountLCY_AppliedCLEFormat</DataField>
+        </Field>
+        <Field Name="DocumentNo_AppliedVLE">
+          <DataField>DocumentNo_AppliedVLE</DataField>
+        </Field>
+        <Field Name="ExternalDocumentNo_AppliedVLE">
+          <DataField>ExternalDocumentNo_AppliedVLE</DataField>
+        </Field>
+        <Field Name="Description_AppliedVLE">
+          <DataField>Description_AppliedVLE</DataField>
+        </Field>
+        <Field Name="CurrencyCode_AppliedVLE">
+          <DataField>CurrencyCode_AppliedVLE</DataField>
+        </Field>
+        <Field Name="Amount_AppliedVLE">
+          <DataField>Amount_AppliedVLE</DataField>
+        </Field>
+        <Field Name="Amount_AppliedVLEFormat">
+          <DataField>Amount_AppliedVLEFormat</DataField>
+        </Field>
+        <Field Name="AmountLCY_AppliedVLE">
+          <DataField>AmountLCY_AppliedVLE</DataField>
+        </Field>
+        <Field Name="AmountLCY_AppliedVLEFormat">
+          <DataField>AmountLCY_AppliedVLEFormat</DataField>
+        </Field>
+        <Field Name="DimText">
+          <DataField>DimText</DataField>
+        </Field>
+        <Field Name="Number_DimensionLoop">
+          <DataField>Number_DimensionLoop</DataField>
+        </Field>
+        <Field Name="DimensionsCaption">
+          <DataField>DimensionsCaption</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>
