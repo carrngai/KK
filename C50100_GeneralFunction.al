@@ -205,6 +205,9 @@ codeunit 50100 "General Function"
                                     else
                                         InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", TempGenJournalLine.Amount, 0, false, AtCompany);
 
+                                //Set Schedule Post
+                                EnqueueGenJrnlLine_Company(TempGenJournalLine, AtCompany);
+
                                 FromCompany := AtCompany;
                             end else begin
                                 //If there is NO NextCompenay >>Last Line
@@ -356,7 +359,48 @@ codeunit 50100 "General Function"
             ICGenJnlLine."Shortcut Dimension 2 Code" := TempDimSetEntry2."Dimension Value Code";
 
         ICGenJnlLine.Modify();
+
     end;
+
+    procedure EnqueueGenJrnlLine_Company(var GenJrnlLine: Record "Gen. Journal Line"; AtCompany: Text[30])
+    var
+        JobQueueID: Guid;
+        l_GenJnlLine: Record "Gen. Journal Line";
+    begin
+        // JobQueueID := EnqueueJobEntry_Company(GenJrnlLine,AtCompany);
+        l_GenJnlLine.ChangeCompany(AtCompany);
+
+        l_GenJnlLine.Reset();
+        l_GenJnlLine.SetRange("Journal Template Name", 'GENERAL');
+        l_GenJnlLine.SetRange("Journal Batch Name", 'ICTRANS');
+        l_GenJnlLine.SetRange("Document No.", GenJrnlLine."Document No.");
+        l_GenJnlLine.ModifyAll("Job Queue Status", l_GenJnlLine."Job Queue Status"::"Scheduled for Posting");
+        l_GenJnlLine.ModifyAll("Job Queue Entry ID", 'c1428436-1fd0-484f-8c55-9e3129b50228');
+    end;
+
+    // local procedure EnqueueJobEntry_Company(GenJrnlLine: Record "Gen. Journal Line"; AtCompany: Text[30]): Guid //From CU250
+    // var
+    //     JobQueueEntry: Record "Job Queue Entry";
+    //     GeneralLedgerSetup: Record "General Ledger Setup";
+    //     PostAndPrintDescription: Label 'Post and print journal lines for journal template %1, journal batch %2, document no. %3.';
+    // begin
+    //     GeneralLedgerSetup.ChangeCompany(AtCompany);
+    //     GeneralLedgerSetup.Get();
+
+    //     JobQueueEntry.ChangeCompany(AtCompany);
+    //     with JobQueueEntry do begin
+    //         Clear(ID);
+    //         "Object Type to Run" := "Object Type to Run"::Codeunit;
+    //         "Object ID to Run" := CODEUNIT::"Gen. Jnl.-Post via Job Queue";
+    //         "Record ID to Process" := GenJrnlLine.RecordId;
+    //         "Notify On Success" := GeneralLedgerSetup."Notify On Success";
+    //         "Job Queue Category Code" := GeneralLedgerSetup."Job Queue Category Code";
+    //         Description := PostAndPrintDescription;
+    //         Description := CopyStr(StrSubstNo(Description, GenJrnlLine."Journal Template Name", GenJrnlLine."Journal Batch Name", GenJrnlLine."Document No."), 1, MaxStrLen(Description));
+    //         CODEUNIT.Run(CODEUNIT::"Job Queue - Enqueue", JobQueueEntry);
+    //         exit(ID);
+    //     end;
+    // end;
 
     local procedure GetDimensionSetID_Company(var DimSetEntry: Record "Dimension Set Entry"; AtCompany: Text[30]): Integer
     var
