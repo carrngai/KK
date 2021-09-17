@@ -475,4 +475,55 @@ codeunit 50100 "General Function"
     end;
 
     //G014--
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnPostFixedAssetOnBeforePostVAT', '', true, true)]
+    local procedure OnPostFixedAssetOnBeforePostVAT(var GenJournalLine: Record "Gen. Journal Line")
+    var
+        FAPostingGr: Record "FA Posting Group";
+        FA: Record "Fixed Asset";
+        GLAccNo: code[20];
+        DimMgt: Codeunit DimensionManagement;
+        DimSetEntry: Record "Dimension Set Entry";
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+        DimVal: Record "Dimension Value";
+        DimensionSetID: Integer;
+    begin
+        if not (GenJournalLine."FA Posting Type" = GenJournalLine."FA Posting Type"::Disposal) then
+            exit;
+
+        if not (GenJournalLine."Source Type" = GenJournalLine."Source Type"::"Fixed Asset") then
+            exit;
+
+        FA.Get(GenJournalLine."Source No.");
+        FAPostingGr.Reset();
+        FAPostingGr.GetPostingGroup(FA."FA Posting Group", GenJournalLine."Depreciation Book Code");
+
+        GLAccNo := FAPostingGr.GetAccumDepreciationAccountOnDisposal();
+
+        if (GenJournalLine."Account No." <> GLAccNo) then
+            exit;
+
+        DimMgt.GetDimensionSet(TempDimSetEntry, GenJournalLine."Dimension Set ID");
+        FAPostingGr.TestField("Accum. Depr. Acc. on Disposal Dim.");
+        TempDimSetEntry.reset;
+        TempDimSetEntry.SetRange("Dimension Code", 'FIXED ASSET MOVEMENT');
+        if TempDimSetEntry.findfirst() then begin
+            TempDimSetEntry.Validate("Dimension Value Code", FAPostingGr."Accum. Depr. Acc. on Disposal Dim.");
+            TempDimSetEntry.Modify();
+        end
+        else begin
+            TempDimSetEntry.Init();
+            TempDimSetEntry."Dimension Code" := 'FIXED ASSET MOVEMENT';
+            TempDimSetEntry."Dimension Value Code" := FAPostingGr."Accum. Depr. Acc. on Disposal Dim.";
+            DimVal.Get(TempDimSetEntry."Dimension Code", FAPostingGr."Accum. Depr. Acc. on Disposal Dim.");
+            TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
+            TempDimSetEntry."Global Dimension No." := DimVal."Global Dimension No.";
+            TempDimSetEntry.Insert();
+        end;
+
+        DimensionSetID := GetDimensionSetID_Company(TempDimSetEntry, CompanyName);
+        if DimensionSetID <> GenJournalLine."Dimension Set ID" then begin
+            GenJournalLine."Dimension Set ID" := DimensionSetID;
+            GenJournalLine.Modify();
+        end;
+    end;
 }
