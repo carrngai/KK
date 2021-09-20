@@ -1,7 +1,8 @@
 codeunit 50100 "General Function"
 {
     Permissions = TableData "Dimension Set Entry" = rim, //G014
-                  TableData "Dimension Set Tree Node" = rim; //G014
+                  TableData "Dimension Set Tree Node" = rim, //G014
+                  tabledata "G/L Entry" = rim;
 
     trigger OnRun()
     begin
@@ -492,8 +493,8 @@ codeunit 50100 "General Function"
 
     //G014--
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnPostFixedAssetOnBeforePostVAT', '', true, true)]
-    local procedure OnPostFixedAssetOnBeforePostVAT(var GenJournalLine: Record "Gen. Journal Line")
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnPostFixedAssetOnBeforeInsertGLEntry', '', true, true)]
+    local procedure OnPostFixedAssetOnBeforeInsertGLEntry(var GenJournalLine: Record "Gen. Journal Line"; var GLEntry: Record "G/L Entry"; var IsHandled: Boolean; var TempFAGLPostBuf: Record "FA G/L Posting Buffer" temporary; GLEntry2: Record "G/L Entry")
     var
         FAPostingGr: Record "FA Posting Group";
         FA: Record "Fixed Asset";
@@ -516,10 +517,10 @@ codeunit 50100 "General Function"
 
         GLAccNo := FAPostingGr.GetAccumDepreciationAccountOnDisposal();
 
-        if (GenJournalLine."Account No." <> GLAccNo) then
+        if (GLEntry."G/L Account No." <> GLAccNo) then
             exit;
 
-        DimMgt.GetDimensionSet(TempDimSetEntry, GenJournalLine."Dimension Set ID");
+        DimMgt.GetDimensionSet(TempDimSetEntry, GLEntry."Dimension Set ID");
         FAPostingGr.TestField("Accum. Depr. Acc. on Disposal Dim.");
         TempDimSetEntry.reset;
         TempDimSetEntry.SetRange("Dimension Code", 'FIXED ASSET MOVEMENT');
@@ -539,8 +540,8 @@ codeunit 50100 "General Function"
 
         DimensionSetID := GetDimensionSetID_Company(TempDimSetEntry, CompanyName);
         if DimensionSetID <> GenJournalLine."Dimension Set ID" then begin
-            GenJournalLine."Dimension Set ID" := DimensionSetID;
-            GenJournalLine.Modify();
+            GLEntry."Dimension Set ID" := DimensionSetID;
+            //GLEntry.Modify();
         end;
     end;
 }
