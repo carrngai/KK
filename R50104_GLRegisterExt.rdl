@@ -7306,7 +7306,7 @@
                     </TablixMember>
                     <TablixMember>
                       <Visibility>
-                        <Hidden>=IIF(Fields!ShowApplied.Value, FALSE, TRUE)</Hidden>
+                        <Hidden>=IIF(Last(Fields!ShowApplied.Value), FALSE, TRUE)</Hidden>
                       </Visibility>
                       <KeepWithGroup>Before</KeepWithGroup>
                     </TablixMember>

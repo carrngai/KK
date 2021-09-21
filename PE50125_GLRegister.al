@@ -20,6 +20,16 @@ pageextension 50125 "G/L Registers Ext" extends "G/L Registers"
                 PromotedIsBig = true;
                 Caption = 'G/L Register';
             }
+            action("G/L Sales Document")
+            {
+                ApplicationArea = All;
+                RunObject = report "G/L Sales Document";
+                Image = SalesInvoice;
+                Promoted = true;
+                PromotedCategory = Report;
+                PromotedIsBig = true;
+                Caption = 'G/L Sales Document';
+            }
         }
         modify("G/L Register") { Visible = false; }
     }

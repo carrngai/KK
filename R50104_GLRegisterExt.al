@@ -222,11 +222,11 @@ report 50104 "G/L Register Ext"
                         end;
                     }
 
-                    trigger OnAfterGetRecord()
-                    begin
-                        if ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::Invoice) OR ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::"Credit Memo") then
-                            PrintSalesDoc := true;
-                    end;
+                    // trigger OnAfterGetRecord()
+                    // begin
+                    //     if ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::Invoice) OR ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::"Credit Memo") then
+                    //         PrintSalesDoc := true;
+                    // end;
                 }
                 dataitem("Vendor Ledger Entry"; "Vendor Ledger Entry") //G003
                 {
@@ -372,6 +372,9 @@ report 50104 "G/L Register Ext"
 
                             if (l_CLE."Original Amount" < 0) and (l_CLE."Remaining Amount" <> l_CLE.Amount) then
                                 ShowApplied := true;
+
+                            if (l_CLE."Document Type" = l_CLE."Document Type"::Invoice) or (l_CLE."Document Type" = l_CLE."Document Type"::"Credit Memo") then
+                                PrintSalesDoc := true;
                         end;
                     end;
 
@@ -381,6 +384,7 @@ report 50104 "G/L Register Ext"
 
                             //if l_VLE."Currency Code" <> '' then
                             //    FCYCode := l_VLE."Currency Code";
+
                             if l_VLE."Original Amount" > 0 then
                                 DrAmt := l_VLE."Original Amount"
                             else
