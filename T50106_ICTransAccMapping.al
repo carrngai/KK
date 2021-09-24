@@ -96,8 +96,11 @@ table 50106 "IC Transaction Account Mapping"
     end;
 
     trigger OnDelete()
+    var
+        ICTransAccMappingDim: Record "IC Trans. Account Mapping Dim.";
     begin
-
+        ICTransAccMappingDim.SetRange(ID, ID);
+        ICTransAccMappingDim.DeleteAll(true);
     end;
 
     trigger OnRename()

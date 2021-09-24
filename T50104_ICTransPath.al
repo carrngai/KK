@@ -8,6 +8,7 @@ table 50104 "IC Transaction Path"
         field(1; "Path Code"; Code[20])
         {
             DataClassification = ToBeClassified;
+            NotBlank = true;
 
         }
         field(2; "Description"; Text[50])
@@ -87,8 +88,15 @@ table 50104 "IC Transaction Path"
     end;
 
     trigger OnDelete()
+    var
+        ICTransPathDetail: Record "IC Transaction Path Details";
+        ICTransAccMapping: Record "IC Transaction Account Mapping";
     begin
+        ICTransPathDetail.SetRange("Path Code", "Path Code");
+        ICTransPathDetail.DeleteAll(true);
 
+        ICTransAccMapping.SetRange("Path Code", "Path Code");
+        ICTransAccMapping.DeleteAll(true);
     end;
 
     trigger OnRename()

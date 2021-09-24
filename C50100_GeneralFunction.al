@@ -253,13 +253,20 @@ codeunit 50100 "General Function"
         TempDimSetEntry2: Record "Dimension Set Entry" temporary;
         DimMgt: Codeunit DimensionManagement;
         DefaultDim: Record "Default Dimension";
-
+        GLSetup1: Record "General Ledger Setup";
+        GLSetup2: Record "General Ledger Setup";
+        CurrExchRate2: Record "Currency Exchange Rate";
     begin
         ICGenBatch.ChangeCompany(AtCompany);
         ICGenJnlLine.ChangeCompany(AtCompany);
         TempDimSetEntry2.ChangeCompany(AtCompany);
         DefaultDim.ChangeCompany(AtCompany);
         DimVal.ChangeCompany(AtCompany);
+        GLSetup2.ChangeCompany(AtCompany);
+        CurrExchRate2.ChangeCompany(AtCompany);
+
+        GLSetup1.Get();
+        GLSetup2.Get();
 
         ICGenBatch.Reset();
         ICGenBatch.SetRange("Journal Template Name", 'GENERAL');
@@ -292,10 +299,21 @@ codeunit 50100 "General Function"
         ICGenJnlLine.Insert();
         ICGenJnlLine."Account Type" := AccType;
         ICGenJnlLine."Account No." := AccNo;
-        ICGenJnlLine."Currency Code" := SourceGenJnLine."Currency Code";
-        ICGenJnlLine."Currency Factor" := SourceGenJnLine."Currency Factor";
         ICGenJnlLine.Description := SourceGenJnLine.Description;
-        ICGenJnlLine.Validate(Amount, LineAmount);
+        if GLSetup1."LCY Code" = GLSetup2."LCY Code" then begin
+            ICGenJnlLine."Currency Code" := SourceGenJnLine."Currency Code";
+            ICGenJnlLine."Currency Factor" := SourceGenJnLine."Currency Factor";
+            ICGenJnlLine.Validate(Amount, LineAmount);
+        end else begin
+            ICGenJnlLine."Currency Code" := SourceGenJnLine."Currency Code";
+            CurrExchRate2.Reset();
+            CurrExchRate2.SetRange("Currency Code", SourceGenJnLine."Currency Code");
+            CurrExchRate2.SetRange("Starting Date", 0D, SourceGenJnLine."Posting Date");
+            if CurrExchRate2.FindLast() then
+                if CurrExchRate2."Relational Currency Code" = '' then
+                    ICGenJnlLine."Currency Factor" := CurrExchRate2."Exchange Rate Amount" / CurrExchRate2."Relational Exch. Rate Amount";
+            ICGenJnlLine.Validate(Amount, LineAmount);
+        end;
 
         //Line Dimension
         //1. From Default Dimension
