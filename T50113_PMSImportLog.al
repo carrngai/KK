@@ -41,6 +41,10 @@ table 50113 "PMS Import Log"
         field(12; "Error Message 4"; Text[250])
         {
         }
+        field(13; "File Name"; Text[250])
+        {
+
+        }
     }
 
     keys

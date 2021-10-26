@@ -75,6 +75,14 @@ table 50110 PMSImportTable
         {
 
         }
+        field(19; "Row No."; Integer)
+        {
+
+        }
+        field(20; "File Name"; Text[250])
+        {
+
+        }
     }
 
     keys

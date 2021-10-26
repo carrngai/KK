@@ -5,7 +5,7 @@ enum 50100 "PMS Import Status"
     value(0; "Open")
     {
     }
-    value(1; "Posted")
+    value(1; "Closed")
     {
 
     }

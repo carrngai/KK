@@ -4,6 +4,7 @@ page 50110 "PMSImportTable"
     ApplicationArea = All;
     UsageCategory = Administration;
     SourceTable = "PMSImportTable";
+    Caption = 'PMS Import Table';
 
     layout
     {
@@ -85,6 +86,34 @@ page 50110 "PMSImportTable"
                 {
                     ApplicationArea = All;
                 }
+                field("Row No."; "Row No.")
+                {
+                    ApplicationArea = all;
+                }
+                field("File Name"; "File Name")
+                {
+                    ApplicationArea = all;
+                }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            action("Convert to General Journal")
+            {
+                ApplicationArea = All;
+                Image = Line;
+                Promoted = true;
+                PromotedCategory = Process;
+                trigger OnAction()
+                var
+                    PMSImport: Codeunit PMSImport;
+                begin
+                    PMSImport.ConvertPMS("File Name");
+                end;
+
             }
         }
     }

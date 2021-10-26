@@ -4,6 +4,8 @@ page 50114 "PMS Import Log"
     ApplicationArea = All;
     UsageCategory = Administration;
     SourceTable = "PMS Import Log";
+    Editable = false;
+    SourceTableView = sorting("Entry No.") order(descending);
 
     layout
     {
@@ -58,6 +60,10 @@ page 50114 "PMS Import Log"
                 field("Error Message 4"; "Error Message 4")
                 {
                     ApplicationArea = All;
+                }
+                field("File Name"; "File Name")
+                {
+                    ApplicationArea = all;
                 }
             }
         }
