@@ -343,8 +343,8 @@ report 50104 "G/L Register Ext"
 
                     if "Source Type" = "Source Type"::"Bank Account" then begin
                         if l_BLE.Get("Entry No.") then begin
-                            //if l_BLE."Currency Code" <> '' then
-                            //    FCYCode := l_BLE."Currency Code";
+                            if l_BLE."Currency Code" <> '' then
+                                FCYCode := l_BLE."Currency Code";
                             if l_BLE.Amount > 0 then
                                 DrAmt := l_BLE.Amount
                             else
@@ -359,8 +359,8 @@ report 50104 "G/L Register Ext"
 
                             l_CLE.CalcFields("Original Amount", "Original Amt. (LCY)", "Remaining Amount", Amount);
 
-                            //if l_CLE."Currency Code" <> '' then
-                            //    FCYCode := l_CLE."Currency Code";
+                            if l_CLE."Currency Code" <> '' then
+                                FCYCode := l_CLE."Currency Code";
 
                             if l_CLE."Original Amount" > 0 then
                                 DrAmt := l_CLE."Original Amount"
@@ -382,8 +382,8 @@ report 50104 "G/L Register Ext"
                         if l_VLE.Get("Entry No.") then begin
                             l_VLE.CalcFields("Original Amount", "Original Amt. (LCY)", "Remaining Amount", Amount);
 
-                            //if l_VLE."Currency Code" <> '' then
-                            //    FCYCode := l_VLE."Currency Code";
+                            if l_VLE."Currency Code" <> '' then
+                                FCYCode := l_VLE."Currency Code";
 
                             if l_VLE."Original Amount" > 0 then
                                 DrAmt := l_VLE."Original Amount"
