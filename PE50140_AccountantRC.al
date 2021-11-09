@@ -173,6 +173,10 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
                 RunObject = page "Vendor Ledger Entries";
             }
         }
+        modify(SetupAndExtensions)
+        {
+            Visible = true;
+        }
 
         addfirst(SetupAndExtensions)
         {
