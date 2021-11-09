@@ -1140,12 +1140,13 @@ codeunit 50131 "Config. Company Exchange"
         ConfigFieldMapping: Record "Config. Field Map";
         NewValue: Text[250];
     begin
-        IF ConfigFieldMapping.GET(
-             ConfigPackageData."Package Code",
-             ConfigPackageField."Table ID",
-             ConfigPackageField."Field ID",
-             ConfigPackageData.Value)
-        THEN
+
+        ConfigFieldMapping.Reset();
+        ConfigFieldMapping.SetRange("Package Code", ConfigPackageData."Package Code");
+        ConfigFieldMapping.SetRange("Table ID", ConfigPackageField."Table ID");
+        ConfigFieldMapping.SetRange("Field ID", ConfigPackageField."Field ID");
+        ConfigFieldMapping.SetRange("Old Value", ConfigPackageData.Value);
+        IF ConfigFieldMapping.FindFirst() THEN
             NewValue := ConfigFieldMapping."New Value";
 
         IF (NewValue = '') AND (ConfigPackageField."Relation Table ID" <> 0) THEN
@@ -1475,14 +1476,15 @@ codeunit 50131 "Config. Company Exchange"
         ConfigPackageField2.SETRANGE("Package Code", ConfigPackageField."Package Code");
         ConfigPackageField2.SETRANGE("Table ID", ConfigPackageField."Relation Table ID");
         ConfigPackageField2.SETRANGE("Primary Key", TRUE);
-        IF ConfigPackageField2.FINDFIRST THEN
-            IF ConfigFieldMapping.GET(
-                 ConfigPackageField2."Package Code",
-                 ConfigPackageField2."Table ID",
-                 ConfigPackageField2."Field ID",
-                 MappingOldValue)
-            THEN
+        IF ConfigPackageField2.FINDFIRST THEN begin
+            ConfigFieldMapping.Reset();
+            ConfigFieldMapping.SetRange("Package Code", ConfigPackageField2."Package Code");
+            ConfigFieldMapping.SetRange("Table ID", ConfigPackageField2."Table ID");
+            ConfigFieldMapping.SetRange("Field ID", ConfigPackageField2."Field ID");
+            ConfigFieldMapping.SetRange("Old Value", MappingOldValue);
+            IF ConfigFieldMapping.FindFirst() THEN
                 EXIT(ConfigFieldMapping."New Value");
+        end;
     end;
 
     local procedure CreateMissingCodes(var ConfigPackageData: Record "Config. Package Data"; RelationTableID: Integer; PackageCode: Code[20])
