@@ -13,16 +13,6 @@ pageextension 50112 "General Ledger Entries Ext" extends "General Ledger Entries
         }
         addafter("Credit Amount")
         {
-            field("Source Type"; Rec."Source Type")
-            {
-                ToolTip = 'Specifies the value of the Source Type field';
-                ApplicationArea = All;
-            }
-            field("Source No."; Rec."Source No.")
-            {
-                ToolTip = 'Specifies the value of the Source No. field';
-                ApplicationArea = All;
-            }
             field("Netting Source No."; Rec."Netting Source No.")
             {
                 ToolTip = 'Specifies the value of the Netting Source No. field';
