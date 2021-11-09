@@ -1137,7 +1137,7 @@ codeunit 50131 "Config. Company Exchange"
 
     local procedure UpdateValueUsingMapping(var ConfigPackageData: Record "Config. Package Data"; ConfigPackageField: Record "Config. Package Field"; PackageCode: Code[20])
     var
-        ConfigFieldMapping: Record "Config. Field Mapping";
+        ConfigFieldMapping: Record "Config. Field Map";
         NewValue: Text[250];
     begin
         IF ConfigFieldMapping.GET(
@@ -1470,7 +1470,7 @@ codeunit 50131 "Config. Company Exchange"
     local procedure GetMappingFromPKOfRelatedTable(ConfigPackageField: Record "Config. Package Field"; MappingOldValue: Text[250]): Text[250]
     var
         ConfigPackageField2: Record "Config. Package Field";
-        ConfigFieldMapping: Record "Config. Field Mapping";
+        ConfigFieldMapping: Record "Config. Field Map";
     begin
         ConfigPackageField2.SETRANGE("Package Code", ConfigPackageField."Package Code");
         ConfigPackageField2.SETRANGE("Table ID", ConfigPackageField."Relation Table ID");

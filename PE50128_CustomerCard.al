@@ -28,7 +28,7 @@ pageextension 50128 "Customer Card Ext" extends "Customer Card"
         modify("Customer price Group") { Visible = false; }
         modify(Shipping) { Visible = false; }
 
-        modify(PriceAndLineDisc) { Visible = false; }
+        //modify(PriceAndLineDisc) { Visible = false; }
 
         modify(SalesHistSelltoFactBox) { Visible = false; }
         modify(Control1905532107) { Visible = true; }
