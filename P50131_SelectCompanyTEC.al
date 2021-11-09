@@ -28,6 +28,57 @@ page 50131 SelectCompanyTEC
         }
     }
 
+    actions
+    {
+
+        area(Processing)
+        {
+            action("Set Select")
+            {
+                ApplicationArea = All;
+                Image = Completed;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                var
+                    l_company: Record "Company TEC";
+                begin
+                    l_company.Reset();
+                    if l_company.FindSet() then begin
+                        repeat
+                            l_company.Select := true;
+                            l_company.Modify();
+                        until l_company.Next() = 0;
+                    end;
+                end;
+            }
+            action("Clear Select")
+            {
+                ApplicationArea = All;
+                Image = ResetStatus;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                var
+                    l_company: Record "Company TEC";
+                begin
+                    l_company.Reset();
+                    if l_company.FindSet() then begin
+                        repeat
+                            l_company.Select := false;
+                            l_company.Modify();
+                        until l_company.Next() = 0;
+                    end;
+                end;
+            }
+        }
+
+    }
+
     trigger OnOpenPage()
     var
         Company: Record Company;
