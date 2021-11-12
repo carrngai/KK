@@ -11,17 +11,17 @@ page 50113 "PMS Import Setup"
         {
             repeater("PMS Import Setup")
             {
-                field("PMS Account No."; "PMS Account No.")
+                field("PMS Account No."; Rec."PMS Account No.")
                 {
                     ApplicationArea = All;
 
                 }
-                field("Instrument Type"; "Instrument Type")
+                field("Instrument Type"; Rec."Instrument Type")
                 {
                     ApplicationArea = All;
 
                 }
-                field("G/L Account No."; "G/L Account No.")
+                field("G/L Account No."; Rec."G/L Account No.")
                 {
                     ApplicationArea = All;
 
@@ -60,9 +60,9 @@ page 50113 "PMS Import Setup"
         IsHandled: Boolean;
         DimMgt: Codeunit "DimensionManagement";
     begin
-        OldDimSetID := "Dimension Set ID";
-        "Dimension Set ID" :=
-          DimMgt.EditDimensionSet("Dimension Set ID", StrSubstNo('%1 %2', "PMS Account No.", "Instrument Type"));
+        OldDimSetID := Rec."Dimension Set ID";
+        Rec."Dimension Set ID" :=
+          DimMgt.EditDimensionSet(Rec."Dimension Set ID", StrSubstNo('%1 %2', Rec."PMS Account No.", Rec."Instrument Type"));
 
     end;
 }

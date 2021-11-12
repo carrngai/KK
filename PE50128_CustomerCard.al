@@ -56,9 +56,9 @@ pageextension 50128 "Customer Card Ext" extends "Customer Card"
         modify(CreateFlow) { Promoted = false; }
         modify(SeeFlows) { Promoted = false; }
 
-        modify(Prices) { Promoted = false; }
-        modify("Line Discounts") { Promoted = false; }
-        modify("Prices and Discounts Overview") { Promoted = false; }
+        // modify(Prices) { Promoted = false; }
+        // modify("Line Discounts") { Promoted = false; }
+        // modify("Prices and Discounts Overview") { Promoted = false; }
 
         modify("Ledger E&ntries") { Promoted = true; PromotedCategory = Category9; }
         modify("Direct Debit Mandates") { Promoted = false; }

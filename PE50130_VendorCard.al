@@ -40,8 +40,8 @@ pageextension 50130 "Vendor Card Ext" extends "Vendor Card"
         modify(NewPurchaseCrMemo) { Promoted = false; }
 
         modify("Ledger E&ntries") { Promoted = true; PromotedCategory = Category7; }
-        modify(Prices) { Promoted = false; }
-        modify("Line Discounts") { Promoted = false; }
+        // modify(Prices) { Promoted = false; }
+        // modify("Line Discounts") { Promoted = false; }
         modify(Quotes) { Promoted = false; }
         modify(Orders) { Promoted = false; }
         modify("Return Orders") { Promoted = false; }

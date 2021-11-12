@@ -4,11 +4,11 @@ pageextension 50143 GLSetupExt extends "General Ledger Setup"
     {
         addlast(General)
         {
-            field("PMS Import General Journal Template"; "PMS Import General Journal Template")
+            field("PMS Import General Journal Template"; Rec."PMS Import Gen. Jnl. Template")
             {
                 ApplicationArea = all;
             }
-            field("PMS Import General Journal Batch"; "PMS Import General Journal Batch")
+            field("PMS Import General Journal Batch"; Rec."PMS Import Gen. Jnl. Batch")
             {
                 ApplicationArea = all;
             }

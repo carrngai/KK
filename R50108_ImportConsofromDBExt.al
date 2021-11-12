@@ -2,6 +2,8 @@ report 50108 "Import Conso. from DB Ext"
 
 //G015 Handle JV / Associate company during consolidation
 //G017 During “Run Consolidation”, Reverse exch. rate adj. entries for pervious pervious and create new exch. Rate adjustment entries for current rate. 
+//TEC211112 
+
 {
     Caption = 'Consolidation Report Ext';
     UsageCategory = Administration;
@@ -227,6 +229,29 @@ report 50108 "Import Conso. from DB Ext"
                 l_ProfitAmt: Decimal; //G015
                 SourceCodeSetup: Record "Source Code Setup"; //G015
             begin
+
+                //TEC211112++
+                if "Business Unit"."Starting Date" <> 0D then begin
+                    if "Business Unit"."Starting Date" > InitialConsolidEndDate then
+                        CurrReport.skip()
+                    else
+                        if "Business Unit"."Starting Date" > InitialConsolidStartDate then
+                            ConsolidStartDate := "Business Unit"."Starting Date"
+                        else
+                            ConsolidStartDate := InitialConsolidStartDate;
+                end;
+
+                if "Business Unit"."Ending Date" <> 0D then begin
+                    if "Business Unit"."Ending Date" < InitialConsolidStartDate then
+                        CurrReport.Skip()
+                    else
+                        if "Business Unit"."Ending Date" < InitialConsolidEndDate then
+                            ConsolidEndDate := "Business Unit"."Ending Date"
+                        else
+                            ConsolidEndDate := InitialConsolidEndDate;
+                end;
+                //TEC211112--
+
                 Window.Update(1, Code);
                 Window.Update(2, '');
 
@@ -307,6 +332,13 @@ report 50108 "Import Conso. from DB Ext"
 
             trigger OnPreDataItem()
             begin
+                //TEC211112++
+                if InitialConsolidStartDate = 0D then
+                    InitialConsolidStartDate := ConsolidStartDate;
+                if InitialConsolidEndDate = 0D then
+                    InitialConsolidEndDate := ConsolidEndDate;
+                //TEC211112--        
+
                 CheckConsolidDates(ConsolidStartDate, ConsolidEndDate);
 
                 if GLDocNo = '' then
@@ -318,6 +350,7 @@ report 50108 "Import Conso. from DB Ext"
                   Text003 +
                   Text004);
             end;
+
         }
 
     }
@@ -458,6 +491,9 @@ report 50108 "Import Conso. from DB Ext"
         GenJnlLine: Record "Gen. Journal Line";//G017
         TempGenJnlLine: Record "Gen. Journal Line" temporary; //G017
         NextLineNo: Integer; //G017
+
+        InitialConsolidStartDate: Date; //TEC211112
+        InitialConsolidEndDate: Date; //TEC211112
 
     local procedure CheckClosingPostings(GLAccNo: Code[20]; StartDate: Date; EndDate: Date)
     var

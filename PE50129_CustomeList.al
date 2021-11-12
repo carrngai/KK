@@ -36,8 +36,8 @@ pageextension 50129 "Customer List Ext" extends "Customer List"
         modify(NewSalesInvoice) { Promoted = false; }
         modify(NewSalesCrMemo) { Promoted = false; }
         modify(NewReminder) { Promoted = false; }
-        modify(Prices_Prices) { Promoted = false; }
-        modify(Prices_LineDiscounts) { Promoted = false; }
+        // modify(Prices_Prices) { Promoted = false; }
+        // modify(Prices_LineDiscounts) { Promoted = false; }
 
         modify(ReportAgedAccountsReceivable) { Promoted = true; PromotedCategory = Report; }
         modify("Customer - Order Summary") { Promoted = false; }

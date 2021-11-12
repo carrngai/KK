@@ -539,18 +539,18 @@ codeunit 50100 "General Function"
             exit;
 
         DimMgt.GetDimensionSet(TempDimSetEntry, GLEntry."Dimension Set ID");
-        FAPostingGr.TestField("Accum. Depr. Acc. on Disposal Dim.");
+        FAPostingGr.TestField("Accum Depr Acc on Disposal Dim");
         TempDimSetEntry.reset;
         TempDimSetEntry.SetRange("Dimension Code", 'FIXED ASSET MOVEMENT');
         if TempDimSetEntry.findfirst() then begin
-            TempDimSetEntry.Validate("Dimension Value Code", FAPostingGr."Accum. Depr. Acc. on Disposal Dim.");
+            TempDimSetEntry.Validate("Dimension Value Code", FAPostingGr."Accum Depr Acc on Disposal Dim");
             TempDimSetEntry.Modify();
         end
         else begin
             TempDimSetEntry.Init();
             TempDimSetEntry."Dimension Code" := 'FIXED ASSET MOVEMENT';
-            TempDimSetEntry."Dimension Value Code" := FAPostingGr."Accum. Depr. Acc. on Disposal Dim.";
-            DimVal.Get(TempDimSetEntry."Dimension Code", FAPostingGr."Accum. Depr. Acc. on Disposal Dim.");
+            TempDimSetEntry."Dimension Value Code" := FAPostingGr."Accum Depr Acc on Disposal Dim";
+            DimVal.Get(TempDimSetEntry."Dimension Code", FAPostingGr."Accum Depr Acc on Disposal Dim");
             TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
             TempDimSetEntry."Global Dimension No." := DimVal."Global Dimension No.";
             TempDimSetEntry.Insert();

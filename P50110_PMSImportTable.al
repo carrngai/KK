@@ -12,85 +12,85 @@ page 50110 "PMSImportTable"
         {
             repeater(PMSImportTableList)
             {
-                field("Entry No."; "Entry No.")
+                field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;
 
                 }
-                field(Status; Status)
+                field(Status; Rec.Status)
                 {
                     ApplicationArea = All;
                 }
-                field("Transaction Date"; "Transaction Date")
+                field("Transaction Date"; Rec."Transaction Date")
                 {
                     ApplicationArea = All;
 
                 }
-                field("Account Number"; "Account Number")
+                field("Account Number"; Rec."Account Number")
                 {
                     ApplicationArea = All;
                 }
-                field("Account Description"; "Account Description")
+                field("Account Description"; Rec."Account Description")
                 {
                     ApplicationArea = All;
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = All;
                 }
-                field("Base Amount"; "Base Amount")
+                field("Base Amount"; Rec."Base Amount")
                 {
                     ApplicationArea = All;
                 }
-                field("Native Amount"; "Native Amount")
+                field("Native Amount"; Rec."Native Amount")
                 {
                     ApplicationArea = All;
                 }
-                field(Currency; Currency)
+                field(Currency; Rec.Currency)
                 {
                     ApplicationArea = All;
                 }
-                field("Entry Memo"; "Entry Memo")
+                field("Entry Memo"; Rec."Entry Memo")
                 {
                     ApplicationArea = All;
                 }
-                field("GL Name"; "GL Name")
+                field("GL Name"; Rec."GL Name")
                 {
                     ApplicationArea = All;
                 }
-                field("Entry Source"; "Entry Source")
+                field("Entry Source"; Rec."Entry Source")
                 {
                     ApplicationArea = All;
                 }
-                field("GL Entry Id"; "GL Entry Id")
+                field("GL Entry Id"; Rec."GL Entry Id")
                 {
                     ApplicationArea = All;
                 }
-                field("GL Distribution Line"; "GL Distribution Line")
+                field("GL Distribution Line"; Rec."GL Distribution Line")
                 {
                     ApplicationArea = All;
                 }
-                field(ISIN; ISIN)
+                field(ISIN; Rec.ISIN)
                 {
                     ApplicationArea = All;
                 }
-                field("BB Yellow Key"; "BB Yellow Key")
+                field("BB Yellow Key"; Rec."BB Yellow Key")
                 {
                     ApplicationArea = All;
                 }
-                field("Custodian Account Display Name"; "Custodian Account Display Name")
+                field("Custodian Account Display Name"; Rec."Custodian Account Display Name")
                 {
                     ApplicationArea = All;
                 }
-                field(Custodian; Custodian)
+                field(Custodian; Rec.Custodian)
                 {
                     ApplicationArea = All;
                 }
-                field("Row No."; "Row No.")
+                field("Row No."; Rec."Row No.")
                 {
                     ApplicationArea = all;
                 }
-                field("File Name"; "File Name")
+                field("File Name"; Rec."File Name")
                 {
                     ApplicationArea = all;
                 }
@@ -111,7 +111,7 @@ page 50110 "PMSImportTable"
                 var
                     PMSImport: Codeunit PMSImport;
                 begin
-                    PMSImport.ConvertPMS("File Name");
+                    PMSImport.ConvertPMS(Rec."File Name");
                 end;
 
             }

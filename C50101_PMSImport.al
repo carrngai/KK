@@ -19,8 +19,8 @@ codeunit 50101 PMSImport
     begin
         GLSetup.Get();
         GnlJnlLine.Reset();
-        GnlJnlLine.SetRange("Journal Template Name", GLSetup."PMS Import General Journal Template");
-        GnlJnlLine.SetRange("Journal Batch Name", GLSetup."PMS Import General Journal Batch");
+        GnlJnlLine.SetRange("Journal Template Name", GLSetup."PMS Import Gen. Jnl. Template");
+        GnlJnlLine.SetRange("Journal Batch Name", GLSetup."PMS Import Gen. Jnl. Batch");
         if GnlJnlLine.FindLast() then
             LineNo := GnlJnlLine."Line No." + 10000
         else
@@ -50,8 +50,8 @@ codeunit 50101 PMSImport
                     Log(PMSImportTable, 'Cannot find Currency Code: ' + PMSImportTable.Currency);
 
                 GnlJnlLine.Init();
-                GnlJnlLine."Journal Template Name" := GLSetup."PMS Import General Journal Template";
-                GnlJnlLine."Journal Batch Name" := GLSetup."PMS Import General Journal Batch";
+                GnlJnlLine."Journal Template Name" := GLSetup."PMS Import Gen. Jnl. Template";
+                GnlJnlLine."Journal Batch Name" := GLSetup."PMS Import Gen. Jnl. Batch";
                 GnlJnlLine."Line No." := LineNo;
                 GnlJnlLine.Validate("Posting Date", PMSImportTable."Transaction Date");
                 GnlJnlLine.Validate("Document No.", PMSImportTable."GL Entry Id");

@@ -4,7 +4,7 @@ pageextension 50142 FAPostingGroupExt extends "FA Posting Group Card"
     {
         addafter("Accum. Depr. Acc. on Disposal")
         {
-            field("Accum. Depr. Acc. on Disposal Dim."; "Accum. Depr. Acc. on Disposal Dim.")
+            field("Accum. Depr. Acc. on Disposal Dim."; Rec."Accum Depr Acc on Disposal Dim")
             {
                 ApplicationArea = All;
             }
