@@ -30,9 +30,9 @@ report 50110 "Exch. Rate Gain/Loss Netting"
                 l_YearEnd: Boolean;
             begin
 
-                BU.ChangeCompany(Company.Name);
-                if BU.FindSet() then
-                    CurrReport.Skip();
+                // BU.ChangeCompany(Company.Name);
+                // if BU.FindSet() then
+                //     CurrReport.Skip();
 
                 //Not Reverse for year end posting
                 l_AccPeriod.ChangeCompany(Company.Name);
