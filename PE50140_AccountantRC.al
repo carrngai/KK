@@ -21,8 +21,8 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify("Sales &Credit Memo") { Visible = false; }
         modify("P&urchase Credit Memo") { Visible = false; }
         modify("VAT Reports") { Visible = false; }
-        modify("Cash Flow Setup") { Visible = false; }
-        modify("Cost Accounting Setup") { Visible = false; }
+        // modify("Cash Flow Setup") { Visible = false; }
+        // modify("Cost Accounting Setup") { Visible = false; }
         modify("P&ost Inventory Cost to G/L") { Visible = false; }
         modify("Calc. and Pos&t VAT Settlement") { Visible = false; }
         modify(Action60) { Visible = false; }
@@ -74,7 +74,7 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify(Deferrals) { Visible = false; }
         modify(Action14) { Visible = false; } //'VAT Statements'
         modify("Bank Account Posting Groups") { Visible = false; }
-        modify(Action116) { Visible = false; } //'G/L Account Categories'
+        // modify(Action116) { Visible = false; } //'G/L Account Categories'
         addlast(Action172)
         {
             action(Customer)

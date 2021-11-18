@@ -67,7 +67,7 @@ codeunit 50131 "Config. Company Exchange"
         EXIT(FieldRef.NUMBER);
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure fn_ExportRecordsFromCompany(PackageCode: Code[20]): Boolean
     var
         RecordRef: RecordRef;
@@ -138,7 +138,7 @@ codeunit 50131 "Config. Company Exchange"
         EXIT(l_booImported);
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure fn_ExportRecordsFromCompanyPerTable(PackageCode: Code[20]; var ConfigPackageTable: Record "Config. Package Table"): Boolean
     var
         RecordRef: RecordRef;
@@ -220,7 +220,7 @@ codeunit 50131 "Config. Company Exchange"
             FillPackageDataFromTable(PackageCode, TableID, RecordRef);
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure fn_ApplyCompanyPackage(ConfigPackage: Record "Config. Package"; var ConfigPackageTable: Record "Config. Package Table"; SetupProcessingOrderForTables: Boolean) ErrorCount: Integer
     var
         DimSetEntry: Record "Dimension Set Entry";
@@ -318,7 +318,7 @@ codeunit 50131 "Config. Company Exchange"
             MESSAGE(NoTablesAndErrorsMsg, TableCount, ErrorCount, RecordsInsertedCount, RecordsModifiedCount);
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure ApplySelectedPackageRecords(var ConfigPackageRecord: Record "Config. Package Record"; PackageCode: Code[20]; TableNo: Integer; CopyToCompany: Text[30])
     begin
         //Copy record data to company
@@ -611,7 +611,7 @@ codeunit 50131 "Config. Company Exchange"
         EXIT(FALSE);
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure InsertPackageRecord(ConfigPackageRecord: Record "Config. Package Record"; CopyToCompany: Text[30])
     var
         ConfigPackageTable: Record "Config. Package Table";
@@ -891,7 +891,7 @@ codeunit 50131 "Config. Company Exchange"
         EXIT(DimMgt.GetDimensionSetID(TempDimSetEntry));
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure GetDimSetIDForRecord(ConfigPackageRecord: Record "Config. Package Record"): Integer
     var
         ConfigPackageData: Record "Config. Package Data";
@@ -975,7 +975,7 @@ codeunit 50131 "Config. Company Exchange"
         END;
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure UpdateDefaultDimValues(ConfigPackageRecord: Record "Config. Package Record"; MasterNo: Code[20])
     var
         ConfigPackageTableDim: Record "Config. Package Table";
@@ -1114,7 +1114,7 @@ codeunit 50131 "Config. Company Exchange"
             UNTIL ConfigPackageField.NEXT = 0;
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure GetFieldsOrder(RecRef: RecordRef; PackageCode: Code[20]; var TempConfigPackageField: Record "Config. Package Field" temporary)
     var
         ConfigPackageField: Record "Config. Package Field";
@@ -1196,7 +1196,7 @@ codeunit 50131 "Config. Company Exchange"
     begin
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure SetFieldFilter(var "Field": Record "Field"; TableID: Integer; FieldID: Integer)
     begin
         Field.RESET;
@@ -1209,7 +1209,7 @@ codeunit 50131 "Config. Company Exchange"
         Field.SETFILTER(ObsoleteState, '<>%1', Field.ObsoleteState::Removed);
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure SetupProcessingOrder(var ConfigPackageTable: Record "Config. Package Table")
     var
         ConfigPackageTableLoop: Record "Config. Package Table";
@@ -1324,7 +1324,7 @@ codeunit 50131 "Config. Company Exchange"
             END;
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure IsBLOBField(TableId: Integer; FieldId: Integer): Boolean
     var
         "Field": Record "Field";
@@ -1382,7 +1382,7 @@ codeunit 50131 "Config. Company Exchange"
         FieldRef.VALUE := FORMAT(TempConfigMediaBuffer."Media Set");
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure IsMediaSetField(TableId: Integer; FieldId: Integer): Boolean
     var
         "Field": Record "Field";
@@ -1399,7 +1399,7 @@ codeunit 50131 "Config. Company Exchange"
         EXIT(FieldType = Field.Type::MediaSet);
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure IsMediaField(TableId: Integer; FieldId: Integer): Boolean
     var
         "Field": Record "Field";
@@ -1511,7 +1511,7 @@ codeunit 50131 "Config. Company Exchange"
                 IF RecRef.INSERT THEN;
     end;
 
-    [Scope('Personalization')]
+    [Scope('Cloud')]
     procedure CleanPackageErrors(PackageCode: Code[20]; TableFilter: Text)
     var
         ConfigPackageError: Record "Config. Package Error";
