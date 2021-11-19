@@ -102,104 +102,103 @@ report 50109 ARAPNetting
                                     until l_GL.Next() = 0;
                             until l_COA.Next() = 0;
 
-                        if (l_SumAR = 0) OR (l_SumAP = 0) then
-                            CurrReport.Skip();
+                        if (l_SumAR <> 0) AND (l_SumAP <> 0) then begin
+                            GenJnlBatch.ChangeCompany(Company.Name);
+                            GenJnlLine.ChangeCompany(Company.Name);
 
-                        GenJnlBatch.ChangeCompany(Company.Name);
-                        GenJnlLine.ChangeCompany(Company.Name);
+                            if (Abs(l_SumAR) > Abs(l_SumAR + l_SumAP)) or (Abs(l_SumAP) > Abs(l_SumAR + l_SumAP)) then begin
 
-                        if (Abs(l_SumAR) > Abs(l_SumAR + l_SumAP)) or (Abs(l_SumAP) > Abs(l_SumAR + l_SumAP)) then begin
+                                l_CustPostGrp.Get(Customer."Customer Posting Group");
+                                l_Vend.Get(Customer."Netting Vendor No.");
+                                l_VendPostGrp.Get(l_Vend."Vendor Posting Group");
 
-                            l_CustPostGrp.Get(Customer."Customer Posting Group");
-                            l_Vend.Get(Customer."Netting Vendor No.");
-                            l_VendPostGrp.Get(l_Vend."Vendor Posting Group");
+                                GenJnlBatch.Reset();
+                                GenJnlBatch.SetRange("Journal Template Name", 'GENERAL');
+                                GenJnlBatch.SetRange(Name, 'NET-ARAP');
+                                if not GenJnlBatch.FindSet() then begin
+                                    GenJnlBatch.Init();
+                                    GenJnlBatch."Journal Template Name" := 'GENERAL';
+                                    GenJnlBatch.Name := 'NET-ARAP';
+                                    GenJnlBatch."Posting No. Series" := 'GJNL-GEN';
+                                    GenJnlBatch.Insert();
+                                end;
 
-                            GenJnlBatch.Reset();
-                            GenJnlBatch.SetRange("Journal Template Name", 'GENERAL');
-                            GenJnlBatch.SetRange(Name, 'NET-ARAP');
-                            if not GenJnlBatch.FindSet() then begin
-                                GenJnlBatch.Init();
-                                GenJnlBatch."Journal Template Name" := 'GENERAL';
-                                GenJnlBatch.Name := 'NET-ARAP';
-                                GenJnlBatch."Posting No. Series" := 'GJNL-GEN';
-                                GenJnlBatch.Insert();
+                                GenJnlLine.Reset();
+                                GenJnlLine.SetRange("Journal Template Name", 'GENERAL');
+                                GenJnlLine.SetRange("Journal Batch Name", 'NET-ARAP');
+                                if GenJnlLine.FindLast() then
+                                    NextLineNo := GenJnlLine."Line No." + 10000
+                                else
+                                    NextLineNo := 10000;
+
+                                //Set Elimination Dimension
+                                TempDimSetEntry.Init();
+                                TempDimSetEntry."Dimension Code" := 'ELIMINATION';
+                                TempDimSetEntry."Dimension Value Code" := 'ELIMINATION';
+                                DimVal.Get('ELIMINATION', 'ELIMINATION');
+                                TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntry.Insert();
+
+                                //Line 1
+                                GenJnlLine.Init();
+                                GenJnlLine."Journal Template Name" := 'GENERAL';
+                                GenJnlLine."Journal Batch Name" := 'NET-ARAP';
+                                GenJnlLine."Line No." := NextLineNo;
+                                GenJnlLine."Posting Date" := AsofDate;
+                                GenJnlLine."Document No." := format(NextLineNo);
+                                GenJnlLine."System-Created Entry" := true;
+                                GenJnlLine."Netting Source No." := Customer."No.";
+                                GenJnlLine.Insert();
+                                If Abs(l_SumAR) >= Abs(l_SumAP) then begin
+                                    GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
+                                    GenJnlLine."Account No." := l_VendPostGrp."Payables Account";
+                                    GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    GenJnlLine."Bal. Account No." := l_CustPostGrp."Receivables Account";
+                                    GenJnlLine.Validate(Amount, -l_SumAP);
+                                end
+                                else begin
+                                    GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
+                                    GenJnlLine."Account No." := l_CustPostGrp."Receivables Account";
+                                    GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    GenJnlLine."Bal. Account No." := l_VendPostGrp."Payables Account";
+                                    GenJnlLine.Validate(Amount, -l_SumAR);
+                                end;
+                                GenJnlLine.Description := StrSubstNo('ARAP Netting %1/%2 on %3', l_SumAR, l_SumAP, AsofDate);
+                                GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntry, Company.Name);
+                                GenJnlLine.Modify();
+                                NextLineNo := NextLineNo + 10000;
+
+                                //Line 2 - Reverse
+                                GenJnlLine.Init();
+                                GenJnlLine."Journal Template Name" := 'GENERAL';
+                                GenJnlLine."Journal Batch Name" := 'NET-ARAP';
+                                GenJnlLine."Line No." := NextLineNo;
+                                GenJnlLine."Posting Date" := AsofDate + 1;
+                                GenJnlLine."Document No." := format(NextLineNo);
+                                GenJnlLine."System-Created Entry" := true;
+                                GenJnlLine."Netting Source No." := Customer."No.";
+                                GenJnlLine.Insert();
+
+                                If Abs(l_SumAR) >= Abs(l_SumAP) then begin
+                                    GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
+                                    GenJnlLine.Validate("Account No.", l_VendPostGrp."Payables Account");
+                                    GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    GenJnlLine.Validate("Bal. Account No.", l_CustPostGrp."Receivables Account");
+                                    GenJnlLine.Validate(Amount, l_SumAP);
+                                end
+                                else begin
+                                    GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
+                                    GenJnlLine.Validate("Account No.", l_CustPostGrp."Receivables Account");
+                                    GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    GenJnlLine.Validate("Bal. Account No.", l_VendPostGrp."Payables Account");
+                                    GenJnlLine.Validate(Amount, l_SumAR);
+                                end;
+                                GenJnlLine.Description := StrSubstNo('ARAP Netting %1/%2 on %3-Reverse', l_SumAR, l_SumAP, AsofDate);
+                                GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntry, Company.Name);
+                                GenJnlLine.Modify();
+                                NextLineNo := NextLineNo + 10000;
+
                             end;
-
-                            GenJnlLine.Reset();
-                            GenJnlLine.SetRange("Journal Template Name", 'GENERAL');
-                            GenJnlLine.SetRange("Journal Batch Name", 'NET-ARAP');
-                            if GenJnlLine.FindLast() then
-                                NextLineNo := GenJnlLine."Line No." + 10000
-                            else
-                                NextLineNo := 10000;
-
-                            //Set Elimination Dimension
-                            TempDimSetEntry.Init();
-                            TempDimSetEntry."Dimension Code" := 'ELIMINATION';
-                            TempDimSetEntry."Dimension Value Code" := 'ELIMINATION';
-                            DimVal.Get('ELIMINATION', 'ELIMINATION');
-                            TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
-                            TempDimSetEntry.Insert();
-
-                            //Line 1
-                            GenJnlLine.Init();
-                            GenJnlLine."Journal Template Name" := 'GENERAL';
-                            GenJnlLine."Journal Batch Name" := 'NET-ARAP';
-                            GenJnlLine."Line No." := NextLineNo;
-                            GenJnlLine."Posting Date" := AsofDate;
-                            GenJnlLine."Document No." := format(NextLineNo);
-                            GenJnlLine."System-Created Entry" := true;
-                            GenJnlLine."Netting Source No." := Customer."No.";
-                            GenJnlLine.Insert();
-                            If Abs(l_SumAR) >= Abs(l_SumAP) then begin
-                                GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
-                                GenJnlLine."Account No." := l_VendPostGrp."Payables Account";
-                                GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
-                                GenJnlLine."Bal. Account No." := l_CustPostGrp."Receivables Account";
-                                GenJnlLine.Validate(Amount, -l_SumAP);
-                            end
-                            else begin
-                                GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
-                                GenJnlLine."Account No." := l_CustPostGrp."Receivables Account";
-                                GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
-                                GenJnlLine."Bal. Account No." := l_VendPostGrp."Payables Account";
-                                GenJnlLine.Validate(Amount, -l_SumAR);
-                            end;
-                            GenJnlLine.Description := StrSubstNo('ARAP Netting %1/%2 on %3', l_SumAR, l_SumAP, AsofDate);
-                            GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntry, Company.Name);
-                            GenJnlLine.Modify();
-                            NextLineNo := NextLineNo + 10000;
-
-                            //Line 2 - Reverse
-                            GenJnlLine.Init();
-                            GenJnlLine."Journal Template Name" := 'GENERAL';
-                            GenJnlLine."Journal Batch Name" := 'NET-ARAP';
-                            GenJnlLine."Line No." := NextLineNo;
-                            GenJnlLine."Posting Date" := AsofDate + 1;
-                            GenJnlLine."Document No." := format(NextLineNo);
-                            GenJnlLine."System-Created Entry" := true;
-                            GenJnlLine."Netting Source No." := Customer."No.";
-                            GenJnlLine.Insert();
-
-                            If Abs(l_SumAR) >= Abs(l_SumAP) then begin
-                                GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
-                                GenJnlLine.Validate("Account No.", l_VendPostGrp."Payables Account");
-                                GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
-                                GenJnlLine.Validate("Bal. Account No.", l_CustPostGrp."Receivables Account");
-                                GenJnlLine.Validate(Amount, l_SumAP);
-                            end
-                            else begin
-                                GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
-                                GenJnlLine.Validate("Account No.", l_CustPostGrp."Receivables Account");
-                                GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
-                                GenJnlLine.Validate("Bal. Account No.", l_VendPostGrp."Payables Account");
-                                GenJnlLine.Validate(Amount, l_SumAR);
-                            end;
-                            GenJnlLine.Description := StrSubstNo('ARAP Netting %1/%2 on %3-Reverse', l_SumAR, l_SumAP, AsofDate);
-                            GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntry, Company.Name);
-                            GenJnlLine.Modify();
-                            NextLineNo := NextLineNo + 10000;
-
                         end;
                     until Customer.Next() = 0;
                 end;
