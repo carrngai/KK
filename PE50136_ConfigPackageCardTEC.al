@@ -77,14 +77,30 @@ pageextension 50136 ConfigPackageCardTEC extends "Config. Package Card"
                         ConfigPackageTable: Record "Config. Package Table";
                         ConfigCompanyExchange: Codeunit "Config. Company Exchange";
                         ConfirmManagement: Codeunit "Confirm Management";
-                        Text003: Label 'Apply data from package %1?';
+                        Text003: Label 'Apply Package Data from %1 to below companies? %2';
+                        TextSelectedCompany: Text;
                         CompanyTEC: Record "Company TEC";
 
 
                     begin
                         //Error('hi');
                         Rec.TESTFIELD(Code);
-                        IF Confirm(STRSUBSTNO(Text003, Rec.Code), TRUE) THEN BEGIN
+
+                        CompanyTEC.Reset();
+                        CompanyTEC.SetRange(Select, false);
+                        if CompanyTEC.FindFirst() then begin
+                            CompanyTEC.Reset();
+                            CompanyTEC.SetRange(Select, true);
+                            if CompanyTEC.Findset() then begin
+                                repeat
+                                    TextSelectedCompany += '\' + CompanyTEC."Company Name";
+                                until CompanyTEC.Next() = 0;
+                            end else
+                                Error('You must select Copy to Companies ');
+                        end else
+                            TextSelectedCompany := 'ALL Companies';
+
+                        IF Confirm(STRSUBSTNO(Text003, Rec.Code, TextSelectedCompany), TRUE) THEN BEGIN
                             CompanyTEC.Reset();
                             CompanyTEC.SetRange(Select, true);
 
@@ -116,7 +132,7 @@ pageextension 50136 ConfigPackageCardTEC extends "Config. Package Card"
                                     until CompanyTEC.Next() = 0;
                                 end;
                             end else
-                                Error('You Must Select Copy to Companies ');
+                                Error('You must select Copy to Companies ');
                         END;
 
                     end;

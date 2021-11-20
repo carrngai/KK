@@ -27,7 +27,8 @@ report 50109 ARAPNetting
                 GenJnlLine: Record "Gen. Journal Line";
                 GenJnlBatch: Record "Gen. Journal Batch";
                 NextLineNo: Integer;
-                TempDimSetEntry: Record "Dimension Set Entry" temporary;
+                TempDimSetEntryAR: Record "Dimension Set Entry" temporary;
+                TempDimSetEntryAP: Record "Dimension Set Entry" temporary;
                 DimVal: Record "Dimension Value";
             begin
 
@@ -131,15 +132,87 @@ report 50109 ARAPNetting
                                 else
                                     NextLineNo := 10000;
 
-                                //Set Elimination Dimension
-                                TempDimSetEntry.Init();
-                                TempDimSetEntry."Dimension Code" := 'ELIMINATION';
-                                TempDimSetEntry."Dimension Value Code" := 'ELIMINATION';
-                                DimVal.Get('ELIMINATION', 'ELIMINATION');
-                                TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
-                                TempDimSetEntry.Insert();
+                                //Set Dimension AR++
+                                TempDimSetEntryAR.Init();
 
-                                //Line 1
+                                TempDimSetEntryAR."Dimension Code" := 'ELIMINATION';
+                                TempDimSetEntryAR."Dimension Value Code" := 'ELIMINATION';
+                                DimVal.Get('ELIMINATION', 'ELIMINATION');
+                                TempDimSetEntryAR."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAR.Insert();
+
+                                TempDimSetEntryAR."Dimension Code" := 'CASH FLOW MOVEMENT';
+                                TempDimSetEntryAR."Dimension Value Code" := 'N/A';
+                                DimVal.Get('CASH FLOW MOVEMENT', 'N/A');
+                                TempDimSetEntryAR."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAR.Insert();
+
+                                TempDimSetEntryAR."Dimension Code" := 'CASH FLOW NATURE';
+                                TempDimSetEntryAR."Dimension Value Code" := 'N/A';
+                                DimVal.Get('CASH FLOW NATURE', 'N/A');
+                                TempDimSetEntryAR."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAR.Insert();
+
+                                TempDimSetEntryAR."Dimension Code" := 'MULTI-PURPOSE';
+                                TempDimSetEntryAR."Dimension Value Code" := 'N/A';
+                                DimVal.Get('MULTI-PURPOSE', 'N/A');
+                                TempDimSetEntryAR."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAR.Insert();
+
+                                TempDimSetEntryAR."Dimension Code" := 'IC CODE';
+                                TempDimSetEntryAR."Dimension Value Code" := Customer."IC Partner Code";
+                                DimVal.Get('IC CODE', Customer."IC Partner Code");
+                                TempDimSetEntryAR."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAR.Insert();
+
+                                TempDimSetEntryAR."Dimension Code" := 'CUSTOMERS/VENDORS';
+                                TempDimSetEntryAR."Dimension Value Code" := Customer."No.";
+                                DimVal.Get('CUSTOMERS/VENDORS', Customer."No.");
+                                TempDimSetEntryAR."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAR.Insert();
+                                //Set Dimension AR--        
+
+                                //Set Dimension AP++
+                                TempDimSetEntryAP.Init();
+
+                                TempDimSetEntryAP."Dimension Code" := 'ELIMINATION';
+                                TempDimSetEntryAP."Dimension Value Code" := 'ELIMINATION';
+                                DimVal.Get('ELIMINATION', 'ELIMINATION');
+                                TempDimSetEntryAP."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAP.Insert();
+
+                                TempDimSetEntryAP."Dimension Code" := 'CASH FLOW MOVEMENT';
+                                TempDimSetEntryAP."Dimension Value Code" := 'N/A';
+                                DimVal.Get('CASH FLOW MOVEMENT', 'N/A');
+                                TempDimSetEntryAP."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAP.Insert();
+
+                                TempDimSetEntryAP."Dimension Code" := 'CASH FLOW NATURE';
+                                TempDimSetEntryAP."Dimension Value Code" := 'N/A';
+                                DimVal.Get('CASH FLOW NATURE', 'N/A');
+                                TempDimSetEntryAP."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAP.Insert();
+
+                                TempDimSetEntryAP."Dimension Code" := 'MULTI-PURPOSE';
+                                TempDimSetEntryAP."Dimension Value Code" := 'N/A';
+                                DimVal.Get('MULTI-PURPOSE', 'N/A');
+                                TempDimSetEntryAP."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAP.Insert();
+
+                                TempDimSetEntryAP."Dimension Code" := 'IC CODE';
+                                TempDimSetEntryAP."Dimension Value Code" := Customer."IC Partner Code";
+                                DimVal.Get('IC CODE', Customer."IC Partner Code");
+                                TempDimSetEntryAP."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAP.Insert();
+
+                                TempDimSetEntryAP."Dimension Code" := 'CUSTOMERS/VENDORS';
+                                TempDimSetEntryAP."Dimension Value Code" := Customer."Netting Vendor No.";
+                                DimVal.Get('CUSTOMERS/VENDORS', Customer."Netting Vendor No.");
+                                TempDimSetEntryAP."Dimension Value ID" := DimVal."Dimension Value ID";
+                                TempDimSetEntryAP.Insert();
+                                //Set Dimension AP--   
+
+                                //Line 1a
                                 GenJnlLine.Init();
                                 GenJnlLine."Journal Template Name" := 'GENERAL';
                                 GenJnlLine."Journal Batch Name" := 'NET-ARAP';
@@ -152,23 +225,49 @@ report 50109 ARAPNetting
                                 If Abs(l_SumAR) >= Abs(l_SumAP) then begin
                                     GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
                                     GenJnlLine."Account No." := l_VendPostGrp."Payables Account";
-                                    GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
-                                    GenJnlLine."Bal. Account No." := l_CustPostGrp."Receivables Account";
+                                    // GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    // GenJnlLine."Bal. Account No." := l_CustPostGrp."Receivables Account";
                                     GenJnlLine.Validate(Amount, -l_SumAP);
+                                    GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntryAP, Company.Name);
                                 end
                                 else begin
                                     GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
                                     GenJnlLine."Account No." := l_CustPostGrp."Receivables Account";
-                                    GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
-                                    GenJnlLine."Bal. Account No." := l_VendPostGrp."Payables Account";
+                                    // GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    // GenJnlLine."Bal. Account No." := l_VendPostGrp."Payables Account";
                                     GenJnlLine.Validate(Amount, -l_SumAR);
+                                    GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntryAR, Company.Name);
                                 end;
                                 GenJnlLine.Description := StrSubstNo('ARAP Netting %1/%2 on %3', l_SumAR, l_SumAP, AsofDate);
-                                GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntry, Company.Name);
+                                GenJnlLine.Modify();
+
+                                //Line 1b
+                                GenJnlLine.Init();
+                                GenJnlLine."Journal Template Name" := 'GENERAL';
+                                GenJnlLine."Journal Batch Name" := 'NET-ARAP';
+                                GenJnlLine."Line No." := NextLineNo + 10;
+                                GenJnlLine."Posting Date" := AsofDate;
+                                GenJnlLine."Document No." := format(NextLineNo);
+                                GenJnlLine."System-Created Entry" := true;
+                                GenJnlLine."Netting Source No." := Customer."No.";
+                                GenJnlLine.Insert();
+                                If Abs(l_SumAR) >= Abs(l_SumAP) then begin
+                                    GenJnlLine."Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    GenJnlLine."Account No." := l_CustPostGrp."Receivables Account";
+                                    GenJnlLine.Validate(Amount, l_SumAP);
+                                    GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntryAR, Company.Name);
+                                end
+                                else begin
+                                    GenJnlLine."Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    GenJnlLine."Account No." := l_VendPostGrp."Payables Account";
+                                    GenJnlLine.Validate(Amount, l_SumAR);
+                                    GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntryAP, Company.Name);
+                                end;
+                                GenJnlLine.Description := StrSubstNo('ARAP Netting %1/%2 on %3', l_SumAR, l_SumAP, AsofDate);
                                 GenJnlLine.Modify();
                                 NextLineNo := NextLineNo + 10000;
 
-                                //Line 2 - Reverse
+                                //Line 2a - Reverse
                                 GenJnlLine.Init();
                                 GenJnlLine."Journal Template Name" := 'GENERAL';
                                 GenJnlLine."Journal Batch Name" := 'NET-ARAP';
@@ -182,19 +281,46 @@ report 50109 ARAPNetting
                                 If Abs(l_SumAR) >= Abs(l_SumAP) then begin
                                     GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
                                     GenJnlLine.Validate("Account No.", l_VendPostGrp."Payables Account");
-                                    GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
-                                    GenJnlLine.Validate("Bal. Account No.", l_CustPostGrp."Receivables Account");
+                                    // GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    // GenJnlLine.Validate("Bal. Account No.", l_CustPostGrp."Receivables Account");
                                     GenJnlLine.Validate(Amount, l_SumAP);
+                                    GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntryAP, Company.Name);
                                 end
                                 else begin
                                     GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
                                     GenJnlLine.Validate("Account No.", l_CustPostGrp."Receivables Account");
-                                    GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
-                                    GenJnlLine.Validate("Bal. Account No.", l_VendPostGrp."Payables Account");
+                                    // GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    // GenJnlLine.Validate("Bal. Account No.", l_VendPostGrp."Payables Account");
                                     GenJnlLine.Validate(Amount, l_SumAR);
+                                    GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntryAR, Company.Name);
                                 end;
                                 GenJnlLine.Description := StrSubstNo('ARAP Netting %1/%2 on %3-Reverse', l_SumAR, l_SumAP, AsofDate);
-                                GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntry, Company.Name);
+                                GenJnlLine.Modify();
+
+                                //Line 2b - Reverse
+                                GenJnlLine.Init();
+                                GenJnlLine."Journal Template Name" := 'GENERAL';
+                                GenJnlLine."Journal Batch Name" := 'NET-ARAP';
+                                GenJnlLine."Line No." := NextLineNo + 10;
+                                GenJnlLine."Posting Date" := AsofDate + 1;
+                                GenJnlLine."Document No." := format(NextLineNo);
+                                GenJnlLine."System-Created Entry" := true;
+                                GenJnlLine."Netting Source No." := Customer."No.";
+                                GenJnlLine.Insert();
+
+                                If Abs(l_SumAR) >= Abs(l_SumAP) then begin
+                                    GenJnlLine."Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    GenJnlLine.Validate("Account No.", l_CustPostGrp."Receivables Account");
+                                    GenJnlLine.Validate(Amount, -l_SumAP);
+                                    GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntryAR, Company.Name);
+                                end
+                                else begin
+                                    GenJnlLine."Account Type" := GenJnlLine."Bal. Account Type"::"G/L Account";
+                                    GenJnlLine.Validate("Account No.", l_VendPostGrp."Payables Account");
+                                    GenJnlLine.Validate(Amount, -l_SumAR);
+                                    GenJnlLine."Dimension Set ID" := GetDimensionSetID_Company(TempDimSetEntryAP, Company.Name);
+                                end;
+                                GenJnlLine.Description := StrSubstNo('ARAP Netting %1/%2 on %3-Reverse', l_SumAR, l_SumAP, AsofDate);
                                 GenJnlLine.Modify();
                                 NextLineNo := NextLineNo + 10000;
 

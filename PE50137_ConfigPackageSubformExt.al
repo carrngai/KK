@@ -49,14 +49,31 @@ pageextension 50137 ConfigPackageSubformExt extends "Config. Package Subform"
                         ConfigPackageTable2: Record "Config. Package Table";
                         ConfigCompanyExchange: Codeunit "Config. Company Exchange";
                         ConfirmManagement: Codeunit "Confirm Management";
-                        Text003: Label 'Apply data from package %1?';
+                        Text003: Label 'Apply Package Data from %1 to below companies? %2';
+                        TextSelectedCompany: Text;
                         CompanyTEC: Record "Company TEC";
                     begin
                         //Error('hi');
+
+                        CompanyTEC.Reset();
+                        CompanyTEC.SetRange(Select, false);
+                        if CompanyTEC.FindFirst() then begin
+                            CompanyTEC.Reset();
+                            CompanyTEC.SetRange(Select, true);
+                            if CompanyTEC.Findset() then begin
+                                repeat
+                                    TextSelectedCompany += '\' + CompanyTEC."Company Name";
+                                until CompanyTEC.Next() = 0;
+                            end else
+                                Error('You must select Copy to Companies ');
+                        end else
+                            TextSelectedCompany := 'ALL Companies';
+
                         CurrPage.SetSelectionFilter(ConfigPackageTable2);
                         ConfigPackage.Get(Rec."Package Code");
                         ConfigPackage.TESTFIELD(Code);
-                        IF Confirm(STRSUBSTNO(Text003, ConfigPackage.Code), TRUE) THEN BEGIN
+
+                        IF Confirm(STRSUBSTNO(Text003, ConfigPackage.Code, TextSelectedCompany), TRUE) THEN BEGIN
                             CompanyTEC.Reset();
                             CompanyTEC.SetRange(Select, true);
 
