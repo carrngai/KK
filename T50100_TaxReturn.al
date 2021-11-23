@@ -27,16 +27,16 @@ table 50100 "Tax Return"
         {
             DataClassification = ToBeClassified;
         }
-        field(6; "Audited Fin. Stmt. Submitted"; Option)
+        field(6; "Audit Fin. Stmt. Submitted"; Option)
         {
             DataClassification = ToBeClassified;
-            Caption = 'Audited Financial Statement Submitted';
+            Caption = 'Audit Financial Statement Submitted';
             OptionMembers = " ","Yes","No","N/A";
         }
-        field(7; "Audited Fin. Stmt. Subm. Date"; Date)
+        field(7; "Audit Fin. Stmt. Subm. Date"; Date)
         {
             DataClassification = ToBeClassified;
-            Caption = 'Audited Financial Statement Submission Date';
+            Caption = 'Audit Financial Statement Submission Date';
         }
         field(8; "BIR51"; Date)
         {
@@ -90,7 +90,8 @@ table 50100 "Tax Return"
 
     trigger OnModify()
     begin
-
+        if ("Audit Fin. Stmt. Submitted" = "Audit Fin. Stmt. Submitted"::Yes) and ("Audit Fin. Stmt. Subm. Date" = 0D) then
+            Error('Audit Financial Statement Submission Date must have a value');
     end;
 
     trigger OnDelete()

@@ -2975,7 +2975,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>Doc. Type</Value>
+                                                    <Value>Acc. Type</Value>
                                                     <Style>
                                                       <FontFamily>Segoe UI Semibold</FontFamily>
                                                       <FontSize>8pt</FontSize>
@@ -3520,7 +3520,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!DocType_GenJnlLine.Value</Value>
+                                                    <Value>=Fields!AccountType_GenJnlLine.Value</Value>
                                                     <Style>
                                                       <FontFamily>Segoe UI</FontFamily>
                                                       <FontSize>8pt</FontSize>
@@ -3976,7 +3976,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!DocType_GenJnlLine.Value</Value>
+                                                    <Value>=Fields!AccountType_GenJnlLine.Value</Value>
                                                     <Style>
                                                       <FontFamily>Segoe UI</FontFamily>
                                                       <FontSize>8pt</FontSize>

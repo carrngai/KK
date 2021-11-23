@@ -30,7 +30,8 @@ table 50101 "Company Information Change"
         {
             DataClassification = ToBeClassified;
         }
-        field(5; "Date of Reg. as non-HK company"; Date)
+        // field(5; "Date of Reg. as non-HK company"; Date) //20211122
+        field(5; "Date of Reg. as non-HK company"; Boolean)
         {
             DataClassification = ToBeClassified;
             Caption = 'Date of Registration as non-HK company under CO';
@@ -43,9 +44,10 @@ table 50101 "Company Information Change"
         {
             DataClassification = ToBeClassified;
         }
-        field(8; "Year-end Date"; Text[10])
+        field(8; "Year-end Month"; Option)
         {
             DataClassification = ToBeClassified;
+            OptionMembers = " ",JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC;
         }
         field(9; "Auditor"; Text[50])
         {
@@ -58,6 +60,20 @@ table 50101 "Company Information Change"
         field(11; "IRD File Number"; Text[50])
         {
             DataClassification = ToBeClassified;
+        }
+        field(12; "Holding Company/Investor Chg."; Boolean)
+        {
+            Caption = 'Holding Company/Investor Change';
+            FieldClass = FlowField;
+            CalcFormula = exist("Holding Company/Investor" where(Company = field("Company"), "Start Date" = field("Start Date")));
+            Editable = false;
+        }
+
+        field(13; "List of Director Change"; Boolean)
+        {
+            FieldClass = FlowField;
+            CalcFormula = exist("List of Director" where(Company = field("Company"), "Start Date" = field("Start Date")));
+            Editable = false;
         }
     }
 

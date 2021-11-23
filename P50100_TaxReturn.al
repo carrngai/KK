@@ -36,15 +36,14 @@ page 50100 "Tax Return"
                     ToolTip = 'Specifies the value of the Tax Return Filing Date field';
                     ApplicationArea = All;
                 }
-
-                field("Audited Fin. Stmt. Subm. Date"; Rec."Audited Fin. Stmt. Subm. Date")
+                field("Audit Fin. Stmt. Submitted"; Rec."Audit Fin. Stmt. Submitted")
                 {
-                    ToolTip = 'Specifies the value of the Audited Financial Statement Submission Date field';
+                    ToolTip = 'Specifies the value of the Audit Financial Statement Submitted field';
                     ApplicationArea = All;
                 }
-                field("Audited Fin. Stmt. Submitted"; Rec."Audited Fin. Stmt. Submitted")
+                field("Audit Fin. Stmt. Subm. Date"; Rec."Audit Fin. Stmt. Subm. Date")
                 {
-                    ToolTip = 'Specifies the value of the Audited Financial Statement Submitted field';
+                    ToolTip = 'Specifies the value of the Audit Financial Statement Submission Date field';
                     ApplicationArea = All;
                 }
                 field(BIR51; Rec.BIR51)
@@ -52,7 +51,6 @@ page 50100 "Tax Return"
                     ToolTip = 'Specifies the value of the BIR51 field';
                     ApplicationArea = All;
                 }
-
                 field(IRC1811; Rec.IRC1811)
                 {
                     ToolTip = 'Specifies the value of the IRC1811 field';

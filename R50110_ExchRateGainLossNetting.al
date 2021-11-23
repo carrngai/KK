@@ -160,6 +160,7 @@ report 50110 "Exch. Rate Gain/Loss Netting"
                     GenJnlLine."Line No." := NextLineNo;
                     GenJnlLine."Posting Date" := AsofDate;
                     GenJnlLine."Document No." := format(NextLineNo);
+                    GenJnlLine."Posting No. Series" := GenJnlBatch."Posting No. Series";
                     GenJnlLine."System-Created Entry" := true;
                     GenJnlLine.Insert();
                     If Abs(l_SumLoss) >= Abs(l_SumGain) then begin
@@ -188,6 +189,7 @@ report 50110 "Exch. Rate Gain/Loss Netting"
                         GenJnlLine."Line No." := NextLineNo;
                         GenJnlLine."Posting Date" := AsofDate + 1;
                         GenJnlLine."Document No." := format(NextLineNo);
+                        GenJnlLine."Posting No. Series" := GenJnlBatch."Posting No. Series";
                         GenJnlLine."System-Created Entry" := true;
                         GenJnlLine.Insert();
                         If Abs(l_SumLoss) >= Abs(l_SumGain) then begin
@@ -219,6 +221,7 @@ report 50110 "Exch. Rate Gain/Loss Netting"
                     GenJnlLine."Line No." := NextLineNo;
                     GenJnlLine."Posting Date" := AsofDate;
                     GenJnlLine."Document No." := format(NextLineNo);
+                    GenJnlLine."Posting No. Series" := GenJnlBatch."Posting No. Series";
                     GenJnlLine."System-Created Entry" := true;
                     GenJnlLine.Insert();
                     If Abs(l_SumUnLoss) >= Abs(l_SumUnGain) then begin
@@ -247,6 +250,7 @@ report 50110 "Exch. Rate Gain/Loss Netting"
                         GenJnlLine."Line No." := NextLineNo;
                         GenJnlLine."Posting Date" := AsofDate + 1;
                         GenJnlLine."Document No." := format(NextLineNo);
+                        GenJnlLine."Posting No. Series" := GenJnlBatch."Posting No. Series";
                         GenJnlLine."System-Created Entry" := true;
                         GenJnlLine.Insert();
                         If Abs(l_SumUnLoss) >= Abs(l_SumUnGain) then begin

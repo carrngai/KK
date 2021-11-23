@@ -133,6 +133,7 @@ report 50109 ARAPNetting
                                     NextLineNo := 10000;
 
                                 //Set Dimension AR++
+                                TempDimSetEntryAR.DeleteAll();
                                 TempDimSetEntryAR.Init();
 
                                 TempDimSetEntryAR."Dimension Code" := 'ELIMINATION';
@@ -173,6 +174,7 @@ report 50109 ARAPNetting
                                 //Set Dimension AR--        
 
                                 //Set Dimension AP++
+                                TempDimSetEntryAP.DeleteAll();
                                 TempDimSetEntryAP.Init();
 
                                 TempDimSetEntryAP."Dimension Code" := 'ELIMINATION';
@@ -219,6 +221,7 @@ report 50109 ARAPNetting
                                 GenJnlLine."Line No." := NextLineNo;
                                 GenJnlLine."Posting Date" := AsofDate;
                                 GenJnlLine."Document No." := format(NextLineNo);
+                                GenJnlLine."Posting No. Series" := GenJnlBatch."Posting No. Series";
                                 GenJnlLine."System-Created Entry" := true;
                                 GenJnlLine."Netting Source No." := Customer."No.";
                                 GenJnlLine.Insert();
@@ -248,6 +251,7 @@ report 50109 ARAPNetting
                                 GenJnlLine."Line No." := NextLineNo + 10;
                                 GenJnlLine."Posting Date" := AsofDate;
                                 GenJnlLine."Document No." := format(NextLineNo);
+                                GenJnlLine."Posting No. Series" := GenJnlBatch."Posting No. Series";
                                 GenJnlLine."System-Created Entry" := true;
                                 GenJnlLine."Netting Source No." := Customer."No.";
                                 GenJnlLine.Insert();
@@ -274,6 +278,7 @@ report 50109 ARAPNetting
                                 GenJnlLine."Line No." := NextLineNo;
                                 GenJnlLine."Posting Date" := AsofDate + 1;
                                 GenJnlLine."Document No." := format(NextLineNo);
+                                GenJnlLine."Posting No. Series" := GenJnlBatch."Posting No. Series";
                                 GenJnlLine."System-Created Entry" := true;
                                 GenJnlLine."Netting Source No." := Customer."No.";
                                 GenJnlLine.Insert();
@@ -304,6 +309,7 @@ report 50109 ARAPNetting
                                 GenJnlLine."Line No." := NextLineNo + 10;
                                 GenJnlLine."Posting Date" := AsofDate + 1;
                                 GenJnlLine."Document No." := format(NextLineNo);
+                                GenJnlLine."Posting No. Series" := GenJnlBatch."Posting No. Series";
                                 GenJnlLine."System-Created Entry" := true;
                                 GenJnlLine."Netting Source No." := Customer."No.";
                                 GenJnlLine.Insert();

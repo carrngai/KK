@@ -22,6 +22,16 @@ page 50101 "Company Information Change"
                     ToolTip = 'Specifies the value of the Start Date field';
                     ApplicationArea = All;
                 }
+                field("Holding Company/Investor Chg."; Rec."Holding Company/Investor Chg.")
+                {
+                    ToolTip = 'Specifies the value of the Holding Company/Investor Change field.';
+                    ApplicationArea = All;
+                }
+                field("List of Director Change"; Rec."List of Director Change")
+                {
+                    ToolTip = 'Specifies the value of the List of Director Change field.';
+                    ApplicationArea = All;
+                }
                 field("Company Name"; Rec."Company Name")
                 {
                     ToolTip = 'Specifies the value of the Company Name field';
@@ -47,7 +57,7 @@ page 50101 "Company Information Change"
                     ToolTip = 'Specifies the value of the Business Nature field';
                     ApplicationArea = All;
                 }
-                field("Year-end Date"; Rec."Year-end Date")
+                field("Year-end Month"; Rec."Year-end Month")
                 {
                     ToolTip = 'Specifies the value of the Year-end Date field';
                     ApplicationArea = All;
