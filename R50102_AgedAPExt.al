@@ -622,6 +622,8 @@ report 50102 "Aged Accounts Payable Ext"
                 EndingDate := WorkDate;
             if Format(PeriodLength) = '' then
                 Evaluate(PeriodLength, '<1M>');
+
+            UseExternalDocNo := true; //G010
         end;
     }
 

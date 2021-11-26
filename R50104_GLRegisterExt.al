@@ -350,7 +350,7 @@ report 50104 "G/L Register Ext"
                             else
                                 CrAmt := -l_BLE.Amount;
                             if (l_BLE.Amount <> 0) and (l_BLE."Amount (LCY)" <> 0) then
-                                ExchRate := l_BLE.Amount / l_BLE."Amount (LCY)";
+                                ExchRate := l_BLE."Amount (LCY)" / l_BLE.Amount;
                         end;
                     end;
 
@@ -368,7 +368,7 @@ report 50104 "G/L Register Ext"
                                 CrAmt := -l_CLE."Original Amount";
 
                             if (l_CLE."Original Amount" <> 0) and (l_CLE."Original Amt. (LCY)" <> 0) then
-                                ExchRate := l_CLE."Original Amount" / l_CLE."Original Amt. (LCY)";
+                                ExchRate := l_CLE."Original Amt. (LCY)" / l_CLE."Original Amount";
 
                             if (l_CLE."Original Amount" < 0) and (l_CLE."Remaining Amount" <> l_CLE.Amount) then
                                 ShowApplied := true;
@@ -390,7 +390,7 @@ report 50104 "G/L Register Ext"
                             else
                                 CrAmt := -l_VLE."Original Amount";
                             if (l_VLE."Original Amount" <> 0) and (l_VLE."Original Amt. (LCY)" <> 0) then
-                                ExchRate := l_VLE."Original Amount" / l_VLE."Original Amt. (LCY)";
+                                ExchRate := l_VLE."Original Amt. (LCY)" / l_VLE."Original Amount";
 
                             if (l_VLE."Original Amount" > 0) and (l_VLE."Remaining Amount" <> l_VLE.Amount) then
                                 ShowApplied := true;

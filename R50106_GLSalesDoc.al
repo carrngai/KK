@@ -136,7 +136,7 @@ report 50106 "G/L Sales Document"
                     PurchCrMemoHdr: Record "Purch. Cr. Memo Hdr.";
                     SalesInvoiceHeader: Record "Sales Invoice Header";
                     SalesCrMemoHeader: Record "Sales Cr.Memo Header";
-                    CurrancyFactor: Decimal;
+                    CurrencyFactor: Decimal;
                     l_CLE: Record "Cust. Ledger Entry"; //G006
                     l_GLE: Record "G/L Entry"; //G006
 
@@ -150,7 +150,7 @@ report 50106 "G/L Sales Document"
                     Clear(CustAddr[1]);
                     Clear(FCYCode);
                     Clear(ARAmt);
-                    Clear(CurrancyFactor);
+                    Clear(CurrencyFactor);
                     DocNo := "G/L Entry"."Document No.";
 
                     TempDocLine.DeleteAll();
@@ -170,7 +170,7 @@ report 50106 "G/L Sales Document"
                             FCYCode := GLSetup."LCY Code";
 
                         l_CLE.CalcFields("Original Amount", "Original Amt. (LCY)");
-                        CurrancyFactor := l_CLE."Original Currency Factor";
+                        CurrencyFactor := l_CLE."Original Currency Factor";
 
                         if l_CLE."Document Type" = l_CLE."Document Type"::Invoice then begin
                             ARAmt := l_CLE."Original Amount";
@@ -180,9 +180,9 @@ report 50106 "G/L Sales Document"
                             if SalesInvoiceLine.FindSet then begin
                                 if not SalesInvoiceHeader.Get("Document No.") then
                                     exit;
-                                CurrancyFactor := SetCurrancyFactor(SalesInvoiceHeader."Currency Factor");
+                                CurrencyFactor := SetCurrencyFactor(SalesInvoiceHeader."Currency Factor");
                                 repeat
-                                    PopulateRecFromSalesInvoiceLine(SalesInvoiceLine, CurrancyFactor, SalesInvoiceHeader."Prices Including VAT");
+                                    PopulateRecFromSalesInvoiceLine(SalesInvoiceLine, CurrencyFactor, SalesInvoiceHeader."Prices Including VAT");
                                 until SalesInvoiceLine.Next() = 0;
                                 exit;
                             end else begin
@@ -192,7 +192,7 @@ report 50106 "G/L Sales Document"
                                 l_GLE.SetFilter("Entry No.", '<>%1', "Entry No.");
                                 if l_GLE.FindSet then begin
                                     repeat
-                                        PopulateRecFromGLLine(l_GLE, CurrancyFactor, false);
+                                        PopulateRecFromGLLine(l_GLE, CurrencyFactor, false);
                                     until l_GLE.Next() = 0;
                                 end;
                             end;
@@ -206,9 +206,9 @@ report 50106 "G/L Sales Document"
                             if SalesCrMemoLine.FindSet then begin
                                 if not SalesCrMemoHeader.Get("Document No.") then
                                     exit;
-                                CurrancyFactor := SetCurrancyFactor(SalesCrMemoHeader."Currency Factor");
+                                CurrencyFactor := SetCurrencyFactor(SalesCrMemoHeader."Currency Factor");
                                 repeat
-                                    PopulateRecFromSalesCrMemoLine(SalesCrMemoLine, CurrancyFactor, SalesCrMemoHeader."Prices Including VAT");
+                                    PopulateRecFromSalesCrMemoLine(SalesCrMemoLine, CurrencyFactor, SalesCrMemoHeader."Prices Including VAT");
                                 until SalesCrMemoLine.Next() = 0;
                             end else begin
                                 l_GLE.SetRange("Document No.", "Document No.");
@@ -217,7 +217,7 @@ report 50106 "G/L Sales Document"
                                 l_GLE.SetFilter("Entry No.", '<>%1', "Entry No.");
                                 if l_GLE.FindSet then begin
                                     repeat
-                                        PopulateRecFromGLLine(l_GLE, CurrancyFactor, false);
+                                        PopulateRecFromGLLine(l_GLE, CurrencyFactor, false);
                                     until l_GLE.Next() = 0;
                                 end;
                             end;
@@ -318,21 +318,29 @@ report 50106 "G/L Sales Document"
         TempPurchInvLinePrinted.Insert();
     end;
     //G006++
-    local procedure PopulateRecFromGLLine(GLLine: Record "G/L Entry"; CurrancyFactor: Decimal; PricesInclVAT: Boolean)
+    local procedure PopulateRecFromGLLine(GLLine: Record "G/L Entry"; CurrencyFactor: Decimal; PricesInclVAT: Boolean)
     begin
         TempDocLine.Init();
         TempDocLine.Description := GLLine.Description;
-        TempDocLine.Amount := -GLLine.Amount;
         TempDocLine."Document No." := GLLine."Document No.";
         TempDocLine."Line No." := GLLine."Entry No.";
         TempDocLine."No." := GLLine."G/L Account No.";
-        TempDocLine."Amount Including VAT" := -GLLine.Amount;
-        TempDocLine."VAT Base Amount" := -GLLine.Amount;
+        if GLLine."Document Type" = GLLine."Document Type"::Invoice then begin
+            TempDocLine.Amount := -GLLine.Amount * CurrencyFactor;
+            TempDocLine."Amount Including VAT" := -GLLine.Amount * CurrencyFactor;
+            TempDocLine."VAT Base Amount" := -GLLine.Amount * CurrencyFactor;
+        end else
+            if GLLine."Document Type" = GLLine."Document Type"::"Credit Memo" then begin
+                TempDocLine.Amount := GLLine.Amount * CurrencyFactor;
+                TempDocLine."Amount Including VAT" := GLLine.Amount * CurrencyFactor;
+                TempDocLine."VAT Base Amount" := GLLine.Amount * CurrencyFactor;
+            end;
+
         if not DetailsPrinted(TempDocLine) then
             TempDocLine.Insert();
     end;
     //G006--
-    local procedure PopulateRecFromSalesInvoiceLine(SalesInvoiceLine: Record "Sales Invoice Line"; CurrancyFactor: Decimal; PricesInclVAT: Boolean)
+    local procedure PopulateRecFromSalesInvoiceLine(SalesInvoiceLine: Record "Sales Invoice Line"; CurrencyFactor: Decimal; PricesInclVAT: Boolean)
     begin
         TempDocLine.Init();
         TempDocLine.Description := SalesInvoiceLine.Description;
@@ -345,7 +353,7 @@ report 50106 "G/L Sales Document"
             TempDocLine.Insert();
     end;
 
-    local procedure PopulateRecFromSalesCrMemoLine(SalesCrMemoLine: Record "Sales Cr.Memo Line"; CurrancyFactor: Decimal; PricesInclVAT: Boolean)
+    local procedure PopulateRecFromSalesCrMemoLine(SalesCrMemoLine: Record "Sales Cr.Memo Line"; CurrencyFactor: Decimal; PricesInclVAT: Boolean)
     begin
         TempDocLine.Init();
         TempDocLine.Description := SalesCrMemoLine.Description;
@@ -358,11 +366,11 @@ report 50106 "G/L Sales Document"
             TempDocLine.Insert();
     end;
 
-    local procedure SetCurrancyFactor(HeaderCurrancyFactor: Decimal): Decimal
+    local procedure SetCurrencyFactor(HeaderCurrencyFactor: Decimal): Decimal
     begin
-        if HeaderCurrancyFactor = 0 then
+        if HeaderCurrencyFactor = 0 then
             exit(1);
-        exit(HeaderCurrancyFactor);
+        exit(HeaderCurrencyFactor);
     end;
 }
 

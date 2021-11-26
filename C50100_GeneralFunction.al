@@ -562,4 +562,62 @@ codeunit 50100 "General Function"
             //GLEntry.Modify();
         end;
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Format Address", 'OnBeforeFormatAddress', '', true, true)]
+    local procedure OnBeforeFormatAddress_AddATTN(Country: Record "Country/Region"; var AddrArray: array[8] of Text[100]; var Name: Text[100]; var Name2: Text[100]; var Contact: Text[100]; var Addr: Text[100]; var Addr2: Text[50]; var City: Text[50]; var PostCode: Code[20]; var County: Text[50]; var CountryCode: Code[10]; NameLineNo: Integer; Name2LineNo: Integer; AddrLineNo: Integer; Addr2LineNo: Integer; ContLineNo: Integer; PostCodeCityLineNo: Integer; CountyLineNo: Integer; CountryLineNo: Integer; var Handled: Boolean)
+    begin
+        if (Contact <> '') and (StrLen(Contact) <= 94) then
+            Contact := 'Attn: ' + Contact;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::ReportManagement, 'OnAfterSubstituteReport', '', false, false)] //G008
+    local procedure OnSubstituteReport_StandardStatement(ReportId: Integer; var NewReportId: Integer)
+    begin
+        if ReportId = Report::"Standard Statement" then
+            NewReportId := Report::"Standard Statement Ext";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::ReportManagement, 'OnAfterSubstituteReport', '', false, false)] //G009
+    local procedure OnSubstituteReport_Reminder(ReportId: Integer; var NewReportId: Integer)
+    begin
+        if ReportId = Report::Reminder then
+            NewReportId := Report::"Reminder Ext";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::ReportManagement, 'OnAfterSubstituteReport', '', false, false)] //G010
+    local procedure OnSubstituteReport_AgedAR(ReportId: Integer; var NewReportId: Integer)
+    begin
+        if ReportId = Report::"Aged Accounts Receivable" then
+            NewReportId := Report::"Aged Accounts Receivable Ext";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::ReportManagement, 'OnAfterSubstituteReport', '', false, false)] //G010
+    local procedure OnSubstituteReport_AgedAP(ReportId: Integer; var NewReportId: Integer)
+    begin
+        if ReportId = Report::"Aged Accounts Payable" then
+            NewReportId := Report::"Aged Accounts Payable Ext";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::ReportManagement, 'OnAfterSubstituteReport', '', false, false)] //G002
+    local procedure OnSubstituteReport_TestReport(ReportId: Integer; var NewReportId: Integer)
+    begin
+        if ReportId = Report::"General Journal - Test" then
+            NewReportId := Report::"General Journal - Test Ext";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::ReportManagement, 'OnAfterSubstituteReport', '', false, false)] //G003
+    local procedure OnSubstituteReport_GLRegister(ReportId: Integer; var NewReportId: Integer)
+    begin
+        if ReportId = Report::"G/L Register" then
+            NewReportId := Report::"G/L Register Ext";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::ReportManagement, 'OnAfterSubstituteReport', '', false, false)] //G004
+    local procedure OnSubstituteReport_BankAccStatement(ReportId: Integer; var NewReportId: Integer)
+    begin
+        if ReportId = Report::"Bank Account Statement" then
+            NewReportId := Report::"Bank Account Statement Ext";
+    end;
+
+
 }
