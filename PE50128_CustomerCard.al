@@ -17,19 +17,29 @@ pageextension 50128 "Customer Card Ext" extends "Customer Card"
         modify("CustSalesLCY - CustProfit - AdjmtCostLCY") { Visible = false; }
         modify(AdjCustProfit) { Visible = false; }
         modify(AdjProfitPct) { Visible = false; }
+        addbefore("Bill-to Customer No.")
+        {
+            field("Currency Code_"; Rec."Currency Code")
+            {
+                ApplicationArea = Suite;
+                Importance = Additional;
+                ToolTip = 'Specifies the default currency for the customer.';
+            }
+        }
         modify("Use GLN in Electronic Document") { Visible = false; }
         modify("Copy Sell-to Addr. to Qte From") { Visible = false; }
         modify("Gen. Bus. Posting Group") { ShowMandatory = false; }
         modify("Prepayment %") { Visible = false; }
         modify("Cash Flow Payment Terms Code") { Visible = false; }
         modify("Block Payment Tolerance") { Visible = false; }
+        modify("EORI Number") { Visible = false; }
+        modify(GLN) { Visible = false; }
         modify(PricesandDiscounts) { Visible = false; }
         modify("Customer Disc. Group") { Visible = false; }
         modify("Customer price Group") { Visible = false; }
+        modify("Partner Type") { Visible = false; }
+        modify("Fin. Charge Terms Code") { Visible = false; }
         modify(Shipping) { Visible = false; }
-
-        //modify(PriceAndLineDisc) { Visible = false; }
-
         modify(SalesHistSelltoFactBox) { Visible = false; }
         modify(Control1905532107) { Visible = true; }
     }

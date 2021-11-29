@@ -113,6 +113,7 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
             l_GenJnlLine."Posting Date" := Rec."Posting Date";
             l_GenJnlLine."Document Type" := Rec."Document Type";
             l_GenJnlLine."Document No." := Rec."Document No.";
+            l_GenJnlLine."Posting No. Series" := Rec."Posting No. Series"; //20211129
             l_GenJnlLine.validate("Account Type", l_ICTransPath."Account Type");
             l_GenJnlLine.Validate("Account No.", l_ICTransPath."Account No.");
 

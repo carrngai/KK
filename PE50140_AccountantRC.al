@@ -29,7 +29,7 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify("Cash Flow") { Visible = false; }
         modify("Intrastat &Journal") { Visible = false; }
         modify("Payment Reconciliation Journals") { Visible = false; }
-
+        modify("Create Finance Charge &Memos") { Visible = false; }
         modify("G/L Journal Entry") { Visible = true; }
         modify("Payment Journal Entry") { Visible = true; }
         addafter("Payment Journal Entry")
@@ -87,6 +87,11 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
                 ApplicationArea = All;
                 RunObject = page "Vendor List";
             }
+            action(Reminders)
+            {
+                ApplicationArea = All;
+                RunObject = page "Reminder List";
+            }
         }
 
         //Journal
@@ -95,13 +100,13 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify(ICGeneralJournals) { Visible = false; }
 
         //Cash Management
+        modify("Direct Debit Collections") { Visible = false; }
+        modify("Payment Recon. Journals") { Visible = false; }
         modify("Cash Flow Forecasts") { Visible = false; }
         modify("Chart of Cash Flow Accounts") { Visible = false; }
         modify("Cash Flow Manual Expenses") { Visible = false; }
         modify("Cash Flow Manual Revenues") { Visible = false; }
         modify("Statement of Cash Flows") { Visible = false; }
-        modify("Direct Debit Collections") { Visible = false; }
-        modify("Payment Recon. Journals") { Visible = false; }
         addafter(Action164)
         {
             action("Bank Account Posting Groups_")
@@ -155,6 +160,7 @@ pageextension 50140 AccountantRC_Ext extends "Accountant Role Center"
         modify("Posted Sales Credit Memos") { Visible = false; }
         modify("Posted Purchase Invoices") { Visible = false; }
         modify("Posted Purchase Credit Memos") { Visible = false; }
+        modify("Issued Fin. Charge Memos") { Visible = false; }
         addafter("G/L Registers")
         {
             action("General Ledger Entries")
