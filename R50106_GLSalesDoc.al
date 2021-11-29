@@ -240,7 +240,7 @@ report 50106 "G/L Sales Document"
             }
             trigger OnPreDataItem()
             begin
-                "G/L Register".SetFilter("Source Code", '%1|%2', 'SALES', 'SALESJNL');
+                "G/L Register".SetFilter("Source Code", '%1|%2|%3', 'SALES', 'SALESJNL', 'GENJNL'); //IC entries post from General Journal 
             end;
         }
 
