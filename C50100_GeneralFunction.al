@@ -49,8 +49,8 @@ codeunit 50100 "General Function"
                 CashFlowDim := FACashFlowDimMapping."Cash Flow Dimension";
             if CashFlowDim <> '' then begin
                 DimMgt.GetDimensionSet(TempDimSetEntry, GenJnlLine."Dimension Set ID");
-                DimVal.GET('CASH FLOW', CashFlowDim);
-                TempDimSetEntry.SetRange("Dimension Code", 'CASH FLOW');
+                DimVal.GET('CASH FLOW NATURE', CashFlowDim);
+                TempDimSetEntry.SetRange("Dimension Code", 'CASH FLOW NATURE');
                 if TempDimSetEntry.FindFirst() then begin
                     TempDimSetEntry."Dimension Value Code" := CashFlowDim;
                     TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
@@ -58,7 +58,7 @@ codeunit 50100 "General Function"
                 end
                 else begin
                     TempDimSetEntry.Init();
-                    TempDimSetEntry."Dimension Code" := 'CASH FLOW';
+                    TempDimSetEntry."Dimension Code" := 'CASH FLOW NATURE';
                     TempDimSetEntry."Dimension Value Code" := CashFlowDim;
                     TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
                     TempDimSetEntry.Insert();
@@ -189,6 +189,7 @@ codeunit 50100 "General Function"
 
                             FromCompany := AtCompany;
                         until ICTransPathDetail.Next() = 0;
+
                     end else
                         Error('IC Transaction Path Detail does not exist for IC Transaction Path %1.', ICTransPath."Path Code");
 
@@ -214,6 +215,7 @@ codeunit 50100 "General Function"
 
                             until ICAllocation.Next() = 0;
                     end;
+
                 end;
             until Next() = 0;
         end;
