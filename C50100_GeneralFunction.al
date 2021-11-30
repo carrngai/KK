@@ -114,7 +114,16 @@ codeunit 50100 "General Function"
         ICAllocation: Record "IC Gen. Jnl. Allocation";
         TotalAllocatedAmt: Decimal;
         ICTransPath: Record "IC Transaction Path";
+        ICTransPathDetail: Record "IC Transaction Path Details";
+        ICTransPathDetail2: Record "IC Transaction Path Details";
         l_GenJnlLine: Record "Gen. Journal Line";
+        FromCompany: Code[50];
+        AtCompany: Code[50];
+        NextCompany: Code[50];
+        ICPartner: Record "IC Partner";
+        DimMgt: Codeunit DimensionManagement;
+        tempDimSetEntry1: Record "Dimension Set Entry" temporary;
+        DimVal: Record "Dimension Value";
     begin
         with GenJournalLine do begin
             SetCurrentKey("Journal Template Name", "Journal Batch Name", "Posting Date", "Document No.");
@@ -147,10 +156,65 @@ codeunit 50100 "General Function"
                     l_GenJnlLine.SetRange("Account No.", ICTransPath."Account No.");
                     if not l_GenJnlLine.FindSet() then
                         Error('Document No. %1: %2 %3 must be the balance account for IC Path %4', GenJournalLine."Document No.", ICTransPath."Account Type", ICTransPath."Account No.", GenJournalLine."IC Path Code");
+
+                    //Check IC Partner Setup Exists
+                    FromCompany := ICTransPath."From Company";
+                    ICTransPathDetail.Reset();
+                    ICTransPathDetail.SetRange("Path Code", ICTransPath."Path Code");
+                    if ICTransPathDetail.FindSet() then begin
+                        repeat
+                            AtCompany := ICTransPathDetail."To Company";
+
+                            //From Company
+                            ICPartner.ChangeCompany(AtCompany);
+                            ICPartner.SetRange("Inbox Details", FromCompany);
+                            if not ICPartner.FindFirst() then
+                                Error('IC Partner Setup does not exist for %1 in Company %2', FromCompany, AtCompany)
+                            else
+                                if (ICPartner."Vendor No." = '') or (ICPartner."Customer No." = '') then
+                                    Error('Vendor No. /Customer No. in IC Partner Setup for %1 in Company %2 cannot be blank', FromCompany, AtCompany);
+
+                            //To Company
+                            ICTransPathDetail2.CopyFilters(ICTransPathDetail);
+                            ICTransPathDetail2.SetFilter(Sequence, '%1..', ICTransPathDetail.Sequence + 1);
+                            if ICTransPathDetail2.FindFirst() then begin
+                                NextCompany := ICTransPathDetail2."To Company";
+                                ICPartner.SetRange("Inbox Details", NextCompany);
+                                if not ICPartner.FindFirst() then
+                                    Error('IC Partner Setup does not exist for %1 in Company %2', NextCompany, AtCompany)
+                                else
+                                    if (ICPartner."Vendor No." = '') or (ICPartner."Customer No." = '') then
+                                        Error('Vendor No. /Customer No. in IC Partner Setup for %1 in Company %2 cannot be blank', NextCompany, AtCompany);
+                            end;
+
+                            FromCompany := AtCompany;
+                        until ICTransPathDetail.Next() = 0;
+                    end else
+                        Error('IC Transaction Path Detail does not exist for IC Transaction Path %1.', ICTransPath."Path Code");
+
+                    //Check Allocation Dimension Value Exists in Last IC Partner
+                    ICTransPathDetail.Reset();
+                    ICTransPathDetail.SetRange("Path Code", ICTransPath."Path Code");
+                    if ICTransPathDetail.FindLast() then begin
+                        ICAllocation.Reset();
+                        ICAllocation.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
+                        ICAllocation.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
+                        ICAllocation.SetRange("Journal Line No.", GenJournalLine."Line No.");
+                        if ICAllocation.FindSet() then
+                            repeat
+                                DimMgt.GetDimensionSet(tempDimSetEntry1, ICAllocation."Bal. Dimension Set ID");
+                                if tempDimSetEntry1.FindSet() then
+                                    repeat
+
+                                        DimVal.ChangeCompany(AtCompany);
+                                        if not DimVal.Get(tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code") then
+                                            Error('Dimension %1 Dimension Value %2 not found in %3', tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code", AtCompany);
+
+                                    until tempDimSetEntry1.Next() = 0;
+
+                            until ICAllocation.Next() = 0;
+                    end;
                 end;
-
-
-
             until Next() = 0;
         end;
     end;
@@ -163,8 +227,8 @@ codeunit 50100 "General Function"
         ICAllocation: Record "IC Gen. Jnl. Allocation";
         ICTransMapping: Record "IC Transaction Account Mapping";
         ICPartner: Record "IC Partner";
-        FromCompany: Code[50];
         AtCompany: Code[50];
+        FromCompany: Code[50];
         NextCompany: Code[50];
         ICEliminate: Boolean;
 
