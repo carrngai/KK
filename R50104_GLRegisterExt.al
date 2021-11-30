@@ -464,6 +464,24 @@ report 50104 "G/L Register Ext"
                 begin
                     SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
                 end;
+
+                trigger OnPostDataItem()
+                var
+                    l_GLRegister: Record "G/L Register";
+                    GLSalesDocReport: Report "G/L Sales Document";
+                    RecRef: RecordRef;
+                begin
+                    if AutoPrintSalesDoc AND PrintSalesDoc then begin
+                        l_GLRegister.CopyFilters("G/L Register");
+                        //l_GLRegister.FindFirst();
+                        GLSalesDocReport.SetTableView(l_GLRegister);
+                        //RecRef.GetTable(l_GLRegister);
+                        //GLSalesDocReport.Execute('', RecRef);
+                        GLSalesDocReport.UseRequestPage(true);
+                        GLSalesDocReport.Run();
+                        //Report.Run(50106, false, false, l_GLRegister);
+                    end;
+                end;
             }
 
             trigger OnPreDataItem()
@@ -472,15 +490,6 @@ report 50104 "G/L Register Ext"
                 Clear(LastTransNo);
             end;
 
-            trigger OnPostDataItem()
-            var
-                l_GLRegister: Record "G/L Register";
-            begin
-                if AutoPrintSalesDoc AND PrintSalesDoc then begin
-                    l_GLRegister.CopyFilters("G/L Register");
-                    Report.Run(50106, false, false, l_GLRegister);
-                end;
-            end;
         }
     }
 
