@@ -44,8 +44,13 @@ table 50105 "IC Transaction Path Details"
     end;
 
     trigger OnDelete()
+    var
+        ICTransDefaultDim: Record "IC Trans. Default Dim.";
     begin
-
+        ICTransDefaultDim.SetRange("Table ID", Database::"IC Transaction Path Details");
+        ICTransDefaultDim.SetRange("Key 1", "Path Code");
+        ICTransDefaultDim.SetRange("Key 2", Sequence);
+        ICTransDefaultDim.DeleteAll(true);
     end;
 
     trigger OnRename()

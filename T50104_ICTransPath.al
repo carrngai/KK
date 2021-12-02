@@ -91,12 +91,17 @@ table 50104 "IC Transaction Path"
     var
         ICTransPathDetail: Record "IC Transaction Path Details";
         ICTransAccMapping: Record "IC Transaction Account Mapping";
+        ICTransDefaultDim: Record "IC Trans. Default Dim.";
     begin
         ICTransPathDetail.SetRange("Path Code", "Path Code");
         ICTransPathDetail.DeleteAll(true);
 
         ICTransAccMapping.SetRange("Path Code", "Path Code");
         ICTransAccMapping.DeleteAll(true);
+
+        ICTransDefaultDim.SetRange("Table ID", Database::"IC Transaction Path");
+        ICTransDefaultDim.SetRange("Key 1", "Path Code");
+        ICTransDefaultDim.DeleteAll(true);
     end;
 
     trigger OnRename()

@@ -38,12 +38,51 @@ page 50104 "IC Transaction Path"
                 }
             }
         }
+        area(Factboxes)
+        {
+            part(DimensionFB; "IC Trans. Default Dim. FactBox")
+            {
+                ApplicationArea = all;
+                Caption = 'Dimension';
+                SubPageLink = "Table ID" = const(50106), "Key 1" = field("Path Code"), "Key 2" = const(0), Type = const(Dimension);
+            }
+
+            part(BalDimensionFB; "IC Trans. Default Dim. FactBox")
+            {
+                ApplicationArea = all;
+                Caption = 'Bal. Dimension';
+                SubPageLink = "Table ID" = const(50106), "Key 1" = field("Path Code"), "Key 2" = const(0), Type = const("Bal. Dimension");
+            }
+        }
     }
 
     actions
     {
         area(Processing)
         {
+            action("Dimensions")
+            {
+                AccessByPermission = TableData Dimension = R;
+                ApplicationArea = Dimensions;
+                Caption = 'Dimensions';
+                Image = Dimensions;
+                Promoted = true;
+                PromotedCategory = Process;
+                RunObject = page "IC Trans. Account Mapping Dim.";
+                RunPageLink = "Table ID" = const(50104), "Key 1" = field("Path Code"), "Key 2" = const(0), Type = filter(Dimension);
+            }
+            action("Bal. Dimensions")
+            {
+                AccessByPermission = TableData Dimension = R;
+                ApplicationArea = Dimensions;
+                Caption = 'Bal. Dimensions';
+                Image = Dimensions;
+                Promoted = true;
+                PromotedCategory = Process;
+                RunObject = page "IC Trans. Account Mapping Dim.";
+
+                RunPageLink = "Table ID" = const(50104), "Key 1" = field("Path Code"), "Key 2" = const(0), Type = filter("Bal. Dimension");
+            }
             action("IC Trans. Path Details")
             {
                 ApplicationArea = All;

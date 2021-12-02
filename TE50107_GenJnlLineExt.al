@@ -129,7 +129,7 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
     procedure InsertICAllocation(var Rec: Record "Gen. Journal Line")
     var
         l_ICTransAccMapping: Record "IC Transaction Account Mapping";
-        l_ICTransAccMappingDim: Record "IC Trans. Account Mapping Dim.";
+        l_ICTransDefaultDim: Record "IC Trans. Default Dim.";
         l_ICGenJnlAlloc: Record "IC Gen. Jnl. Allocation";
         NextLineNo: Integer;
         DimMgmt: Codeunit DimensionManagement;
@@ -159,17 +159,20 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
                 l_ICGenJnlAlloc.Insert();
 
                 TempDimSetEntry.DeleteAll();
-                l_ICTransAccMappingDim.Reset();
-                l_ICTransAccMappingDim.SetRange(ID, l_ICTransAccMapping.ID);
-                if l_ICTransAccMappingDim.FindSet() then
+                l_ICTransDefaultDim.Reset();
+                l_ICTransDefaultDim.SetRange("Table ID", Database::"IC Transaction Account Mapping");
+                l_ICTransDefaultDim.SetRange("Key 1", '');
+                l_ICTransDefaultDim.SetRange("Key 2", l_ICTransAccMapping.ID);
+                l_ICTransDefaultDim.SetRange(Type, l_ICTransDefaultDim.Type::"Bal. Dimension");
+                if l_ICTransDefaultDim.FindSet() then
                     repeat
                         TempDimSetEntry.Init();
-                        TempDimSetEntry."Dimension Code" := l_ICTransAccMappingDim."Dimension Code";
-                        TempDimSetEntry."Dimension Value Code" := l_ICTransAccMappingDim."Dimension Value Code";
-                        DimVal.Get(l_ICTransAccMappingDim."Dimension Code", l_ICTransAccMappingDim."Dimension Value Code");
+                        TempDimSetEntry."Dimension Code" := l_ICTransDefaultDim."Dimension Code";
+                        TempDimSetEntry."Dimension Value Code" := l_ICTransDefaultDim."Dimension Value Code";
+                        DimVal.Get(l_ICTransDefaultDim."Dimension Code", l_ICTransDefaultDim."Dimension Value Code");
                         TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
                         TempDimSetEntry.Insert();
-                    until l_ICTransAccMappingDim.Next() = 0;
+                    until l_ICTransDefaultDim.Next() = 0;
 
                 l_ICGenJnlAlloc.validate("Bal. Dimension Set ID", DimMgmt.GetDimensionSetID(TempDimSetEntry));
                 l_ICGenJnlAlloc.Modify();

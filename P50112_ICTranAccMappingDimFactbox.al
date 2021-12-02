@@ -1,9 +1,9 @@
-page 50112 "IC Trans. Acc. Dim. FactBox"
+page 50112 "IC Trans. Default Dim. FactBox"
 {
     Caption = 'Dimensions';
     Editable = false;
     PageType = ListPart;
-    SourceTable = "IC Trans. Account Mapping Dim.";
+    SourceTable = "IC Trans. Default Dim.";
 
     layout
     {
