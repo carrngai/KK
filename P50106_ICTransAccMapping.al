@@ -41,7 +41,7 @@ page 50106 "IC Transaction Account Mapping"
             part(BalDimensionFB; "IC Trans. Default Dim. FactBox")
             {
                 ApplicationArea = all;
-                Caption = 'Bal. Dimension';
+                Caption = 'Bal. Dimensions';
                 SubPageLink = "Table ID" = const(50106), "Key 1" = const(''), "Key 2" = field(ID), Type = filter("Bal. Dimension");
             }
         }
@@ -59,7 +59,7 @@ page 50106 "IC Transaction Account Mapping"
                 Image = Dimensions;
                 Promoted = true;
                 PromotedCategory = Process;
-                RunObject = page "IC Trans. Account Mapping Dim.";
+                RunObject = page "IC Trans. Default Dim.";
                 RunPageLink = "Table ID" = const(50106), "Key 1" = const(''), "Key 2" = field(ID), Type = filter("Bal. Dimension");
             }
 

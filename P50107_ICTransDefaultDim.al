@@ -1,4 +1,4 @@
-page 50107 "IC Trans. Account Mapping Dim."
+page 50107 "IC Trans. Default Dim."
 {
     PageType = List;
     ApplicationArea = All;

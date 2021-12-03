@@ -360,6 +360,7 @@ codeunit 50100 "General Function"
         // ICGenJnlLine."Print Posted Documents" := true;
         ICGenJnlLine."Line No." := NextLineNo;
         ICGenJnlLine."Posting Date" := SourceGenJnLine."Posting Date";
+        ICGenJnlLine."Document Type" := SourceGenJnLine."Document Type";
         ICGenJnlLine."Document No." := SourceGenJnLine."Document No.";
         ICGenJnlLine."External Document No." := SourceGenJnLine."External Document No.";
         ICGenJnlLine.Insert();
@@ -396,32 +397,32 @@ codeunit 50100 "General Function"
         DefaultDim.SetFilter("Dimension Value Code", '<>%1', '');
         if DefaultDim.FindSet() then
             repeat
-                TempDimSetEntry2.Init();
-                TempDimSetEntry2."Dimension Code" := DefaultDim."Dimension Code";
-                TempDimSetEntry2."Dimension Value Code" := DefaultDim."Dimension Value Code";
                 DimVal.Get(DefaultDim."Dimension Code", DefaultDim."Dimension Value Code");
+                TempDimSetEntry2.Init();
+                TempDimSetEntry2."Dimension Code" := DimVal."Dimension Code";
+                TempDimSetEntry2."Dimension Value Code" := DimVal.Code;
                 TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
                 TempDimSetEntry2."Global Dimension No." := DimVal."Global Dimension No.";
                 TempDimSetEntry2.Insert();
             until DefaultDim.Next() = 0;
 
-        //2. From Journal Line Dimension
+        //2. Add Line dimension to Default Dimension
         if DimSetID <> 0 then begin
             DimMgt.GetDimensionSet(tempDimSetEntry1, DimSetID);
             if tempDimSetEntry1.FindSet() then
                 repeat
                     TempDimSetEntry2.SetRange("Dimension Code", tempDimSetEntry1."Dimension Code");
                     if TempDimSetEntry2.FindSet() then begin
-                        TempDimSetEntry2."Dimension Value Code" := tempDimSetEntry1."Dimension Value Code";
                         DimVal.Get(tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code");
+                        TempDimSetEntry2."Dimension Value Code" := DimVal.Code;
                         TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
                         TempDimSetEntry2."Global Dimension No." := DimVal."Global Dimension No.";
                         TempDimSetEntry2.Modify();
                     end else begin
-                        TempDimSetEntry2.Init();
-                        TempDimSetEntry2."Dimension Code" := tempDimSetEntry1."Dimension Code";
-                        TempDimSetEntry2."Dimension Value Code" := tempDimSetEntry1."Dimension Value Code";
                         DimVal.Get(tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code");
+                        TempDimSetEntry2.Init();
+                        TempDimSetEntry2."Dimension Code" := DimVal."Dimension Code";
+                        TempDimSetEntry2."Dimension Value Code" := DimVal.Code;
                         TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
                         TempDimSetEntry2."Global Dimension No." := DimVal."Global Dimension No.";
                         TempDimSetEntry2.Insert();
@@ -613,10 +614,10 @@ codeunit 50100 "General Function"
             TempDimSetEntry.Modify();
         end
         else begin
+            DimVal.Get(TempDimSetEntry."Dimension Code", FAPostingGr."Accum Depr Acc on Disposal Dim");
             TempDimSetEntry.Init();
             TempDimSetEntry."Dimension Code" := 'FIXED ASSET MOVEMENT';
             TempDimSetEntry."Dimension Value Code" := FAPostingGr."Accum Depr Acc on Disposal Dim";
-            DimVal.Get(TempDimSetEntry."Dimension Code", FAPostingGr."Accum Depr Acc on Disposal Dim");
             TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
             TempDimSetEntry."Global Dimension No." := DimVal."Global Dimension No.";
             TempDimSetEntry.Insert();

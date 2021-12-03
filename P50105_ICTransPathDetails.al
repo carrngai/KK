@@ -34,14 +34,14 @@ page 50105 "IC Transaction Path Details"
             part(DimensionFB; "IC Trans. Default Dim. FactBox")
             {
                 ApplicationArea = all;
-                Caption = 'Dimension';
+                Caption = 'Dimensions';
                 SubPageLink = "Table ID" = const(50105), "Key 1" = field("Path Code"), "Key 2" = field(Sequence), Type = const(Dimension);
             }
 
             part(BalDimensionFB; "IC Trans. Default Dim. FactBox")
             {
                 ApplicationArea = all;
-                Caption = 'Bal. Dimension';
+                Caption = 'Bal. Dimensions';
                 SubPageLink = "Table ID" = const(50105), "Key 1" = field("Path Code"), "Key 2" = field(Sequence), Type = const("Bal. Dimension");
             }
         }
@@ -59,7 +59,7 @@ page 50105 "IC Transaction Path Details"
                 Image = Dimensions;
                 Promoted = true;
                 PromotedCategory = Process;
-                RunObject = page "IC Trans. Account Mapping Dim.";
+                RunObject = page "IC Trans. Default Dim.";
                 RunPageLink = "Table ID" = const(50105), "Key 1" = field("Path Code"), "Key 2" = field(Sequence), Type = filter(Dimension);
             }
             action("Bal. Dimensions")
@@ -70,7 +70,7 @@ page 50105 "IC Transaction Path Details"
                 Image = Dimensions;
                 Promoted = true;
                 PromotedCategory = Process;
-                RunObject = page "IC Trans. Account Mapping Dim.";
+                RunObject = page "IC Trans. Default Dim.";
                 RunPageLink = "Table ID" = const(50105), "Key 1" = field("Path Code"), "Key 2" = field(Sequence), Type = filter("Bal. Dimension");
             }
         }
