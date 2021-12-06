@@ -19,6 +19,10 @@ tableextension 50106 "G/L Entry Ext" extends "G/L Entry"
             DataClassification = ToBeClassified;
             TableRelation = "IC Transaction Path"."Path Code";
         }
+        field(50104; "IC Source Document No."; Code[20]) //G014
+        {
+            DataClassification = ToBeClassified;
+        }
         field(50107; "Description 2"; Text[250])
         {
         }

@@ -22,10 +22,12 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
             begin
                 UpdateICPathDefaultDim(Rec);
                 InsertICAllocation(Rec);
-
             end;
         }
-
+        field(50104; "IC Source Document No."; Code[20]) //G014
+        {
+            DataClassification = ToBeClassified;
+        }
         field(50107; "Description 2"; Text[250]) { }
         field(50108; "Pre-Assigned No."; Code[20]) { }
     }
