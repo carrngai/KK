@@ -472,6 +472,7 @@ report 50104 "G/L Register Ext"
                     RecRef: RecordRef;
                 begin
                     if AutoPrintSalesDoc AND PrintSalesDoc then begin
+                        Commit();
                         l_GLRegister.CopyFilters("G/L Register");
                         //l_GLRegister.FindFirst();
                         GLSalesDocReport.SetTableView(l_GLRegister);

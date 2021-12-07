@@ -460,7 +460,7 @@ codeunit 50100 "General Function"
         ICGenJnlLine."Document No." := SourceGenJnLine."Document No.";
         ICGenJnlLine."External Document No." := LastDocNo;
         ICGenJnlLine."Posting No. Series" := ICGenBatch."Posting No. Series";
-        // ICGenJnlLine."Print Posted Documents" := true;        
+        ICGenJnlLine."Print Posted Documents" := true;
         ICGenJnlLine.Insert();
         ICGenJnlLine."Account Type" := AccType;
         ICGenJnlLine."Account No." := AccNo;
@@ -609,6 +609,8 @@ codeunit 50100 "General Function"
                     l_NoSeriesLine.SetRange(Open, true);
                 end;
                 DocNo := IncStr(l_NoSeriesLine."Last No. Used");
+                if DocNo = '' then
+                    DocNo := l_NoSeriesLine."Starting No.";
                 l_GenJnlLine.ModifyAll("Document No.", DocNo);
             end else
                 DocNo := l_GenJnlLine."Document No.";
@@ -811,5 +813,56 @@ codeunit 50100 "General Function"
             NewReportId := Report::"Bank Account Statement Ext";
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Batch Posting Print Mgt.", 'OnBeforeGLRegPostingReportPrint', '', false, false)]
+    local procedure OnBeforeGLRegPostingReportPrint(var ReportID: Integer; ReqWindow: Boolean; SystemPrinter: Boolean; var GLRegister: Record "G/L Register"; var Handled: Boolean)
+    var
+        PrintSalesDoc: Boolean;
+        l_CLE: Record "Cust. Ledger Entry";
+        l_GLRegister: Record "G/L Register";
+        GLSalesDocReport: Report "G/L Sales Document";
+        RecRef: RecordRef;
+        GeneralLedgerSetup: Record "General Ledger Setup";
+    begin
 
+        l_CLE.SetRange("Entry No.", GLRegister."From Entry No.", GLRegister."To Entry No.");
+        if l_CLE.FindFirst() then begin
+            if (l_CLE."Document Type" = l_CLE."Document Type"::Invoice) or (l_CLE."Document Type" = l_CLE."Document Type"::"Credit Memo") then begin
+                PrintSalesDoc := true;
+            end;
+        end;
+        if PrintSalesDoc then begin
+            //Commit();
+            l_GLRegister.CopyFilters(GLRegister);
+            //l_GLRegister.FindFirst();
+            //RecRef.GetTable(l_GLRegister);
+            //GLSalesDocReport.Execute('', RecRef);
+            //GLSalesDocReport.SaveAs()
+            GeneralLedgerSetup.Get();
+            if GeneralLedgerSetup."Post & Print with Job Queue" then
+                SchedulePrintJobQueueEntry(l_GLRegister, 50106, GeneralLedgerSetup."Report Output Type")
+            else begin
+                GLSalesDocReport.SetTableView(l_GLRegister);
+                GLSalesDocReport.UseRequestPage(true);
+                GLSalesDocReport.Run();
+            end;
+        end;
+    end;
+
+    local procedure SchedulePrintJobQueueEntry(RecVar: Variant; ReportId: Integer; ReportOutputType: Option)
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        RecRefToPrint: RecordRef;
+    begin
+        RecRefToPrint.GetTable(RecVar);
+        with JobQueueEntry do begin
+            Clear(ID);
+            "Object Type to Run" := "Object Type to Run"::Report;
+            "Object ID to Run" := ReportId;
+            "Report Output Type" := ReportOutputType;
+            "Record ID to Process" := RecRefToPrint.RecordId;
+            Description := Format("Report Output Type");
+            CODEUNIT.Run(CODEUNIT::"Job Queue - Enqueue", JobQueueEntry);
+            Commit();
+        end;
+    end;
 }
