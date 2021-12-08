@@ -471,17 +471,17 @@ report 50104 "G/L Register Ext"
                     GLSalesDocReport: Report "G/L Sales Document";
                     RecRef: RecordRef;
                 begin
-                    if AutoPrintSalesDoc AND PrintSalesDoc then begin
-                        Commit();
-                        l_GLRegister.CopyFilters("G/L Register");
-                        //l_GLRegister.FindFirst();
-                        GLSalesDocReport.SetTableView(l_GLRegister);
-                        //RecRef.GetTable(l_GLRegister);
-                        //GLSalesDocReport.Execute('', RecRef);
-                        GLSalesDocReport.UseRequestPage(true);
-                        GLSalesDocReport.Run();
-                        //Report.Run(50106, false, false, l_GLRegister);
-                    end;
+                    // if AutoPrintSalesDoc AND PrintSalesDoc then begin
+                    //     Commit();
+                    //     l_GLRegister.CopyFilters("G/L Register");
+                    //     //l_GLRegister.FindFirst();
+                    //     GLSalesDocReport.SetTableView(l_GLRegister);
+                    //     //RecRef.GetTable(l_GLRegister);
+                    //     //GLSalesDocReport.Execute('', RecRef);
+                    //     GLSalesDocReport.UseRequestPage(true);
+                    //     GLSalesDocReport.Run();
+                    //     //Report.Run(50106, false, false, l_GLRegister);
+                    // end;
                 end;
             }
 

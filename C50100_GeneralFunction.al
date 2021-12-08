@@ -831,7 +831,7 @@ codeunit 50100 "General Function"
             end;
         end;
         if PrintSalesDoc then begin
-            //Commit();
+            Commit();
             l_GLRegister.CopyFilters(GLRegister);
             //l_GLRegister.FindFirst();
             //RecRef.GetTable(l_GLRegister);
