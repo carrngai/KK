@@ -21,12 +21,12 @@ table 50104 "IC Transaction Path"
             DataClassification = ToBeClassified;
             TableRelation = Company.Name;
         }
-        field(4; "Account Type"; Enum "Gen. Journal Account Type")
+        field(4; "Bal. Account Type"; Enum "Gen. Journal Account Type")
         {
             DataClassification = ToBeClassified;
             ValuesAllowed = 0, 3;
         }
-        field(5; "Account No."; Code[20])
+        field(5; "Bal. Account No."; Code[20])
         {
             DataClassification = ToBeClassified;
 
@@ -37,7 +37,7 @@ table 50104 "IC Transaction Path"
                 BankAcc2: Record "Bank Account";
                 BankList2: Page "Bank Account List";
             begin
-                IF "Account Type" = "Account Type"::"Bank Account" then begin
+                IF "Bal. Account Type" = "Bal. Account Type"::"Bank Account" then begin
                     BankAcc2.ChangeCompany("From Company");
                     BankList2.ChangeToCompany("From Company");
                     BankList2.SetTableView(BankAcc2);
@@ -45,11 +45,11 @@ table 50104 "IC Transaction Path"
                     BankList2.LookupMode := true;
                     if BankList2.RunModal() = Action::LookupOK then begin
                         BankList2.GetRecord(BankAcc2);
-                        "Account No." := BankAcc2."No.";
+                        "Bal. Account No." := BankAcc2."No.";
                     end;
                 end;
 
-                IF "Account Type" = "Account Type"::"G/L Account" then begin
+                IF "Bal. Account Type" = "Bal. Account Type"::"G/L Account" then begin
                     GLAcc2.ChangeCompany("From Company");
                     GLAcc2.SetRange("Account Type", GLAcc2."Account Type"::Posting);
                     GLAcc2.SetRange("Direct Posting", true);
@@ -59,7 +59,7 @@ table 50104 "IC Transaction Path"
                     GLList2.LookupMode := true;
                     if GLList2.RunModal() = Action::LookupOK then begin
                         GLList2.GetRecord(GLAcc2);
-                        "Account No." := GLAcc2."No.";
+                        "Bal. Account No." := GLAcc2."No.";
                     end;
                 end;
             end;

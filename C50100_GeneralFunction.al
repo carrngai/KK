@@ -158,10 +158,10 @@ codeunit 50100 "General Function"
                     l_GenJnlLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
                     l_GenJnlLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
                     l_GenJnlLine.SetRange("Document No.", GenJournalLine."Document No.");
-                    l_GenJnlLine.SetRange("Account Type", ICTransPath."Account Type");
-                    l_GenJnlLine.SetRange("Account No.", ICTransPath."Account No.");
+                    l_GenJnlLine.SetRange("Account Type", ICTransPath."Bal. Account Type");
+                    l_GenJnlLine.SetRange("Account No.", ICTransPath."Bal. Account No.");
                     if not l_GenJnlLine.FindSet() then
-                        Error('Document No. %1: %2 %3 must be the balance account for IC Path %4', GenJournalLine."Document No.", ICTransPath."Account Type", ICTransPath."Account No.", GenJournalLine."IC Path Code");
+                        Error('Document No. %1: %2 %3 must be the balance account for IC Path %4', GenJournalLine."Document No.", ICTransPath."Bal. Account Type", ICTransPath."Bal. Account No.", GenJournalLine."IC Path Code");
 
                     //Check IC Partner Setup Exists
                     FromCompany := ICTransPath."From Company";

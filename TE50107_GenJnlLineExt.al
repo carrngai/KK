@@ -245,8 +245,11 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
             l_GenJnlLine."Document Type" := Rec."Document Type";
             l_GenJnlLine."Document No." := Rec."Document No.";
             l_GenJnlLine."Posting No. Series" := Rec."Posting No. Series"; //20211129
-            l_GenJnlLine.validate("Account Type", l_ICTransPath."Account Type");
-            l_GenJnlLine.Validate("Account No.", l_ICTransPath."Account No.");
+            l_GenJnlLine.Validate("Account Type", l_ICTransPath."Bal. Account Type");
+            l_GenJnlLine.Validate("Account No.", l_ICTransPath."Bal. Account No.");
+            // l_GenJnlLine.Validate("Currency Code", Rec."Currency Code"); 
+            // l_GenJnlLine.Validate("Currency Factor", Rec."Currency Factor");
+            // l_GenJnlLine.Validate(Amount, Rec.Amount);
 
             //get default dimension 
             l_ICTransDefaultDim.Reset();
@@ -266,7 +269,7 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
                 until l_ICTransDefaultDim.Next() = 0;
             l_GenJnlLine.Validate("Dimension Set ID", DimMgmt.GetDimensionSetID(TempDimSetEntry1));
 
-            if (l_GenJnlLine2."Document No." = Rec."Document No.") and (l_GenJnlLine2."Account No." <> l_ICTransPath."Account No.") then
+            if (l_GenJnlLine2."Document No." = Rec."Document No.") and (l_GenJnlLine2."Account No." <> l_ICTransPath."Bal. Account No.") then
                 l_GenJnlLine.Insert()
             else
                 if (l_GenJnlLine2."Document No." <> Rec."Document No.") then

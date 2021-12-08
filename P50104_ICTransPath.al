@@ -26,12 +26,12 @@ page 50104 "IC Transaction Path"
                     ToolTip = 'Specifies the value of the Description field';
                     ApplicationArea = All;
                 }
-                field("Account Type"; Rec."Account Type")
+                field("Bal. Account Type"; Rec."Bal. Account Type")
                 {
                     ToolTip = 'Specifies the value of the Account Type field';
                     ApplicationArea = All;
                 }
-                field("Account No."; Rec."Account No.")
+                field("Bal. Account No."; Rec."Bal. Account No.")
                 {
                     ToolTip = 'Specifies the value of the Account No. field';
                     ApplicationArea = All;
