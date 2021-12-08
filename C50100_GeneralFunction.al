@@ -465,6 +465,7 @@ codeunit 50100 "General Function"
         ICGenJnlLine."Account Type" := AccType;
         ICGenJnlLine."Account No." := AccNo;
         ICGenJnlLine.Description := SourceGenJnLine.Description;
+        ICGenJnlLine."Source Code" := SourceGenJnLine."Source Code";
         if GLSetup1."LCY Code" = GLSetup2."LCY Code" then begin
             ICGenJnlLine."Currency Code" := SourceGenJnLine."Currency Code";
             ICGenJnlLine."Currency Factor" := SourceGenJnLine."Currency Factor";
@@ -833,13 +834,14 @@ codeunit 50100 "General Function"
         if PrintSalesDoc then begin
             Commit();
             l_GLRegister.CopyFilters(GLRegister);
-            //l_GLRegister.FindFirst();
+            l_GLRegister.FindFirst();
+            l_GLRegister.SetRecFilter();
             //RecRef.GetTable(l_GLRegister);
             //GLSalesDocReport.Execute('', RecRef);
             //GLSalesDocReport.SaveAs()
             GeneralLedgerSetup.Get();
             if GeneralLedgerSetup."Post & Print with Job Queue" then
-                SchedulePrintJobQueueEntry(l_GLRegister, 50106, GeneralLedgerSetup."Report Output Type")
+                SchedulePrintJobQueueEntry(GLRegister, 50106, GeneralLedgerSetup."Report Output Type")
             else begin
                 GLSalesDocReport.SetTableView(l_GLRegister);
                 GLSalesDocReport.UseRequestPage(true);
