@@ -36,11 +36,13 @@ page 50108 "IC Gen. Jnl. Allocations"
                 {
                     ApplicationArea = Dimensions;
                     ToolTip = 'Specifies the code for Shortcut Dimension 1, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
+                    Editable = false;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = Dimensions;
                     ToolTip = 'Specifies the code for Shortcut Dimension 2, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
+                    Editable = false;
                 }
                 field("ShortcutDimCode[3]"; ShortcutDimCode[3])
                 {
@@ -49,6 +51,7 @@ page 50108 "IC Gen. Jnl. Allocations"
                     TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
+                    Editable = false;
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(3, ShortcutDimCode[3]);
@@ -61,6 +64,7 @@ page 50108 "IC Gen. Jnl. Allocations"
                     TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(4),
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
+                    Editable = false;
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(4, ShortcutDimCode[4]);
@@ -73,6 +77,7 @@ page 50108 "IC Gen. Jnl. Allocations"
                     TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(5),
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
+                    Editable = false;
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(5, ShortcutDimCode[5]);
@@ -85,6 +90,7 @@ page 50108 "IC Gen. Jnl. Allocations"
                     TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(6),
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
+                    Editable = false;
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(6, ShortcutDimCode[6]);
@@ -97,6 +103,7 @@ page 50108 "IC Gen. Jnl. Allocations"
                     TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(7),
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
+                    Editable = false;
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(7, ShortcutDimCode[7]);
@@ -109,6 +116,7 @@ page 50108 "IC Gen. Jnl. Allocations"
                     TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(8),
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
+                    Editable = false;
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(8, ShortcutDimCode[8]);
@@ -148,7 +156,6 @@ page 50108 "IC Gen. Jnl. Allocations"
                     Promoted = true;
                     PromotedCategory = Process;
                     ShortCutKey = 'Alt+D';
-                    ToolTip = 'View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.';
 
                     trigger OnAction()
                     begin

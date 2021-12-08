@@ -233,10 +233,8 @@ table 50108 "IC Gen. Jnl. Allocation"
 
     procedure ShowDimensions()
     begin
-        "Bal. Dimension Set ID" :=
-          DimMgt.EditDimensionSet("Bal. Dimension Set ID",
-            StrSubstNo('%1 %2 %3', "Journal Template Name", "Journal Batch Name", "Journal Line No."));
-
+        DimMgt.ShowDimensionSet("Bal. Dimension Set ID",
+        StrSubstNo('%1 %2 %3', "Journal Template Name", "Journal Batch Name", "Journal Line No."));
     end;
 
 }

@@ -125,6 +125,7 @@ codeunit 50100 "General Function"
         DimMgt: Codeunit DimensionManagement;
         DimVal: Record "Dimension Value";
         tempDimSetEntry1: Record "Dimension Set Entry" temporary;
+        ICTransDefaultDim: Record "IC Trans. Default Dim.";
 
     begin
         with GenJournalLine do begin
@@ -152,7 +153,24 @@ codeunit 50100 "General Function"
                             Error('Line No. %1 : Allocated Amount(%2) is not equal to Journal Line Amount(%3).', GenJournalLine."Line No.", TotalAllocatedAmt, GenJournalLine.Amount);
                     end;
 
-                    //Check Bal. Account and IC Allocation Bal. Account same as setup
+                    //Check Dimension same as setup
+                    tempDimSetEntry1.DeleteAll();
+                    DimMgt.GetDimensionSet(tempDimSetEntry1, GenJournalLine."Dimension Set ID");
+                    ICTransDefaultDim.Reset();
+                    ICTransDefaultDim.SetRange("Table ID", Database::"IC Transaction Path");
+                    ICTransDefaultDim.SetRange("Key 1", GenJournalLine."IC Path Code");
+                    ICTransDefaultDim.SetRange("Key 2", 0);
+                    ICTransDefaultDim.SetRange(Type, ICTransDefaultDim.Type::"Dimension");
+                    if ICTransDefaultDim.FindSet() then
+                        repeat
+                            tempDimSetEntry1.Reset();
+                            tempDimSetEntry1.SetRange("Dimension Code", ICTransDefaultDim."Dimension Code");
+                            tempDimSetEntry1.SetRange("Dimension Value Code", ICTransDefaultDim."Dimension Value Code");
+                            if not tempDimSetEntry1.FindSet() then
+                                Error('Line No. %1 : Dimension %2 and Dimension Value %3 must be selected.', GenJournalLine."Line No.", ICTransDefaultDim."Dimension Code", ICTransDefaultDim."Dimension Value Code");
+                        until ICTransDefaultDim.Next() = 0;
+
+                    //Check Bal. Account and Dimension same as setup
                     ICTransPath.Get(GenJournalLine."IC Path Code");
                     l_GenJnlLine.Reset();
                     l_GenJnlLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
@@ -160,7 +178,23 @@ codeunit 50100 "General Function"
                     l_GenJnlLine.SetRange("Document No.", GenJournalLine."Document No.");
                     l_GenJnlLine.SetRange("Account Type", ICTransPath."Bal. Account Type");
                     l_GenJnlLine.SetRange("Account No.", ICTransPath."Bal. Account No.");
-                    if not l_GenJnlLine.FindSet() then
+                    if l_GenJnlLine.FindFirst() then begin
+                        tempDimSetEntry1.DeleteAll();
+                        DimMgt.GetDimensionSet(tempDimSetEntry1, l_GenJnlLine."Dimension Set ID");
+                        ICTransDefaultDim.Reset();
+                        ICTransDefaultDim.SetRange("Table ID", Database::"IC Transaction Path");
+                        ICTransDefaultDim.SetRange("Key 1", GenJournalLine."IC Path Code");
+                        ICTransDefaultDim.SetRange("Key 2", 0);
+                        ICTransDefaultDim.SetRange(Type, ICTransDefaultDim.Type::"Bal. Dimension");
+                        if ICTransDefaultDim.FindSet() then
+                            repeat
+                                tempDimSetEntry1.Reset();
+                                tempDimSetEntry1.SetRange("Dimension Code", ICTransDefaultDim."Dimension Code");
+                                tempDimSetEntry1.SetRange("Dimension Value Code", ICTransDefaultDim."Dimension Value Code");
+                                if not tempDimSetEntry1.FindSet() then
+                                    Error('Line No. %1 : Dimension %2 and Dimension Value %3 must be selected.', l_GenJnlLine."Line No.", ICTransDefaultDim."Dimension Code", ICTransDefaultDim."Dimension Value Code");
+                            until ICTransDefaultDim.Next() = 0;
+                    end else
                         Error('Document No. %1: %2 %3 must be the balance account for IC Path %4', GenJournalLine."Document No.", ICTransPath."Bal. Account Type", ICTransPath."Bal. Account No.", GenJournalLine."IC Path Code");
 
                     //Check IC Partner Setup Exists
@@ -209,16 +243,14 @@ codeunit 50100 "General Function"
                         ICAllocation.SetRange("Journal Line No.", GenJournalLine."Line No.");
                         if ICAllocation.FindSet() then
                             repeat
+                                tempDimSetEntry1.DeleteAll();
                                 DimMgt.GetDimensionSet(tempDimSetEntry1, ICAllocation."Bal. Dimension Set ID");
                                 if tempDimSetEntry1.FindSet() then
                                     repeat
-
                                         DimVal.ChangeCompany(AtCompany);
                                         if not DimVal.Get(tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code") then
                                             Error('Dimension %1 Dimension Value %2 not found in %3', tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code", AtCompany);
-
                                     until tempDimSetEntry1.Next() = 0;
-
                             until ICAllocation.Next() = 0;
                     end;
 
@@ -460,7 +492,7 @@ codeunit 50100 "General Function"
         ICGenJnlLine."Document No." := SourceGenJnLine."Document No.";
         ICGenJnlLine."External Document No." := LastDocNo;
         ICGenJnlLine."Posting No. Series" := ICGenBatch."Posting No. Series";
-        ICGenJnlLine."Print Posted Documents" := true;
+        // ICGenJnlLine."Print Posted Documents" := true;
         ICGenJnlLine.Insert();
         ICGenJnlLine."Account Type" := AccType;
         ICGenJnlLine."Account No." := AccNo;

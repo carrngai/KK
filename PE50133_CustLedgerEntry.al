@@ -5,10 +5,14 @@ pageextension 50133 "Customer Ledger Entries Ext" extends "Customer Ledger Entri
         // Add changes to page layout here
         addafter("Document No.")
         {
-
             field("Pre-Assigned No."; Rec."Pre-Assigned No.")
             {
                 ToolTip = 'Specifies the value of the Pre-Assigned No. field';
+                ApplicationArea = All;
+            }
+            field("External Document No._"; Rec."External Document No.")
+            {
+                ToolTip = 'Specifies the value of the External Document No. field.';
                 ApplicationArea = All;
             }
         }
@@ -19,6 +23,8 @@ pageextension 50133 "Customer Ledger Entries Ext" extends "Customer Ledger Entri
         modify("Max. Payment Tolerance") { Visible = false; }
         modify("Exported to Payment File") { Visible = false; }
         modify("Message to Recipient") { Visible = false; }
+        modify(RecipientBankAccount) { Visible = false; }
+        modify("External Document No.") { Visible = false; }
     }
 
     actions
