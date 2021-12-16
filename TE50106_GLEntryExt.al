@@ -26,6 +26,10 @@ tableextension 50106 "G/L Entry Ext" extends "G/L Entry"
         field(50107; "Description 2"; Text[250])
         {
         }
+        field(50108; "Pre-Assigned No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
 
     }
 

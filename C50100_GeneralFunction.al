@@ -81,6 +81,7 @@ codeunit 50100 "General Function"
         GLEntry."Netting Source No." := GenJournalLine."Netting Source No."; //G025
         GLEntry."IC Path Code" := GenJournalLine."IC Path Code"; //G014
         GLEntry."IC Source Document No." := GenJournalLine."IC Source Document No."; //G014
+        GLEntry."Pre-Assigned No." := GenJournalLine."Pre-Assigned No."; //G014
         GLEntry."Description 2" := GenJournalLine."Description 2";
     end;
     //G017--
