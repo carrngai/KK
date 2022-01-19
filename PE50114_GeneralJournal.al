@@ -49,7 +49,18 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
                     CurrPage.Update();
                 end;
             }
-
+            field("Allow Zero-Amount Posting"; Rec."Allow Zero-Amount Posting")
+            {
+                ToolTip = 'Specifies the value of the Allow Zero-Amount Posting field.';
+                ApplicationArea = All;
+                Editable = false;
+            }
+            field("System-Created Entry"; Rec."System-Created Entry")
+            {
+                ToolTip = 'Specifies the value of the System-Created Entry field.';
+                ApplicationArea = All;
+                Editable = false;
+            }
             field("Bal. Account Type_"; Rec."Bal. Account Type")
             {
                 ToolTip = 'Specifies the value of the Bal. Account Type field';
@@ -69,6 +80,8 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
                 Editable = false;
                 Visible = false;
             }
+
+
         }
         modify(JournalLineDetails) { Visible = false; }
         modify(IncomingDocAttachFactBox) { Visible = false; }

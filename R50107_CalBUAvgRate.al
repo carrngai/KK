@@ -21,8 +21,18 @@ report 50107 "Calculate BU Average Rate"
             end;
 
             trigger OnAfterGetRecord()
-
+            var
+                l_AccountingPeriod: Record "Accounting Period";
             begin
+
+                l_AccountingPeriod.Reset();
+                l_AccountingPeriod.SetRange("New Fiscal Year", true);
+                l_AccountingPeriod.SetFilter("Starting Date", '..%1', ConsolidStartDate);
+                if l_AccountingPeriod.FindLast() then
+                    FYStartDate := l_AccountingPeriod."Starting Date"
+                else
+                    Error('FY Start Date does not exist');
+
                 if "Currency Exchange Rate Table" = "Currency Exchange Rate Table"::Local then begin
                     ExchRate.Reset();
                     FYStartRate := 1 / ExchRate.ExchangeRate(FYStartDate, "Currency Code");
@@ -31,6 +41,7 @@ report 50107 "Calculate BU Average Rate"
                         //System calculates “Average Rate (Manual)” for each Business Unit 
                         //by (Rate @ Consolidation Period End Date + Rate @ Fiscal Year Start Date) / 2
                         "Business Unit"."Income Currency Factor" := 1 / ((FYStartRate + ConsoEndRate) / 2);
+                        "Business Unit"."Balance Currency Factor" := 1 / ConsoEndRate;
                         "Business Unit".Modify();
                     end;
                 end;
@@ -166,7 +177,7 @@ report 50107 "Calculate BU Average Rate"
         AccountingPeriod.SetRange("New Fiscal Year", true);
         if AccountingPeriod.Find('-') then begin
             FiscalYearStartDate := AccountingPeriod."Starting Date";
-            FYStartDate := AccountingPeriod."Starting Date"; //
+            // FYStartDate := AccountingPeriod."Starting Date";
             if AccountingPeriod.Find('>') then
                 FiscalYearEndDate := CalcDate('<-1D>', AccountingPeriod."Starting Date")
             else
