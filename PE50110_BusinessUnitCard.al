@@ -63,11 +63,12 @@ pageextension 50110 "Business Unit Card Ext" extends "Business Unit Card"
         }
         addafter("Run Consolidation")
         {
-            action("Run Consolidation Ext")
+            action("Run Consolidation_")
             {
                 ApplicationArea = all;
                 Image = ImportDatabase;
                 RunObject = report "Import Conso. from DB Ext";
+                Caption = 'Run Consolidation';
             }
         }
         modify("Run Consolidation")
