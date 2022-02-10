@@ -1609,6 +1609,10 @@ codeunit 50131 "Config. Company Exchange"
                         CurrencyExchangeRate.Validate("Adjustment Exch. Rate Amount", ExchangeRateMaster."Adjustment Exch. Rate Amount");
                     if CurrencyExchangeRate."Relational Adjmt Exch Rate Amt" <> ExchangeRateMaster."Relational Adjmt Exch Rate Amt" then
                         CurrencyExchangeRate.Validate("Relational Adjmt Exch Rate Amt", ExchangeRateMaster."Relational Adjmt Exch Rate Amt");
+                    if CurrencyExchangeRate."Exch. Rate Amt. - Consol." <> ExchangeRateMaster."Exch. Rate Amt. - Consol." then
+                        CurrencyExchangeRate.Validate("Exch. Rate Amt. - Consol.", ExchangeRateMaster."Exch. Rate Amt. - Consol.");
+                    if CurrencyExchangeRate."Rel. Exch. Rate Amt. - Consol." <> ExchangeRateMaster."Rel. Exch. Rate Amt. - Consol." then
+                        CurrencyExchangeRate.Validate("Rel. Exch. Rate Amt. - Consol.", ExchangeRateMaster."Rel. Exch. Rate Amt. - Consol.");
                     CurrencyExchangeRate.Modify(true);
                 end
                 else begin
