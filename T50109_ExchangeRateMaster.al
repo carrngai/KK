@@ -90,6 +90,29 @@ table 50109 "Exchange Rate Master"
                 TestField("Relational Adjmt Exch Rate Amt");
             end;
         }
+        field(50100; "Exch. Rate Amt. - Consol."; Decimal)
+        {
+            Caption = 'Exch. Rate Amt. for Consol. Avg. Rate Cal.';
+            DecimalPlaces = 1 : 6;
+            MinValue = 0;
+
+            trigger OnValidate()
+            begin
+                TestField("Exch. Rate Amt. - Consol.");
+            end;
+        }
+        field(50101; "Rel. Exch. Rate Amt. - Consol."; Decimal)
+        {
+            AccessByPermission = TableData Currency = R;
+            Caption = 'Relational Exch. Rate Amt. for Consol. Avg. Rate Cal.';
+            DecimalPlaces = 1 : 6;
+            MinValue = 0;
+
+            trigger OnValidate()
+            begin
+                TestField("Rel. Exch. Rate Amt. - Consol.");
+            end;
+        }
     }
 
     keys

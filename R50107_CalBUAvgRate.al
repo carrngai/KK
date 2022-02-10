@@ -35,8 +35,8 @@ report 50107 "Calculate BU Average Rate"
 
                 if "Currency Exchange Rate Table" = "Currency Exchange Rate Table"::Local then begin
                     ExchRate.Reset();
-                    FYStartRate := 1 / ExchRate.ExchangeRate(FYStartDate, "Currency Code");
-                    ConsoEndRate := 1 / ExchRate.ExchangeRate(ConsolidEndDate, "Currency Code");
+                    FYStartRate := 1 / ExchRate.CONSOLExchangeRate(FYStartDate, "Currency Code");
+                    ConsoEndRate := 1 / ExchRate.CONSOLExchangeRate(ConsolidEndDate, "Currency Code");
                     if (FYStartRate <> 0) and (ConsoEndRate <> 0) then begin
                         //System calculates “Average Rate (Manual)” for each Business Unit 
                         //by (Rate @ Consolidation Period End Date + Rate @ Fiscal Year Start Date) / 2

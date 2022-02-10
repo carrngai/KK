@@ -49,6 +49,17 @@ page 50109 "Exchange Rate Master"
                     ApplicationArea = Suite;
                     ToolTip = 'Specifies the amounts that are used to calculate exchange rates that will be used by the Adjust Exchange Rates batch job.';
                 }
+                field("Exch. Rate Amt. - Consol."; Rec."Exch. Rate Amt. - Consol.")
+                {
+                    ToolTip = 'Specifies the value of the Exch. Rate Amt. for Consol. Avg. Rate Cal. field.';
+                    ApplicationArea = All;
+                }
+                field("Rel. Exch. Rate Amt. - Consol."; Rec."Rel. Exch. Rate Amt. - Consol.")
+                {
+                    ToolTip = 'Specifies the value of the Relational Exch. Rate Amt. for Consol. Avg. Rate Cal. field.';
+                    ApplicationArea = All;
+                }
+
                 field("Fix Exchange Rate Amount"; Rec."Fix Exchange Rate Amount")
                 {
                     ApplicationArea = Suite;
