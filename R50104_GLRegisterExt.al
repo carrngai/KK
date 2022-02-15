@@ -194,6 +194,9 @@ report 50104 "G/L Register Ext"
                             column(DocumentNo_AppliedCLE; "Document No.")
                             {
                             }
+                            column(Pre_Assigned_No_AppliedCLE; "Pre-Assigned No.")
+                            {
+                            }
                             column(ExternalDocumentNo_AppliedCLE; "External Document No.")
                             {
                             }

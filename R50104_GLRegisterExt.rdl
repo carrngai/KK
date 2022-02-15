@@ -22,13 +22,13 @@
                   <Width>55pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>67.78264pt</Width>
+                  <Width>77.7828pt</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>81.45115pt</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>125pt</Width>
+                  <Width>115pt</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>30pt</Width>
@@ -5590,22 +5590,22 @@
                           <TablixBody>
                             <TablixColumns>
                               <TablixColumn>
-                                <Width>67.78264pt</Width>
+                                <Width>77.78277pt</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>81.45115pt</Width>
+                                <Width>81.45118pt</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>265pt</Width>
+                                <Width>254.99993pt</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>19.84252pt</Width>
+                                <Width>19.84255pt</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>130pt</Width>
+                                <Width>130.00003pt</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>108.99998pt</Width>
+                                <Width>109.00001pt</Width>
                               </TablixColumn>
                             </TablixColumns>
                             <TablixRows>
@@ -5807,7 +5807,7 @@
                                           <Paragraph>
                                             <TextRuns>
                                               <TextRun>
-                                                <Value>=Fields!DocumentNo_AppliedCLE.Value</Value>
+                                                <Value>=IIF(Fields!Pre_Assigned_No_AppliedCLE.Value&lt;&gt;"",Fields!Pre_Assigned_No_AppliedCLE.Value,Fields!DocumentNo_AppliedCLE.Value)</Value>
                                                 <Style>
                                                   <FontFamily>Segoe UI</FontFamily>
                                                   <FontSize>7pt</FontSize>
@@ -7322,14 +7322,14 @@
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
             <Height>7.10614cm</Height>
-            <Width>798.94245pt</Width>
+            <Width>798.94261pt</Width>
             <Style />
           </Tablix>
         </ReportItems>
         <Height>7.22647cm</Height>
         <Style />
       </Body>
-      <Width>28.18491cm</Width>
+      <Width>28.18492cm</Width>
       <Page>
         <PageHeader>
           <Height>1.86973cm</Height>
@@ -7406,7 +7406,7 @@
               </Paragraphs>
               <Top>1.05833cm</Top>
               <Height>0.38806cm</Height>
-              <Width>7.18366cm</Width>
+              <Width>7.5577cm</Width>
               <ZIndex>2</ZIndex>
               <Style>
                 <VerticalAlign>Middle</VerticalAlign>
@@ -7522,7 +7522,7 @@
               <rd:DefaultName>Textbox3</rd:DefaultName>
               <Top>0.70556cm</Top>
               <Height>10pt</Height>
-              <Width>7.18366cm</Width>
+              <Width>7.5577cm</Width>
               <ZIndex>6</ZIndex>
               <Style>
                 <Border>
@@ -7551,7 +7551,7 @@
               <rd:DefaultName>Textbox24</rd:DefaultName>
               <Top>1.44639cm</Top>
               <Height>0.38806cm</Height>
-              <Width>7.18366cm</Width>
+              <Width>7.5577cm</Width>
               <ZIndex>7</ZIndex>
               <Style>
                 <Border>
@@ -7785,6 +7785,9 @@ End Function
         </Field>
         <Field Name="DocumentNo_AppliedCLE">
           <DataField>DocumentNo_AppliedCLE</DataField>
+        </Field>
+        <Field Name="Pre_Assigned_No_AppliedCLE">
+          <DataField>Pre_Assigned_No_AppliedCLE</DataField>
         </Field>
         <Field Name="ExternalDocumentNo_AppliedCLE">
           <DataField>ExternalDocumentNo_AppliedCLE</DataField>
