@@ -9211,9 +9211,6 @@
                                         <KeepWithGroup>Before</KeepWithGroup>
                                       </TablixMember>
                                       <TablixMember>
-                                        <Visibility>
-                                          <Hidden>=IIF(Fields!DocumentNo_AppliedCLE.Value="" AND Fields!DocumentNo_AppliedVLE.Value="", TRUE, FALSE)</Hidden>
-                                        </Visibility>
                                         <KeepWithGroup>Before</KeepWithGroup>
                                       </TablixMember>
                                       <TablixMember>
@@ -9350,7 +9347,7 @@
         <Height>15.03531cm</Height>
         <Style />
       </Body>
-      <Width>780.00009pt</Width>
+      <Width>780.8716pt</Width>
       <Page>
         <PageHeader>
           <Height>1.8415cm</Height>
