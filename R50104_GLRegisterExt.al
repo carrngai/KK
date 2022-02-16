@@ -100,6 +100,13 @@ report 50104 "G/L Register Ext"
                 column(G_L_Entry__G_L_Account_No__; "G/L Account No.")
                 {
                 }
+                column(ExternalDocumentNo_GLEntry; "External Document No.")
+                {
+                }
+                column(PreAssignedNo_GLEntry; "Pre-Assigned No.")
+                {
+                }
+
                 column(GLAcc_Name; GLAcc.Name)
                 {
                 }

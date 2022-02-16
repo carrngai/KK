@@ -197,6 +197,9 @@ report 50103 "General Journal - Test Ext"
                         column(ExternalDocumentNo_AppliedCLE; "External Document No.")
                         {
                         }
+                        column(Pre_Assigned_No_AppliedCLE; "Pre-Assigned No.")
+                        {
+                        }
                         column(Description_AppliedCLE; Description)
                         {
                         }
@@ -908,6 +911,14 @@ report 50103 "General Journal - Test Ext"
                         SetRange(Number, 1, GLAccNetChange.Count);
                     end;
                 }
+
+                trigger OnAfterGetRecord()
+                begin
+                    // if "Gen. Journal Line"."Document No." <> LastDocNo then begin
+                    //     CLEexist := false;
+                    //     VLEexist := false;
+                    // end;
+                end;
             }
 
 
