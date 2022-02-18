@@ -9211,13 +9211,22 @@
                                         <KeepWithGroup>Before</KeepWithGroup>
                                       </TablixMember>
                                       <TablixMember>
+                                        <Visibility>
+                                          <Hidden>=IIF(Max(Fields!DocumentNo_AppliedCLE.Value)="" AND Max(Fields!DocumentNo_AppliedVLE.Value)="", TRUE, FALSE)</Hidden>
+                                        </Visibility>
                                         <KeepWithGroup>Before</KeepWithGroup>
                                       </TablixMember>
                                       <TablixMember>
+                                        <Visibility>
+                                          <Hidden>=IIF(Max(Fields!DocumentNo_AppliedCLE.Value)="" AND Max(Fields!DocumentNo_AppliedVLE.Value)="", TRUE, FALSE)</Hidden>
+                                        </Visibility>
                                         <KeepWithGroup>Before</KeepWithGroup>
                                         <KeepTogether>true</KeepTogether>
                                       </TablixMember>
                                       <TablixMember>
+                                        <Visibility>
+                                          <Hidden>=IIF(Max(Fields!DocumentNo_AppliedCLE.Value)="" AND Max(Fields!DocumentNo_AppliedVLE.Value)="", TRUE, FALSE)</Hidden>
+                                        </Visibility>
                                         <KeepWithGroup>Before</KeepWithGroup>
                                       </TablixMember>
                                       <TablixMember>
