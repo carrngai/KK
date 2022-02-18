@@ -101,7 +101,7 @@ report 50108 "Import Conso. from DB Ext"
                         l_GLReverseAmt := 0;
                         l_GLEntry.Reset();
                         l_GLEntry.SetRange("G/L Account No.", "G/L Account"."No.");
-                        l_GLEntry.SetRange("Posting Date", 0D, ConsolidStartDate - 1);
+                        l_GLEntry.SetRange("Posting Date", 0D, ClosingDate(ConsolidStartDate - 1));
                         l_GLEntry.SetRange("Business Unit Code", "Business Unit".Code);
                         l_GLEntry.SetRange("Conso. Exch. Adj.", true);
                         if l_GLEntry.FindSet() then
@@ -136,7 +136,7 @@ report 50108 "Import Conso. from DB Ext"
 
                         l_GLEntry2.Reset();
                         l_GLEntry2.SetRange("G/L Account No.", "G/L Account"."No.");
-                        l_GLEntry2.SetRange("Posting Date", 0D, ConsolidStartDate - 1);
+                        l_GLEntry2.SetRange("Posting Date", 0D, ClosingDate(ConsolidStartDate - 1));
                         l_GLEntry2.SetRange("Business Unit Code", "Business Unit".Code);
                         l_GLEntry2.SetRange("Conso. Exch. Adj.", false);
                         if l_GLEntry2.FindSet() then
