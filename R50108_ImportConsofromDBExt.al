@@ -85,9 +85,14 @@ report 50108 "Import Conso. from DB Ext"
                     OpeningExchRateAdj: Decimal;
                     SourceCodeSetup: Record "Source Code Setup";
                     ConsoBalance: Decimal;
+                    ConsoBalanceWOAdj: Decimal;
                     l_GLEntry: Record "G/L Entry";
                     l_GLReverseAmt: Decimal;
                     l_GLEntry2: Record "G/L Entry";
+                    DimSetEntry: Record "Dimension Set Entry";
+                    TempDimSetEntry: Record "Dimension Set Entry" temporary;
+                    TempDimBufOut: Record "Dimension Buffer" temporary;
+                    DimBufMgt: Codeunit "Dimension Buffer Management";
                 //G017--
                 begin
                     Window.Update(2, "No.");
@@ -97,7 +102,6 @@ report 50108 "Import Conso. from DB Ext"
 
                     //G017++
                     if (("Business Unit"."Currency Code" <> GLSetup."LCY Code") OR ("Business Unit"."Currency Code" <> '')) AND ("Consol. Translation Method" = "Consol. Translation Method"::"Average Rate (Manual)") AND ("Income/Balance" = "Income/Balance"::"Income Statement") then begin
-                        // Reverse Last Period Adjustment 
                         l_GLReverseAmt := 0;
                         l_GLEntry.Reset();
                         l_GLEntry.SetRange("G/L Account No.", "G/L Account"."No.");
@@ -228,6 +232,11 @@ report 50108 "Import Conso. from DB Ext"
                 l_GLAcc: Record "G/L Account"; //G015
                 l_ProfitAmt: Decimal; //G015
                 SourceCodeSetup: Record "Source Code Setup"; //G015
+                GLAcc: Record "G/L Account";
+                OpeningExchRateAdj: Decimal;
+                l_GLEntry: Record "G/L Entry";
+                l_GLReverseAmt: Decimal;
+                l_GLEntry2: Record "G/L Entry";
             begin
 
                 //TEC211112++
@@ -327,7 +336,6 @@ report 50108 "Import Conso. from DB Ext"
                     end;
                 end;
                 //G015--
-
             end;
 
             trigger OnPreDataItem()
@@ -444,6 +452,10 @@ report 50108 "Import Conso. from DB Ext"
         GenJnlPostLineFinally; //G017
         TempGenJnlLine.DeleteAll(); //G017
 
+        Commit();
+        PostReportAdj();
+        GenJnlPostLineFinally;
+        TempGenJnlLine.DeleteAll();
         Commit();
         REPORT.Run(REPORT::"Consolidated Trial Balance");
     end;
@@ -644,6 +656,96 @@ report 50108 "Import Conso. from DB Ext"
                 Window.Update(3, TempGenJnlLine."Account No.");
                 GenJnlPostLine.RunWithCheck(TempGenJnlLine);
             until TempGenJnlLine.Next() = 0;
+    end;
+
+    local procedure PostReportAdj()
+    var
+        l_GLEntry: Record "G/L Entry";
+        ConsoBalance: Decimal;
+        ConsoBalanceWOAdj: Decimal;
+        GLAcc: Record "G/L Account";
+        SourceCodeSetup: Record "Source Code Setup"; //G015
+        DimSetEntry: Record "Dimension Set Entry";
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+        TempDimBufOut: Record "Dimension Buffer" temporary;
+        DimBufMgt: Codeunit "Dimension Buffer Management";
+    begin
+        if (("Business Unit"."Currency Code" <> GLSetup."LCY Code") OR ("Business Unit"."Currency Code" <> '')) then begin
+            GLAcc.Reset();
+            GLAcc.SetRange("Consol. Translation Method", GLAcc."Consol. Translation Method"::"Average Rate (Manual)");
+            if GLAcc.FindSet() then
+                repeat
+                    TempDimSetEntry.Reset();
+                    TempDimSetEntry.DeleteAll();
+
+                    l_GLEntry.Reset();
+                    l_GLEntry.SetRange("G/L Account No.", GLAcc."No.");
+                    l_GLEntry.SetRange("Posting Date", 0D, ConsolidEndDate);
+                    l_GLEntry.SetRange("Business Unit Code", "Business Unit".Code);
+                    l_GLEntry.SetFilter(Amount, '<>%1', 0);
+                    if l_GLEntry.FindSet() then
+                        repeat
+                            TempDimSetEntry.Reset();
+                            TempDimSetEntry.SetRange("Dimension Set ID", l_GLEntry."Dimension Set ID");
+                            if not TempDimSetEntry.FindFirst() then begin
+                                TempDimSetEntry.Init();
+                                TempDimSetEntry."Dimension Set ID" := l_GLEntry."Dimension Set ID";
+                                TempDimSetEntry.Insert();
+                            end;
+                        until l_GLEntry.Next() = 0;
+
+                    TempDimSetEntry.Reset();
+                    if TempDimSetEntry.FindSet() then
+                        repeat
+                            ConsoBalance := 0;
+                            ConsoBalanceWOAdj := 0;
+
+                            l_GLEntry.Reset();
+                            l_GLEntry.SetRange("G/L Account No.", GLAcc."No.");
+                            l_GLEntry.SetRange("Posting Date", 0D, ConsolidEndDate);
+                            l_GLEntry.SetRange("Business Unit Code", "Business Unit".Code);
+                            l_GLEntry.SetFilter(Amount, '<>%1', 0);
+                            if l_GLEntry.FindSet() then
+                                repeat
+                                    ConsoBalance += l_GLEntry.Amount;
+                                until l_GLEntry.Next() = 0;
+                            if ConsoBalance <> 0 then begin
+                                l_GLEntry.SetRange("Conso. Exch. Adj. Entry", false);
+                                if l_GLEntry.FindSet() then
+                                    repeat
+                                        ConsoBalanceWOAdj += l_GLEntry."Conso. Base Amount";
+                                    until l_GLEntry.Next() = 0;
+                            end;
+                            if (ConsoBalanceWOAdj = 0) and (ConsoBalance <> 0) then begin
+                                Clear(GenJnlLine);
+                                GenJnlLine."Business Unit Code" := "Business Unit".Code;
+                                GenJnlLine."Posting Date" := ConsolidEndDate;
+                                GenJnlLine."Document No." := GLDocNo;
+                                GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
+                                GenJnlLine."Account No." := GLAcc."No.";
+                                GenJnlLine.Description := CopyStr(StrSubstNo('Closing Bal. Exch. Rate Adj. on %1', ConsolidEndDate), 1, MaxStrLen(GenJnlLine.Description));
+                                GenJnlLine.Amount := -1 * ConsoBalance;
+                                if ConsoBalance > 0 then begin
+                                    "Business Unit".TestField("Exch. Rate Gains Acc.");
+                                    GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Gains Acc."
+                                end else begin
+                                    "Business Unit".TestField("Exch. Rate Losses Acc.");
+                                    GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Losses Acc."
+                                end;
+                                GenJnlLine."Dimension Set ID" := TempDimSetEntry."Dimension Set ID";
+                                DimSetEntry.Reset();
+                                DimSetEntry.SetRange("Dimension Set ID", TempDimSetEntry."Dimension Set ID");
+                                DimSetEntry.SetRange("Dimension Code", 'PROJECT');
+                                if DimSetEntry.FindFirst() then
+                                    GenJnlLine."Shortcut Dimension 1 Code" := DimSetEntry."Dimension Value Code";
+                                DimSetEntry.SetRange("Dimension Code", 'DEPARTMENT');
+                                if DimSetEntry.FindFirst() then
+                                    GenJnlLine."Shortcut Dimension 2 Code" := DimSetEntry."Dimension Value Code";
+                                GenJnlPostLineTmp(GenJnlLine);
+                            end;
+                        until TempDimSetEntry.Next() = 0;
+                until GLAcc.Next() = 0;
+        end;
     end;
 }
 

@@ -30,6 +30,9 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
         }
         field(50107; "Description 2"; Text[250]) { }
         field(50108; "Pre-Assigned No."; Code[20]) { }
+        field(50109; "Conso. Exch. Adj. Entry"; Boolean) { }
+        field(50110; "Conso. Base Amount"; Decimal) { }
+        field(50111; "Conso. Exchange Rate"; Decimal) { }
     }
 
     trigger OnDelete()

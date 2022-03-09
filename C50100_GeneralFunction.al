@@ -83,6 +83,9 @@ codeunit 50100 "General Function"
         GLEntry."IC Source Document No." := GenJournalLine."IC Source Document No."; //G014
         GLEntry."Pre-Assigned No." := GenJournalLine."Pre-Assigned No."; //G014
         GLEntry."Description 2" := GenJournalLine."Description 2";
+        GLEntry."Conso. Base Amount" := GenJournalLine."Conso. Base Amount";
+        GLEntry."Conso. Exch. Adj. Entry" := GenJournalLine."Conso. Exch. Adj. Entry";
+        GLEntry."Conso. Exchange Rate" := GenJournalLine."Conso. Exchange Rate";
     end;
     //G017--
 
@@ -899,5 +902,27 @@ codeunit 50100 "General Function"
             CODEUNIT.Run(CODEUNIT::"Job Queue - Enqueue", JobQueueEntry);
             Commit();
         end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Consolidate", 'OnBeforeGenJnlPostLine', '', false, false)]
+    local procedure OnBeforeGenJnlPostLine(var GenJnlLine: Record "Gen. Journal Line")
+    var
+        Text013: Label 'adjusted from';
+        Text017: Label 'at exchange rate';
+        Text018: Label 'on';
+        Description: Text;
+        ConsolidAmount: Decimal;
+        ExchangeRate: Decimal;
+    begin
+        Description := GenJnlLine.Description;
+        if (Description.IndexOf(Text013) >= 1) then
+            GenJnlLine."Conso. Exch. Adj. Entry" := true;
+
+        if (Description.IndexOf(Text017) < 1) then
+            exit;
+        Evaluate(ConsolidAmount, Description.Substring(1, Description.IndexOf(Text017) - 1));
+        Evaluate(ExchangeRate, Description.Substring(Description.IndexOf(Text017) + StrLen(Text017) + 1, Description.IndexOf(Text018) - (Description.IndexOf(Text017) + StrLen(Text017) + 1)));
+        GenJnlLine."Conso. Base Amount" := ConsolidAmount;
+        GenJnlLine."Conso. Exchange Rate" := ExchangeRate;
     end;
 }

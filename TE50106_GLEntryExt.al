@@ -31,6 +31,9 @@ tableextension 50106 "G/L Entry Ext" extends "G/L Entry"
             DataClassification = ToBeClassified;
         }
 
+        field(50109; "Conso. Exch. Adj. Entry"; Boolean) { } //The Exchange Rate Converted Entry generated when the current exchange rate is different from the last period exchange rate
+        field(50110; "Conso. Base Amount"; Decimal) { }
+        field(50111; "Conso. Exchange Rate"; Decimal) { }
     }
 
     var
