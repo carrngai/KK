@@ -704,7 +704,7 @@ report 50108 "Import Conso. from DB Ext"
                             l_GLEntry.SetRange("G/L Account No.", GLAcc."No.");
                             l_GLEntry.SetRange("Posting Date", 0D, ConsolidEndDate);
                             l_GLEntry.SetRange("Business Unit Code", "Business Unit".Code);
-                            l_GLEntry.SetFilter(Amount, '<>%1', 0);
+                            l_GLEntry.SetFilter("Conso. Base Amount", '<>%1', 0);
                             if l_GLEntry.FindSet() then
                                 repeat
                                     ConsoBalance += l_GLEntry.Amount;
