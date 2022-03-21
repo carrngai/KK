@@ -35,6 +35,13 @@ pageextension 50112 "General Ledger Entries Ext" extends "General Ledger Entries
         modify("Gen. Prod. Posting Group") { Visible = false; }
         modify("Bal. Account Type") { Visible = false; }
         modify("Bal. Account No.") { Visible = false; }
+        addafter("Business Unit Code")
+        {
+            field("Business Unit Name"; Rec."Business Unit Name")
+            {
+                ApplicationArea = All;
+            }
+        }
     }
 
     actions

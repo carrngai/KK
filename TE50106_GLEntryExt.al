@@ -34,6 +34,12 @@ tableextension 50106 "G/L Entry Ext" extends "G/L Entry"
         field(50109; "Conso. Exch. Adj. Entry"; Boolean) { } //The Exchange Rate Converted Entry generated when the current exchange rate is different from the last period exchange rate
         field(50110; "Conso. Base Amount"; Decimal) { }
         field(50111; "Conso. Exchange Rate"; Decimal) { }
+        field(50112; "Business Unit Name"; Text[100])
+        {
+            FieldClass = FlowField;
+            Editable = false;
+            CalcFormula = lookup("Business Unit".Name where("Code" = field("Business Unit Code")));
+        }
     }
 
     var
