@@ -93,6 +93,7 @@ report 50108 "Import Conso. from DB Ext"
                     TempDimSetEntry: Record "Dimension Set Entry" temporary;
                     TempDimBufOut: Record "Dimension Buffer" temporary;
                     DimBufMgt: Codeunit "Dimension Buffer Management";
+
                 //G017--
                 begin
                     Window.Update(2, "No.");
@@ -101,118 +102,121 @@ report 50108 "Import Conso. from DB Ext"
                     BusUnitConsolidate.InsertGLAccount("G/L Account");
 
                     //G017++
-                    if (("Business Unit"."Currency Code" <> GLSetup."LCY Code") OR ("Business Unit"."Currency Code" <> '')) AND ("Consol. Translation Method" = "Consol. Translation Method"::"Average Rate (Manual)") AND ("Income/Balance" = "Income/Balance"::"Income Statement") then begin
-                        l_GLReverseAmt := 0;
-                        l_GLEntry.Reset();
-                        l_GLEntry.SetRange("G/L Account No.", "G/L Account"."No.");
-                        l_GLEntry.SetRange("Posting Date", 0D, ClosingDate(ConsolidStartDate - 1));
-                        l_GLEntry.SetRange("Business Unit Code", "Business Unit".Code);
-                        l_GLEntry.SetRange("Conso. Exch. Adj.", true);
-                        if l_GLEntry.FindSet() then
-                            repeat
-                                l_GLReverseAmt += l_GLEntry.Amount;
-                            until l_GLEntry.Next() = 0;
+                    if FYStartDate <> ConsolidStartDate then begin
+                        if (("Business Unit"."Currency Code" <> GLSetup."LCY Code") OR ("Business Unit"."Currency Code" <> '')) AND ("Consol. Translation Method" = "Consol. Translation Method"::"Average Rate (Manual)") AND ("Income/Balance" = "Income/Balance"::"Income Statement") then begin
+                            l_GLReverseAmt := 0;
+                            l_GLEntry.Reset();
+                            l_GLEntry.SetRange("G/L Account No.", "G/L Account"."No.");
+                            l_GLEntry.SetRange("Posting Date", LastFYStartDate, (ConsolidStartDate - 1));
+                            l_GLEntry.SetRange("Business Unit Code", "Business Unit".Code);
+                            l_GLEntry.SetRange("Conso. Exch. Adj.", true);
+                            if l_GLEntry.FindSet() then
+                                repeat
+                                    l_GLReverseAmt += l_GLEntry.Amount;
+                                until l_GLEntry.Next() = 0;
 
-                        if l_GLReverseAmt <> 0 then begin
-                            Clear(GenJnlLine);
-                            GenJnlLine."Business Unit Code" := "Business Unit".Code;
-                            GenJnlLine."Posting Date" := ConsolidEndDate;
-                            GenJnlLine."Document No." := GLDocNo;
-                            GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
-                            GenJnlLine."Account No." := "G/L Account"."No.";
-                            GenJnlLine.Description := StrSubstNo('Opening Bal. Adj. - Reversal');
-                            GenJnlLine.Amount := -l_GLReverseAmt;
-                            if -l_GLReverseAmt > 0 then begin
-                                "Business Unit".TestField("Exch. Rate Gains Acc.");
-                                GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Gains Acc."
-                            end else begin
-                                "Business Unit".TestField("Exch. Rate Losses Acc.");
-                                GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Losses Acc."
-                            end;
-                            GenJnlLine."Conso. Exch. Adj." := true;
-                            GenJnlPostLineTmp(GenJnlLine);
-                        end;
-
-
-                        // Revaluate Balance at current rate
-                        ConsoBalance := 0;
-                        OpeningExchRateAdj := 0;
-
-                        TempDimSetEntry.Reset();
-                        TempDimSetEntry.DeleteAll();
-
-                        l_GLEntry2.Reset();
-                        l_GLEntry2.SetRange("G/L Account No.", "G/L Account"."No.");
-                        l_GLEntry2.SetRange("Posting Date", 0D, ClosingDate(ConsolidStartDate - 1));
-                        l_GLEntry2.SetRange("Business Unit Code", "Business Unit".Code);
-                        l_GLEntry2.SetRange("Conso. Exch. Adj.", false);
-                        if l_GLEntry2.FindSet() then
-                            repeat
-                                TempDimSetEntry.Reset();
-                                TempDimSetEntry.SetRange("Dimension Set ID", l_GLEntry2."Dimension Set ID");
-                                if not TempDimSetEntry.FindFirst() then begin
-                                    TempDimSetEntry.Init();
-                                    TempDimSetEntry."Dimension Set ID" := l_GLEntry2."Dimension Set ID";
-                                    TempDimSetEntry.Insert();
+                            if l_GLReverseAmt <> 0 then begin
+                                Clear(GenJnlLine);
+                                GenJnlLine."Business Unit Code" := "Business Unit".Code;
+                                GenJnlLine."Posting Date" := ConsolidEndDate;
+                                GenJnlLine."Document No." := GLDocNo;
+                                GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
+                                GenJnlLine."Account No." := "G/L Account"."No.";
+                                GenJnlLine.Description := StrSubstNo('Opening Bal. Adj. - Reversal');
+                                GenJnlLine.Amount := -l_GLReverseAmt;
+                                if -l_GLReverseAmt > 0 then begin
+                                    "Business Unit".TestField("Residual Account");
+                                    GenJnlLine."Bal. Account No." := "Business Unit"."Residual Account"
+                                end else begin
+                                    "Business Unit".TestField("Residual Account");
+                                    GenJnlLine."Bal. Account No." := "Business Unit"."Residual Account"
                                 end;
-                            until l_GLEntry.Next() = 0;
+                                GenJnlLine."Conso. Exch. Adj." := true;
+                                GenJnlPostLineTmp(GenJnlLine);
+                            end;
 
-                        TempDimSetEntry.Reset();
-                        if TempDimSetEntry.FindSet() then
-                            repeat
-                                ConsoBalance := 0;
 
-                                l_GLEntry2.Reset();
-                                l_GLEntry2.SetRange("G/L Account No.", "G/L Account"."No.");
-                                l_GLEntry2.SetRange("Posting Date", 0D, ClosingDate(ConsolidStartDate - 1));
-                                l_GLEntry2.SetRange("Business Unit Code", "Business Unit".Code);
-                                l_GLEntry2.SetRange("Dimension Set ID", TempDimSetEntry."Dimension Set ID");
-                                l_GLEntry2.SetRange("Conso. Exch. Adj.", false);
-                                if l_GLEntry2.FindSet() then
-                                    repeat
-                                        ConsoBalance += l_GLEntry2.Amount;
-                                    until l_GLEntry2.Next() = 0;
+                            // Revaluate Balance at current rate
+                            ConsoBalance := 0;
+                            OpeningExchRateAdj := 0;
 
-                                if ConsoBalance <> 0 then begin
-                                    GLAcc.Reset();
-                                    GLAcc.ChangeCompany("Business Unit"."Company Name");
-                                    GLAcc.SetRange("No.", "No.");
-                                    GLAcc.SetFilter("Date Filter", '..%1', ConsolidStartDate - 1);
-                                    if GLAcc.FindFirst() then begin
-                                        GLAcc.CalcFields("Balance at Date");
-                                        OpeningExchRateAdj := ((GLAcc."Balance at Date" / "Business Unit"."Income Currency Factor") - ConsoBalance);
-                                        if OpeningExchRateAdj <> 0 then begin
-                                            Clear(GenJnlLine);
-                                            GenJnlLine."Business Unit Code" := "Business Unit".Code;
-                                            GenJnlLine."Posting Date" := ConsolidEndDate;
-                                            GenJnlLine."Document No." := GLDocNo;
-                                            GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
-                                            GenJnlLine."Account No." := "G/L Account"."No.";
-                                            GenJnlLine.Description := CopyStr(StrSubstNo('Opening Bal. Adj. at Exch. Rate %1 : (%2/%1) - (%3)', Round("Business Unit"."Income Currency Factor", 0.00001), GLAcc."Balance at Date", ConsoBalance), 1, MaxStrLen(GenJnlLine.Description));
-                                            GenJnlLine.Amount := OpeningExchRateAdj;
-                                            if OpeningExchRateAdj > 0 then begin
-                                                "Business Unit".TestField("Exch. Rate Gains Acc.");
-                                                GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Gains Acc."
-                                            end else begin
-                                                "Business Unit".TestField("Exch. Rate Losses Acc.");
-                                                GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Losses Acc."
+                            TempDimSetEntry.Reset();
+                            TempDimSetEntry.DeleteAll();
+
+                            l_GLEntry2.Reset();
+                            l_GLEntry2.SetRange("G/L Account No.", "G/L Account"."No.");
+                            l_GLEntry2.SetRange("Posting Date", LastFYStartDate, (ConsolidStartDate - 1));
+                            l_GLEntry2.SetRange("Business Unit Code", "Business Unit".Code);
+                            l_GLEntry2.SetRange("Conso. Exch. Adj.", false);
+                            if l_GLEntry2.FindSet() then
+                                repeat
+                                    TempDimSetEntry.Reset();
+                                    TempDimSetEntry.SetRange("Dimension Set ID", l_GLEntry2."Dimension Set ID");
+                                    if not TempDimSetEntry.FindFirst() then begin
+                                        TempDimSetEntry.Init();
+                                        TempDimSetEntry."Dimension Set ID" := l_GLEntry2."Dimension Set ID";
+                                        TempDimSetEntry.Insert();
+                                    end;
+                                until l_GLEntry.Next() = 0;
+
+                            TempDimSetEntry.Reset();
+                            if TempDimSetEntry.FindSet() then
+                                repeat
+                                    ConsoBalance := 0;
+
+                                    l_GLEntry2.Reset();
+                                    l_GLEntry2.SetRange("G/L Account No.", "G/L Account"."No.");
+                                    l_GLEntry2.SetRange("Posting Date", LastFYStartDate, (ConsolidStartDate - 1));
+                                    l_GLEntry2.SetRange("Business Unit Code", "Business Unit".Code);
+                                    l_GLEntry2.SetRange("Dimension Set ID", TempDimSetEntry."Dimension Set ID");
+                                    l_GLEntry2.SetRange("Conso. Exch. Adj.", false);
+                                    if l_GLEntry2.FindSet() then
+                                        repeat
+                                            ConsoBalance += l_GLEntry2.Amount;
+                                        until l_GLEntry2.Next() = 0;
+
+                                    if ConsoBalance <> 0 then begin
+                                        GLAcc.Reset();
+                                        GLAcc.ChangeCompany("Business Unit"."Company Name");
+                                        GLAcc.SetRange("No.", "No.");
+                                        GLAcc.SetFilter("Date Filter", '%1..%2', LastFYStartDate, ConsolidStartDate - 1);
+                                        if GLAcc.FindFirst() then begin
+                                            GLAcc.CalcFields("Net Change");
+                                            OpeningExchRateAdj := ((GLAcc."Net Change" / "Business Unit"."Income Currency Factor") - ConsoBalance);
+                                            if OpeningExchRateAdj <> 0 then begin
+                                                Clear(GenJnlLine);
+                                                GenJnlLine."Business Unit Code" := "Business Unit".Code;
+                                                GenJnlLine."Posting Date" := ConsolidEndDate;
+                                                GenJnlLine."Document No." := GLDocNo;
+                                                GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
+                                                GenJnlLine."Account No." := "G/L Account"."No.";
+                                                GenJnlLine.Description := CopyStr(StrSubstNo('Opening Bal. Adj. at Exch. Rate %1 : (%2/%1) - (%3)', Round("Business Unit"."Income Currency Factor", 0.00001), GLAcc."Net Change", ConsoBalance), 1, MaxStrLen(GenJnlLine.Description));
+                                                GenJnlLine.Amount := OpeningExchRateAdj;
+                                                if OpeningExchRateAdj > 0 then begin
+                                                    "Business Unit".TestField("Residual Account");
+                                                    GenJnlLine."Bal. Account No." := "Business Unit"."Residual Account"
+                                                end else begin
+                                                    "Business Unit".TestField("Residual Account");
+                                                    GenJnlLine."Bal. Account No." := "Business Unit"."Residual Account"
+                                                end;
+                                                GenJnlLine."Dimension Set ID" := TempDimSetEntry."Dimension Set ID";
+                                                DimSetEntry.Reset();
+                                                DimSetEntry.SetRange("Dimension Set ID", TempDimSetEntry."Dimension Set ID");
+                                                DimSetEntry.SetRange("Dimension Code", 'PROJECT');
+                                                if DimSetEntry.FindFirst() then
+                                                    GenJnlLine."Shortcut Dimension 1 Code" := DimSetEntry."Dimension Value Code";
+                                                DimSetEntry.SetRange("Dimension Code", 'DEPARTMENT');
+                                                if DimSetEntry.FindFirst() then
+                                                    GenJnlLine."Shortcut Dimension 2 Code" := DimSetEntry."Dimension Value Code";
+
+                                                GenJnlLine."Conso. Exch. Adj." := true;
+                                                GenJnlPostLineTmp(GenJnlLine);
                                             end;
-                                            GenJnlLine."Dimension Set ID" := TempDimSetEntry."Dimension Set ID";
-                                            DimSetEntry.Reset();
-                                            DimSetEntry.SetRange("Dimension Set ID", TempDimSetEntry."Dimension Set ID");
-                                            DimSetEntry.SetRange("Dimension Code", 'PROJECT');
-                                            if DimSetEntry.FindFirst() then
-                                                GenJnlLine."Shortcut Dimension 1 Code" := DimSetEntry."Dimension Value Code";
-                                            DimSetEntry.SetRange("Dimension Code", 'DEPARTMENT');
-                                            if DimSetEntry.FindFirst() then
-                                                GenJnlLine."Shortcut Dimension 2 Code" := DimSetEntry."Dimension Value Code";
-
-                                            GenJnlLine."Conso. Exch. Adj." := true;
-                                            GenJnlPostLineTmp(GenJnlLine);
                                         end;
                                     end;
-                                end;
-                            until TempDimSetEntry.Next() = 0;
+                                until TempDimSetEntry.Next() = 0;
+
+                        end;
                     end;
                     //G017--
                 end;
@@ -273,6 +277,7 @@ report 50108 "Import Conso. from DB Ext"
                 l_GLEntry: Record "G/L Entry";
                 l_GLReverseAmt: Decimal;
                 l_GLEntry2: Record "G/L Entry";
+                l_AccountingPeriod: Record "Accounting Period";
             begin
 
                 //TEC211112++
@@ -372,6 +377,19 @@ report 50108 "Import Conso. from DB Ext"
                     end;
                 end;
                 //G015--
+
+                //G017++
+                l_AccountingPeriod.Reset();
+                l_AccountingPeriod.SetRange("New Fiscal Year", true);
+                l_AccountingPeriod.SetFilter("Starting Date", '..%1', (ConsolidStartDate));
+                if l_AccountingPeriod.FindLast() then
+                    FYStartDate := l_AccountingPeriod."Starting Date";
+
+                l_AccountingPeriod.SetFilter("Starting Date", '..%1', (ConsolidStartDate - 1));
+                if l_AccountingPeriod.FindLast() then
+                    LastFYStartDate := l_AccountingPeriod."Starting Date";
+                //G017--
+
             end;
 
             trigger OnPreDataItem()
@@ -542,6 +560,8 @@ report 50108 "Import Conso. from DB Ext"
 
         InitialConsolidStartDate: Date; //TEC211112
         InitialConsolidEndDate: Date; //TEC211112
+        FYStartDate: Date;
+        LastFYStartDate: Date;
 
     local procedure CheckClosingPostings(GLAccNo: Code[20]; StartDate: Date; EndDate: Date)
     var
