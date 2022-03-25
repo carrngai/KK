@@ -104,7 +104,13 @@ report 50108 "Import Conso. from DB Ext"
                     //G017++
                     if FYStartDate <> ConsolidStartDate then begin
                         if (("Business Unit"."Currency Code" <> GLSetup."LCY Code") OR ("Business Unit"."Currency Code" <> '')) AND ("Consol. Translation Method" = "Consol. Translation Method"::"Average Rate (Manual)") AND ("Income/Balance" = "Income/Balance"::"Income Statement") then begin
-                            l_GLReverseAmt := 0;
+
+                            ConsoBalance := 0;
+                            OpeningExchRateAdj := 0;
+
+                            TempDimSetEntry.Reset();
+                            TempDimSetEntry.DeleteAll();
+
                             l_GLEntry.Reset();
                             l_GLEntry.SetRange("G/L Account No.", "G/L Account"."No.");
                             l_GLEntry.SetRange("Posting Date", LastFYStartDate, (ConsolidStartDate - 1));
@@ -112,28 +118,59 @@ report 50108 "Import Conso. from DB Ext"
                             l_GLEntry.SetRange("Conso. Exch. Adj.", true);
                             if l_GLEntry.FindSet() then
                                 repeat
-                                    l_GLReverseAmt += l_GLEntry.Amount;
+                                    TempDimSetEntry.Reset();
+                                    TempDimSetEntry.SetRange("Dimension Set ID", l_GLEntry2."Dimension Set ID");
+                                    if not TempDimSetEntry.FindFirst() then begin
+                                        TempDimSetEntry.Init();
+                                        TempDimSetEntry."Dimension Set ID" := l_GLEntry2."Dimension Set ID";
+                                        TempDimSetEntry.Insert();
+                                    end;
                                 until l_GLEntry.Next() = 0;
 
-                            if l_GLReverseAmt <> 0 then begin
-                                Clear(GenJnlLine);
-                                GenJnlLine."Business Unit Code" := "Business Unit".Code;
-                                GenJnlLine."Posting Date" := ConsolidEndDate;
-                                GenJnlLine."Document No." := GLDocNo;
-                                GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
-                                GenJnlLine."Account No." := "G/L Account"."No.";
-                                GenJnlLine.Description := StrSubstNo('Opening Bal. Adj. - Reversal');
-                                GenJnlLine.Amount := -l_GLReverseAmt;
-                                if -l_GLReverseAmt > 0 then begin
-                                    "Business Unit".TestField("Residual Account");
-                                    GenJnlLine."Bal. Account No." := "Business Unit"."Residual Account"
-                                end else begin
-                                    "Business Unit".TestField("Residual Account");
-                                    GenJnlLine."Bal. Account No." := "Business Unit"."Residual Account"
-                                end;
-                                GenJnlLine."Conso. Exch. Adj." := true;
-                                GenJnlPostLineTmp(GenJnlLine);
-                            end;
+                            TempDimSetEntry.Reset();
+                            if TempDimSetEntry.FindSet() then
+                                repeat
+                                    l_GLReverseAmt := 0;
+                                    l_GLEntry.Reset();
+                                    l_GLEntry.SetRange("G/L Account No.", "G/L Account"."No.");
+                                    l_GLEntry.SetRange("Posting Date", LastFYStartDate, (ConsolidStartDate - 1));
+                                    l_GLEntry.SetRange("Business Unit Code", "Business Unit".Code);
+                                    l_GLEntry.SetRange("Conso. Exch. Adj.", true);
+                                    l_GLEntry.SetRange("Dimension Set ID", TempDimSetEntry."Dimension Set ID");
+                                    if l_GLEntry.FindSet() then
+                                        repeat
+                                            l_GLReverseAmt += l_GLEntry.Amount;
+                                        until l_GLEntry.Next() = 0;
+
+                                    if l_GLReverseAmt <> 0 then begin
+                                        Clear(GenJnlLine);
+                                        GenJnlLine."Business Unit Code" := "Business Unit".Code;
+                                        GenJnlLine."Posting Date" := ConsolidEndDate;
+                                        GenJnlLine."Document No." := GLDocNo;
+                                        GenJnlLine."Source Code" := SourceCodeSetup.Consolidation;
+                                        GenJnlLine."Account No." := "G/L Account"."No.";
+                                        GenJnlLine.Description := StrSubstNo('Opening Bal. Adj. - Reversal');
+                                        GenJnlLine.Amount := -l_GLReverseAmt;
+                                        if -l_GLReverseAmt > 0 then begin
+                                            "Business Unit".TestField("Residual Account");
+                                            GenJnlLine."Bal. Account No." := "Business Unit"."Residual Account"
+                                        end else begin
+                                            "Business Unit".TestField("Residual Account");
+                                            GenJnlLine."Bal. Account No." := "Business Unit"."Residual Account"
+                                        end;
+                                        GenJnlLine."Conso. Exch. Adj." := true;
+                                        GenJnlLine."Dimension Set ID" := TempDimSetEntry."Dimension Set ID";
+                                        DimSetEntry.Reset();
+                                        DimSetEntry.SetRange("Dimension Set ID", TempDimSetEntry."Dimension Set ID");
+                                        DimSetEntry.SetRange("Dimension Code", 'PROJECT');
+                                        if DimSetEntry.FindFirst() then
+                                            GenJnlLine."Shortcut Dimension 1 Code" := DimSetEntry."Dimension Value Code";
+                                        DimSetEntry.SetRange("Dimension Code", 'DEPARTMENT');
+                                        if DimSetEntry.FindFirst() then
+                                            GenJnlLine."Shortcut Dimension 2 Code" := DimSetEntry."Dimension Value Code";
+                                        GenJnlPostLineTmp(GenJnlLine);
+                                    end;
+                                until TempDimSetEntry.Next() = 0;
 
 
                             // Revaluate Balance at current rate
@@ -215,7 +252,6 @@ report 50108 "Import Conso. from DB Ext"
                                         end;
                                     end;
                                 until TempDimSetEntry.Next() = 0;
-
                         end;
                     end;
                     //G017--
