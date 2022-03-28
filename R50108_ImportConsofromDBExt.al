@@ -821,12 +821,16 @@ report 50108 "Import Conso. from DB Ext"
                                 GenJnlLine."Account No." := GLAcc."No.";
                                 GenJnlLine.Description := CopyStr(StrSubstNo('Closing Bal. Exch. Rate Adj. on %1', ConsolidEndDate), 1, MaxStrLen(GenJnlLine.Description));
                                 GenJnlLine.Amount := -1 * ConsoBalance;
+                                // if ConsoBalance > 0 then begin
+                                //     "Business Unit".TestField("Exch. Rate Gains Acc.");
+                                //     GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Gains Acc."
+                                // end else begin
+                                //     "Business Unit".TestField("Exch. Rate Losses Acc.");
+                                //     GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Losses Acc."
+                                // end;
                                 if ConsoBalance > 0 then begin
-                                    "Business Unit".TestField("Exch. Rate Gains Acc.");
-                                    GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Gains Acc."
-                                end else begin
-                                    "Business Unit".TestField("Exch. Rate Losses Acc.");
-                                    GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Losses Acc."
+                                    "Business Unit".TestField("Residual Account");
+                                    GenJnlLine."Bal. Account No." := "Business Unit"."Residual Account";
                                 end;
                                 GenJnlLine."Dimension Set ID" := TempDimSetEntry."Dimension Set ID";
                                 DimSetEntry.Reset();
