@@ -828,7 +828,7 @@ report 50108 "Import Conso. from DB Ext"
                                 //     "Business Unit".TestField("Exch. Rate Losses Acc.");
                                 //     GenJnlLine."Bal. Account No." := "Business Unit"."Exch. Rate Losses Acc."
                                 // end;
-                                if ConsoBalance > 0 then begin
+                                if ConsoBalance <> 0 then begin
                                     "Business Unit".TestField("Residual Account");
                                     GenJnlLine."Bal. Account No." := "Business Unit"."Residual Account";
                                 end;
