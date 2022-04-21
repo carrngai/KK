@@ -45,10 +45,10 @@ report 50105 "Bank Account Statement Ext"
             column(BnkAcStmtLinValDteCapt; BnkAcStmtLinValDteCaptLbl)
             {
             }
-            column(Statement_Date; FORMAT("Statement Date", 0, '<Day,2><Month text,3><Year4>')) //G004
+            column(Statement_Date; FORMAT("Statement Date", 0, '<Day,2> <Month text,3> <Year4>')) //G004
             {
             }
-            column(LastStatement_Date; FORMAT(LastStatementDate, 0, '<Day,2><Month text,3><Year4>')) //G004
+            column(LastStatement_Date; FORMAT(LastStatementDate, 0, '<Day,2> <Month text,3> <Year4>')) //G004
             {
             }
 

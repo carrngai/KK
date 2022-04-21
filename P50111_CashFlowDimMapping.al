@@ -1,9 +1,11 @@
-page 50111 "FA Cash Flow Dimension Mapping"
+page 50111 "Cash Flow Dimension Mapping"
 {
+    //20200422 G019 Map CF Movement to CF Nature
+
     PageType = List;
     ApplicationArea = All;
     UsageCategory = Lists;
-    SourceTable = "FA Cash Flow Dimension Mapping";
+    SourceTable = "Cash Flow Dimension Mapping";
 
     layout
     {
@@ -11,19 +13,17 @@ page 50111 "FA Cash Flow Dimension Mapping"
         {
             repeater(GroupName)
             {
-                field("FA Movement Dimension"; Rec."FA Movement Dimension")
+                field("CF Movement Dimension"; Rec."CF Movement Dimension")
                 {
                     ToolTip = 'Specifies the value of the FA Movement Dimension field';
+                    Caption = 'Cash Flow Movement Dimension';
                     ApplicationArea = All;
                 }
-                field("FA Posting Type"; Rec."FA Posting Type")
-                {
-                    ToolTip = 'Specifies the value of the FA Posting Type field';
-                    ApplicationArea = All;
-                }
-                field("Cash Flow Dimension"; Rec."Cash Flow Dimension")
+
+                field("CF Nature Dimension"; Rec."CF Nature Dimension")
                 {
                     ToolTip = 'Specifies the value of the Cash Flow Dimension field';
+                    Caption = 'Cash Flow Nature Dimension';
                     ApplicationArea = All;
                 }
             }

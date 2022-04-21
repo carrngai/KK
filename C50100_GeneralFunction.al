@@ -9,67 +9,146 @@ codeunit 50100 "General Function"
 
     end;
 
-
-    //G019++
-    [EventSubscriber(ObjectType::Table, 81, 'OnAfterValidateEvent', 'FA Posting Type', false, false)]
-    local procedure OnAfterValidateEvent_GenJnlLine_FAPostingType(VAR Rec: Record "Gen. Journal Line"; VAR xRec: Record "Gen. Journal Line")
+    //G019++ 
+    //20200422 Map CF Movement to CF Nature
+    //Edit in Dimension Set Entry
+    [EventSubscriber(ObjectType::Table, 480, 'OnBeforeGetDimensionSetID', '', false, false)]
+    local procedure OnBeforeGetDimensionSetID(var DimensionSetEntry: Record "Dimension Set Entry")
     var
-    begin
-        UpdateCashFlowDimension(Rec);
-    end;
-
-    [EventSubscriber(ObjectType::Table, 81, 'OnAfterValidateEvent', 'Dimension Set ID', false, false)]
-    local procedure OnAfterValidateEvent_GenJnlLine_DimensionSetID(VAR Rec: Record "Gen. Journal Line"; VAR xRec: Record "Gen. Journal Line")
-    var
-    begin
-        UpdateCashFlowDimension(Rec);
-    end;
-
-    [EventSubscriber(ObjectType::Page, 5628, 'OnAfterActionEvent', 'Dimensions', false, false)]
-    local procedure OnAfterActionEvent_FAGLJournal_Dimension(var Rec: Record "Gen. Journal Line")
-    begin
-        Rec.Validate("Dimension Set ID");
-    end;
-
-    local procedure UpdateCashFlowDimension(VAR GenJnlLine: Record "Gen. Journal Line")
-    var
-        FACashFlowDimMapping: Record "FA Cash Flow Dimension Mapping";
-        CashFlowDim: Code[20];
-        DimSetID: Integer;
-        DimSetEntry: Record "Dimension Set Entry";
+        CashFlowDimMapping: Record "Cash Flow Dimension Mapping";
+        CashFlowNatureDim: Code[20];
         DimVal: Record "Dimension Value";
-        TempDimSetEntry: Record "Dimension Set Entry" temporary;
-        DimMgt: Codeunit DimensionManagement;
     begin
-        if (GenJnlLine."Journal Template Name" <> 'ASSETS') then
-            exit;
+        //Get Current Dimension Set Entry
+        if DimensionSetEntry.Get(DimensionSetEntry."Dimension Set ID", 'CASH FLOW MOVEMENT') then begin
 
-        if DimSetEntry.Get(GenJnlLine."Dimension Set ID", 'FIXED ASSET MOVEMENT') then begin
-            clear(CashFlowDim);
-            if FACashFlowDimMapping.Get(GenJnlLine."FA Posting Type", DimSetEntry."Dimension Value Code") then
-                CashFlowDim := FACashFlowDimMapping."Cash Flow Dimension";
-            if CashFlowDim <> '' then begin
-                DimMgt.GetDimensionSet(TempDimSetEntry, GenJnlLine."Dimension Set ID");
-                DimVal.GET('CASH FLOW NATURE', CashFlowDim);
-                TempDimSetEntry.SetRange("Dimension Code", 'CASH FLOW NATURE');
-                if TempDimSetEntry.FindFirst() then begin
-                    TempDimSetEntry."Dimension Value Code" := CashFlowDim;
-                    TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
-                    TempDimSetEntry.Modify();
-                end
-                else begin
-                    TempDimSetEntry.Init();
-                    TempDimSetEntry."Dimension Code" := 'CASH FLOW NATURE';
-                    TempDimSetEntry."Dimension Value Code" := CashFlowDim;
-                    TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
-                    TempDimSetEntry.Insert();
-                end;
-                DimSetID := DimMgt.GetDimensionSetID(TempDimSetEntry);
-                if DimSetID <> GenJnlLine."Dimension Set ID" then begin
-                    GenJnlLine.Validate("Dimension Set ID", DimSetID);
+            //Find Any Mapping for selected CF Movement
+            if CashFlowDimMapping.Get(DimensionSetEntry."Dimension Value Code") then
+                CashFlowNatureDim := CashFlowDimMapping."CF Nature Dimension";
 
-                end;
+            if CashFlowNatureDim <> '' then begin
+                //Delete current CF Nature
+                if DimensionSetEntry.Get(DimensionSetEntry."Dimension Set ID", 'CASH FLOW NATURE') then
+                    if DimensionSetEntry."Dimension Value Code" <> CashFlowNatureDim then
+                        DimensionSetEntry.Delete();
+                //Insert CF Nature 
+                DimVal.Get('CASH FLOW NATURE', CashFlowNatureDim);
+                DimensionSetEntry.Init();
+                DimensionSetEntry."Dimension Set ID" := DimensionSetEntry."Dimension Set ID";
+                DimensionSetEntry."Dimension Code" := DimVal."Dimension Code";
+                DimensionSetEntry."Dimension Value Code" := DimVal.Code;
+                DimensionSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
+                if DimensionSetEntry.Insert() then;
             end;
+        end;
+    end;
+
+    //Edit in Journal Shortcut Dimension
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::DimensionManagement, 'OnAfterValidateShortcutDimValues', '', false, false)]
+    local procedure OnAfterValidateShortcutDimValues(FieldNumber: Integer; var ShortcutDimCode: Code[20]; var DimSetID: Integer)
+    var
+        DimMgt: Codeunit DimensionManagement;
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+        CashFlowDimMapping: Record "Cash Flow Dimension Mapping";
+        CashFlowNatureDim: Code[20];
+        DimVal: Record "Dimension Value";
+    begin
+        //Get Current Dimension Set Entry
+        DimMgt.GetDimensionSet(TempDimSetEntry, DimSetID);
+        if TempDimSetEntry.Get(TempDimSetEntry."Dimension Set ID", 'CASH FLOW MOVEMENT') then begin
+
+            //Find Any Mapping for selected CF Movement
+            if CashFlowDimMapping.Get(TempDimSetEntry."Dimension Value Code") then
+                CashFlowNatureDim := CashFlowDimMapping."CF Nature Dimension";
+
+            if CashFlowNatureDim <> '' then begin
+                //Delete current CF Nature
+                if TempDimSetEntry.Get(TempDimSetEntry."Dimension Set ID", 'CASH FLOW NATURE') then
+                    if TempDimSetEntry."Dimension Value Code" <> CashFlowNatureDim then
+                        TempDimSetEntry.Delete();
+                //Insert CF Nature 
+                DimVal.Get('CASH FLOW NATURE', CashFlowNatureDim);
+                TempDimSetEntry.Init();
+                TempDimSetEntry."Dimension Code" := DimVal."Dimension Code";
+                TempDimSetEntry."Dimension Value Code" := DimVal.Code;
+                TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
+                if TempDimSetEntry.Insert() then;
+
+                DimSetID := DimMgt.GetDimensionSetID(TempDimSetEntry);
+            end;
+        end;
+    end;
+
+    //Update Shortcut Dimension 7 CASH FLOW NATURE on Journal Page
+    [EventSubscriber(ObjectType::Page, Page::"General Journal", 'OnAfterValidateShortcutDimCode', '', false, false)]
+    local procedure OnAfterValidateShortcutDimCode_GJ(var GenJournalLine: Record "Gen. Journal Line"; var ShortcutDimCode: array[8] of Code[20]; DimIndex: Integer)
+    var
+        DimMgt: Codeunit DimensionManagement;
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+    begin
+        DimMgt.GetDimensionSet(TempDimSetEntry, GenJournalLine."Dimension Set ID");
+        if TempDimSetEntry.Get(TempDimSetEntry."Dimension Set ID", 'CASH FLOW NATURE') then begin
+            ShortcutDimCode[7] := TempDimSetEntry."Dimension Value Code";
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Sales Journal", 'OnAfterValidateShortcutDimCode', '', false, false)]
+    local procedure OnAfterValidateShortcutDimCode_SJ(var GenJournalLine: Record "Gen. Journal Line"; var ShortcutDimCode: array[8] of Code[20]; DimIndex: Integer)
+    var
+        DimMgt: Codeunit DimensionManagement;
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+    begin
+        DimMgt.GetDimensionSet(TempDimSetEntry, GenJournalLine."Dimension Set ID");
+        if TempDimSetEntry.Get(TempDimSetEntry."Dimension Set ID", 'CASH FLOW NATURE') then begin
+            ShortcutDimCode[7] := TempDimSetEntry."Dimension Value Code";
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Purchase Journal", 'OnAfterValidateShortcutDimCode', '', false, false)]
+    local procedure OnAfterValidateShortcutDimCode_PJ(var GenJournalLine: Record "Gen. Journal Line"; var ShortcutDimCode: array[8] of Code[20]; DimIndex: Integer)
+    var
+        DimMgt: Codeunit DimensionManagement;
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+    begin
+        DimMgt.GetDimensionSet(TempDimSetEntry, GenJournalLine."Dimension Set ID");
+        if TempDimSetEntry.Get(TempDimSetEntry."Dimension Set ID", 'CASH FLOW NATURE') then begin
+            ShortcutDimCode[7] := TempDimSetEntry."Dimension Value Code";
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Cash Receipt Journal", 'OnAfterValidateShortcutDimCode', '', false, false)]
+    local procedure OnAfterValidateShortcutDimCode_CRJ(var GenJournalLine: Record "Gen. Journal Line"; var ShortcutDimCode: array[8] of Code[20]; DimIndex: Integer)
+    var
+        DimMgt: Codeunit DimensionManagement;
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+    begin
+        DimMgt.GetDimensionSet(TempDimSetEntry, GenJournalLine."Dimension Set ID");
+        if TempDimSetEntry.Get(TempDimSetEntry."Dimension Set ID", 'CASH FLOW NATURE') then begin
+            ShortcutDimCode[7] := TempDimSetEntry."Dimension Value Code";
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Payment Journal", 'OnAfterValidateShortcutDimCode', '', false, false)]
+    local procedure OnAfterValidateShortcutDimCode_VPJ(var GenJournalLine: Record "Gen. Journal Line"; var ShortcutDimCode: array[8] of Code[20]; DimIndex: Integer)
+    var
+        DimMgt: Codeunit DimensionManagement;
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+    begin
+        DimMgt.GetDimensionSet(TempDimSetEntry, GenJournalLine."Dimension Set ID");
+        if TempDimSetEntry.Get(TempDimSetEntry."Dimension Set ID", 'CASH FLOW NATURE') then begin
+            ShortcutDimCode[7] := TempDimSetEntry."Dimension Value Code";
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Fixed Asset G/L Journal", 'OnAfterValidateShortcutDimCode', '', false, false)]
+    local procedure OnAfterValidateShortcutDimCode_FAGL(var GenJournalLine: Record "Gen. Journal Line"; var ShortcutDimCode: array[8] of Code[20]; DimIndex: Integer)
+    var
+        DimMgt: Codeunit DimensionManagement;
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+    begin
+        DimMgt.GetDimensionSet(TempDimSetEntry, GenJournalLine."Dimension Set ID");
+        if TempDimSetEntry.Get(TempDimSetEntry."Dimension Set ID", 'CASH FLOW NATURE') then begin
+            ShortcutDimCode[7] := TempDimSetEntry."Dimension Value Code";
         end;
     end;
     //G019--
