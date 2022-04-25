@@ -19,16 +19,16 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>2.5cm</Width>
+                  <Width>1.8cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.1529cm</Width>
+                  <Width>2cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.51717cm</Width>
+                  <Width>2.2cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.52656cm</Width>
+                  <Width>6.6cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.2cm</Width>
@@ -1291,16 +1291,16 @@
                           <TablixBody>
                             <TablixColumns>
                               <TablixColumn>
-                                <Width>2.5cm</Width>
+                                <Width>1.8cm</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>2.1529cm</Width>
+                                <Width>2cm</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>2.51717cm</Width>
+                                <Width>2.2cm</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>6.52656cm</Width>
+                                <Width>6.6cm</Width>
                               </TablixColumn>
                               <TablixColumn>
                                 <Width>2.2cm</Width>
@@ -1682,16 +1682,16 @@
                           <TablixBody>
                             <TablixColumns>
                               <TablixColumn>
-                                <Width>2.5cm</Width>
+                                <Width>1.8cm</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>2.1529cm</Width>
+                                <Width>2cm</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>2.51717cm</Width>
+                                <Width>2.2cm</Width>
                               </TablixColumn>
                               <TablixColumn>
-                                <Width>6.52656cm</Width>
+                                <Width>6.6cm</Width>
                               </TablixColumn>
                               <TablixColumn>
                                 <Width>2.2cm</Width>
@@ -2250,7 +2250,7 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>1pt</Top>
             <Height>7.7289cm</Height>
-            <Width>18.09663cm</Width>
+            <Width>17cm</Width>
             <Style>
               <FontFamily>Segoe UI</FontFamily>
               <FontSize>8pt</FontSize>
@@ -2263,7 +2263,7 @@
           <FontSize>8pt</FontSize>
         </Style>
       </Body>
-      <Width>18.09663cm</Width>
+      <Width>17cm</Width>
       <Page>
         <PageHeader>
           <Height>1.05834cm</Height>
@@ -2291,9 +2291,9 @@
                 </Paragraph>
               </Paragraphs>
               <Top>0.52917cm</Top>
-              <Left>4.6529cm</Left>
+              <Left>3.8cm</Left>
               <Height>15pt</Height>
-              <Width>9.04373cm</Width>
+              <Width>8.8cm</Width>
               <Style>
                 <Border />
                 <FontFamily>Segoe UI</FontFamily>
@@ -2322,9 +2322,9 @@
                 </Paragraph>
               </Paragraphs>
               <Top>0pt</Top>
-              <Left>4.6529cm</Left>
+              <Left>3.8cm</Left>
               <Height>15pt</Height>
-              <Width>9.04373cm</Width>
+              <Width>8.8cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <FontFamily>Segoe UI</FontFamily>
@@ -2353,7 +2353,7 @@
                   </Style>
                 </Paragraph>
               </Paragraphs>
-              <Left>13.69663cm</Left>
+              <Left>12.6cm</Left>
               <Height>10pt</Height>
               <Width>4.4cm</Width>
               <ZIndex>2</ZIndex>
@@ -2385,7 +2385,7 @@
                 </Paragraph>
               </Paragraphs>
               <Top>20pt</Top>
-              <Left>13.69663cm</Left>
+              <Left>12.6cm</Left>
               <Height>10pt</Height>
               <Width>4.4cm</Width>
               <ZIndex>3</ZIndex>
@@ -2416,7 +2416,7 @@
                 </Paragraph>
               </Paragraphs>
               <Top>10pt</Top>
-              <Left>13.69663cm</Left>
+              <Left>12.6cm</Left>
               <Height>10pt</Height>
               <Width>4.4cm</Width>
               <ZIndex>4</ZIndex>
@@ -2436,10 +2436,9 @@
         <PageWidth>21cm</PageWidth>
         <InteractiveHeight>11in</InteractiveHeight>
         <InteractiveWidth>8.5in</InteractiveWidth>
-        <LeftMargin>1.76388cm</LeftMargin>
-        <RightMargin>1.05834cm</RightMargin>
-        <TopMargin>1.05834cm</TopMargin>
-        <BottomMargin>1.48166cm</BottomMargin>
+        <LeftMargin>1.78cm</LeftMargin>
+        <TopMargin>1.8cm</TopMargin>
+        <BottomMargin>1cm</BottomMargin>
         <ColumnSpacing>1.27cm</ColumnSpacing>
         <Style>
           <FontFamily>Segoe UI</FontFamily>
