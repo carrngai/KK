@@ -437,8 +437,8 @@ codeunit 50100 "General Function"
                                         InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", TempGenJournalLine.Amount, DimMgt.GetDimensionSetID(tempDimSetEntry1), false, false, LastDocNo, AtCompany);
                                 end;
 
-                                //Set Schedule Post except last line
-                                LastDocNo := EnqueueGenJrnlLine_Company(TempGenJournalLine, AtCompany);
+                                //Update Document No., Schedule Post
+                                LastDocNo := EnqueueGenJrnlLine_Company(TempGenJournalLine, AtCompany, true);
 
                                 FromCompany := AtCompany;
 
@@ -483,6 +483,10 @@ codeunit 50100 "General Function"
                                     until ICAllocation.Next() = 0;
                                     ICAllocation.DeleteAll();
                                 end;
+
+                                //Update Document No. , not schedule post
+                                LastDocNo := EnqueueGenJrnlLine_Company(TempGenJournalLine, AtCompany, false);
+
                             end;
 
                         until ICTransPathDetail.Next() = 0;
@@ -671,7 +675,7 @@ codeunit 50100 "General Function"
     end;
 
 
-    local procedure EnqueueGenJrnlLine_Company(var GenJrnlLine: Record "Gen. Journal Line"; AtCompany: Text[30]): Code[20]
+    local procedure EnqueueGenJrnlLine_Company(var GenJrnlLine: Record "Gen. Journal Line"; AtCompany: Text[30]; "Scheduled for Posting": Boolean): Code[20]
     var
         // JobQueueID: Guid;
         l_GenJnlLine: Record "Gen. Journal Line";
@@ -699,24 +703,6 @@ codeunit 50100 "General Function"
             GeneralLedgerSetup.ChangeCompany(AtCompany);
             GeneralLedgerSetup.Get();
 
-            JobQueueEntry.ChangeCompany(AtCompany);
-            JobQueueEntry.Init();
-            Clear(JobQueueEntry.ID);
-            // Message(format(l_GenJnlLine.RecordId) + format(l_GenJnlLine."Line No."));
-            JobQueueEntry."Object Type to Run" := JobQueueEntry."Object Type to Run"::Codeunit;
-            JobQueueEntry."Object ID to Run" := CODEUNIT::"Gen. Jnl.-Post via Job Queue";
-            JobQueueEntry."Record ID to Process" := l_GenJnlLine.RecordId;
-            JobQueueEntry."Notify On Success" := GeneralLedgerSetup."Notify On Success";
-            JobQueueEntry."Job Queue Category Code" := GeneralLedgerSetup."Job Queue Category Code";
-            JobQueueEntry.Description := PostAndPrintDescription;
-            JobQueueEntry.Description := CopyStr(StrSubstNo(JobQueueEntry.Description, l_GenJnlLine."Journal Template Name", l_GenJnlLine."Journal Batch Name", l_GenJnlLine."Document No."), 1, MaxStrLen(JobQueueEntry.Description));
-            JobQueueEntry."User Session Started" := 0DT;
-            JobQueueEntry."Earliest Start Date/Time" := CurrentDateTime + 1000;
-            JobQueueEntry.Status := JobQueueEntry.Status::"On Hold";
-            if IsNullGuid(JobQueueEntry.ID) then
-                JobQueueEntry.Insert(true);
-
-
             l_GenJnlBatch.Get(l_GenJnlLine."Journal Template Name", l_GenJnlLine."Journal Batch Name");
             if l_GenJnlBatch."No. Series" <> '' then begin
                 l_NoSeriesLine.Reset();
@@ -734,11 +720,29 @@ codeunit 50100 "General Function"
             end else
                 DocNo := l_GenJnlLine."Document No.";
 
-            l_GenJnlLine.ModifyAll("Job Queue Status", l_GenJnlLine."Job Queue Status"::"Scheduled for Posting");
-            l_GenJnlLine.ModifyAll("Job Queue Entry ID", JobQueueEntry.ID);
+            if "Scheduled for Posting" then begin
+                JobQueueEntry.ChangeCompany(AtCompany);
+                JobQueueEntry.Init();
+                Clear(JobQueueEntry.ID);
+                // Message(format(l_GenJnlLine.RecordId) + format(l_GenJnlLine."Line No."));
+                JobQueueEntry."Object Type to Run" := JobQueueEntry."Object Type to Run"::Codeunit;
+                JobQueueEntry."Object ID to Run" := CODEUNIT::"Gen. Jnl.-Post via Job Queue";
+                JobQueueEntry."Record ID to Process" := l_GenJnlLine.RecordId;
+                JobQueueEntry."Notify On Success" := GeneralLedgerSetup."Notify On Success";
+                JobQueueEntry."Job Queue Category Code" := GeneralLedgerSetup."Job Queue Category Code";
+                JobQueueEntry.Description := PostAndPrintDescription;
+                JobQueueEntry.Description := CopyStr(StrSubstNo(JobQueueEntry.Description, l_GenJnlLine."Journal Template Name", l_GenJnlLine."Journal Batch Name", l_GenJnlLine."Document No."), 1, MaxStrLen(JobQueueEntry.Description));
+                JobQueueEntry."User Session Started" := 0DT;
+                JobQueueEntry."Earliest Start Date/Time" := CurrentDateTime + 1000;
+                JobQueueEntry.Status := JobQueueEntry.Status::"On Hold";
+                if IsNullGuid(JobQueueEntry.ID) then
+                    JobQueueEntry.Insert(true);
 
-            JobQueueEntry.SetStatus(JobQueueEntry.Status::Ready);
+                l_GenJnlLine.ModifyAll("Job Queue Status", l_GenJnlLine."Job Queue Status"::"Scheduled for Posting");
+                l_GenJnlLine.ModifyAll("Job Queue Entry ID", JobQueueEntry.ID);
 
+                JobQueueEntry.SetStatus(JobQueueEntry.Status::Ready);
+            end;
         end;
 
         exit(DocNo);

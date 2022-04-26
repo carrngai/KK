@@ -96,7 +96,18 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox78</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Code.SetData(Cstr(Fields!Name_CompanyInfo.Value) 
++ Chr(177) + Cstr(Fields!Addr_CompanyInfo.Value) 
++ Chr(177) + Cstr(Fields!Addr2_CompanyInfo.Value) 
++ Chr(177) + Cstr(Fields!PhoneNo_CompanyInfo.Value) 
++ Chr(177) + Cstr(Fields!FaxNo_CompanyInfo.Value), 1)</Hidden>
+                          </Visibility>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BackgroundColor>Red</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                           </Style>
                         </Textbox>
@@ -2759,7 +2770,7 @@
             <Style />
           </Tablix>
         </ReportItems>
-        <Height>10.29437cm</Height>
+        <Height>10.97958cm</Height>
         <Style />
       </Body>
       <Width>510.23622pt</Width>
@@ -2775,7 +2786,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Fields!Name_CompanyInfo.Value</Value>
+                      <Value>=Code.GetData(1,1)</Value>
                       <Style>
                         <FontFamily>Verdana</FontFamily>
                         <FontSize>15pt</FontSize>
@@ -2800,7 +2811,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!Addr2_CompanyInfo.Value, "DataSet_Result")</Value>
+                      <Value>=Code.GetData(3,1)</Value>
                       <Style>
                         <FontSize>11pt</FontSize>
                         <FontWeight>Bold</FontWeight>
@@ -2826,7 +2837,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!Addr_CompanyInfo.Value, "DataSet_Result")</Value>
+                      <Value>=Code.GetData(2,1)</Value>
                       <Style>
                         <FontSize>11pt</FontSize>
                         <FontWeight>Bold</FontWeight>
@@ -2852,7 +2863,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>="Tel : " &amp; First(Fields!PhoneNo_CompanyInfo.Value, "DataSet_Result") &amp; "     FAX : " &amp; First(Fields!FaxNo_CompanyInfo.Value, "DataSet_Result")</Value>
+                      <Value>="Tel : " &amp; Code.GetData(4,1) &amp; "     FAX : " &amp; Code.GetData(5,1)</Value>
                       <Style>
                         <FontSize>11pt</FontSize>
                         <FontWeight>Bold</FontWeight>
@@ -2919,7 +2930,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Fields!Name_CompanyInfo.Value</Value>
+                      <Value>=Code.GetData(1,1)</Value>
                       <Style>
                         <FontWeight>Bold</FontWeight>
                       </Style>
@@ -3036,6 +3047,38 @@ Public Function BlankNegAndZero(ByVal Value As Decimal)
         Return ""
     end if
     Return Value
+End Function
+
+Shared Data1 as Object
+Shared Data2 as Object
+Shared Data3 as Object
+Public Function GetData(Num as Integer, Group as integer) as Object
+if Group = 1 then
+   Return Cstr(Choose(Num, Split(Cstr(Data1),Chr(177))))
+End If
+
+if Group = 2 then
+   Return Cstr(Choose(Num, Split(Cstr(Data2),Chr(177))))
+End If
+
+if Group = 3 then
+   Return Cstr(Choose(Num, Split(Cstr(Data3),Chr(177))))
+End If
+End Function
+
+Public Function SetData(NewData as Object,Group as integer)
+  If Group = 1 and NewData &gt; "" Then
+      Data1 = NewData
+  End If
+
+  If Group = 2 and NewData &gt; "" Then
+      Data2 = NewData
+  End If
+
+  If Group = 3 and NewData &gt; "" Then
+      Data3 = NewData
+  End If
+  Return True
 End Function
 </Code>
   <Language>=User!Language</Language>

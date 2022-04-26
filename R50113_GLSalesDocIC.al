@@ -322,6 +322,13 @@ report 50113 "G/L Sales Document IC"
                             until l_Company.Next() = 0;
                     until B_FinishedPosting or (Cnt >= 10);
                 end;
+
+                trigger OnAfterGetRecord()
+                begin
+                    CompanyInfo.ChangeCompany(Company.Name);
+                    CompanyInfo.Get;
+                    FormatAddr.Company(CompanyAddr[1], CompanyInfo);
+                end;
             }
 
             trigger OnPreDataItem()
@@ -403,9 +410,6 @@ report 50113 "G/L Sales Document IC"
         GLFilter := "G/L Entry".GetFilters();
         TempPurchInvLinePrinted.DeleteAll();
         GLSetup.Get;
-        CompanyInfo.Get;
-
-        FormatAddr.Company(CompanyAddr[1], CompanyInfo);
     end;
 
     local procedure DetailsPrinted(PurchInvLine: Record "Purch. Inv. Line"): Boolean
