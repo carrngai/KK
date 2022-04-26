@@ -157,6 +157,7 @@ report 50113 "G/L Sales Document IC"
                             l_CLE.ChangeCompany(Company.Name);
                             GLAcc.ChangeCompany(Company.Name);
                             GLSetup.ChangeCompany(Company.Name);
+                            l_GLE.ChangeCompany(company.Name);
 
                             if not GLAcc.Get("G/L Account No.") then
                                 GLAcc.Init();
