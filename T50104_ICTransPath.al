@@ -11,7 +11,7 @@ table 50104 "IC Transaction Path"
             NotBlank = true;
 
         }
-        field(2; "Description"; Text[50])
+        field(2; "Description"; Text[250])
         {
             DataClassification = ToBeClassified;
 

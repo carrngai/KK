@@ -17,11 +17,11 @@ report 50113 "G/L Sales Document IC"
             RequestFilterFields = "No.";
             dataitem(Company; Company)
             {
+                DataItemTableView = sorting(Name);
                 dataitem("G/L Register"; "G/L Register")
                 {
                     DataItemTableView = SORTING("No.");
                     PrintOnlyIfDetail = true;
-                    RequestFilterFields = "No.";
                     column(COMPANYNAME; COMPANYPROPERTY.DisplayName)
                     {
                     }
@@ -37,8 +37,6 @@ report 50113 "G/L Sales Document IC"
                     dataitem("G/L Entry"; "G/L Entry")
                     {
                         DataItemTableView = SORTING("Entry No.") where("Source Type" = const(Customer));
-                        RequestFilterFields = "Document No.";
-
                         column(G_L_Entry__Posting_Date_; Format("Posting Date", 0, '<Day,2>-<Month text,3>-<Year4>'))
                         {
                         }
@@ -148,6 +146,18 @@ report 50113 "G/L Sales Document IC"
                             l_GLE: Record "G/L Entry"; //G006
 
                         begin
+                            PurchInvLine.ChangeCompany(Company.Name);
+                            SalesInvoiceLine.ChangeCompany(Company.Name);
+                            PurchCrMemoLine.ChangeCompany(Company.Name);
+                            SalesCrMemoLine.ChangeCompany(Company.Name);
+                            PurchInvHeader.ChangeCompany(Company.Name);
+                            PurchCrMemoHdr.ChangeCompany(Company.Name);
+                            SalesInvoiceHeader.ChangeCompany(Company.Name);
+                            SalesCrMemoHeader.ChangeCompany(Company.Name);
+                            l_CLE.ChangeCompany(Company.Name);
+                            GLAcc.ChangeCompany(Company.Name);
+                            GLSetup.ChangeCompany(Company.Name);
+
                             if not GLAcc.Get("G/L Account No.") then
                                 GLAcc.Init();
 
@@ -234,8 +244,6 @@ report 50113 "G/L Sales Document IC"
 
                             //G006--
 
-
-
                         end;
 
                         trigger OnPreDataItem()
@@ -245,6 +253,7 @@ report 50113 "G/L Sales Document IC"
                         end;
 
                     }
+
                     trigger OnPreDataItem()
                     var
                         l_GLEntry: Record "G/L Entry";
@@ -258,14 +267,18 @@ report 50113 "G/L Sales Document IC"
                             l_GLEntry.ChangeCompany(Company.Name);
                             l_GLEntry.Reset();
                             l_GLEntry.SetRange("IC Source Document No.", ICSourceDocNo);
-                            l_GLEntry.FindFirst();
-
-                            "G/L Register".SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
-                            "G/L Register".SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
+                            if l_GLEntry.FindFirst() then begin
+                                "G/L Register".SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
+                                "G/L Register".SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
+                            end else begin
+                                "G/L Register".SetFilter("From Entry No.", '<=%1', 0);
+                                "G/L Register".SetFilter("To Entry No.", '>=%1', 0);
+                            end;
                         end;
                         "G/L Register".SetFilter("Source Code", '%1|%2|%3', 'SALES', 'SALESJNL', 'GENJNL'); //IC entries post from General Journal
                     end;
                 }
+
                 trigger OnPreDataItem()
                 var
                     l_GLEntry: Record "G/L Entry";
@@ -309,6 +322,21 @@ report 50113 "G/L Sales Document IC"
                     until B_FinishedPosting or (Cnt >= 10);
                 end;
             }
+
+            trigger OnPreDataItem()
+            var
+                l_GLEntry: Record "G/L Entry";
+            begin
+                if FilterDocNo <> '' then begin
+                    l_GLEntry.Reset();
+                    l_GLEntry.SetRange("Document No.", FilterDocNo);
+                    if l_GLEntry.FindFirst() then begin
+                        GLRegisterIC.SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
+                        GLRegisterIC.SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
+                    end;
+                end;
+            end;
+
         }
 
     }
@@ -323,6 +351,10 @@ report 50113 "G/L Sales Document IC"
                 group(Control3)
                 {
                     Caption = 'Options';
+                    field("IC Document No."; FilterDocNo)
+                    {
+                        ApplicationArea = Basic, Suite;
+                    }
                     field(ShowDetails; ShowDetails)
                     {
                         ApplicationArea = Basic, Suite;
@@ -344,6 +376,7 @@ report 50113 "G/L Sales Document IC"
     }
 
     var
+        FilterDocNo: Code[20];
         ICSourceDocNo: Code[20];
         GLSetup: Record "General Ledger Setup";
         GLAcc: Record "G/L Account";
@@ -404,8 +437,8 @@ report 50113 "G/L Sales Document IC"
                 TempDocLine."VAT Base Amount" := GLLine.Amount * CurrencyFactor;
             end;
 
-        if not DetailsPrinted(TempDocLine) then
-            TempDocLine.Insert();
+        // if not DetailsPrinted(TempDocLine) then
+        TempDocLine.Insert();
     end;
     //G006--
     local procedure PopulateRecFromSalesInvoiceLine(SalesInvoiceLine: Record "Sales Invoice Line"; CurrencyFactor: Decimal; PricesInclVAT: Boolean)

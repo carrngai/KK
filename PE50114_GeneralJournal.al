@@ -23,6 +23,7 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
         modify(Comment) { Visible = false; }
         modify("Bal. Account Type") { Visible = false; }
         modify("Bal. Account No.") { Visible = false; }
+        modify("External Document No.") { Visible = true; }
         addafter(ShortcutDimCode8)
         {
             field("IC Path Code"; Rec."IC Path Code") //G014
@@ -48,6 +49,11 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
                     end;
                     CurrPage.Update();
                 end;
+            }
+            field("IC Source Document No."; Rec."IC Source Document No.")
+            {
+                ToolTip = 'Specifies the value of the IC Source Document No. field.';
+                ApplicationArea = All;
             }
             field("Allow Zero-Amount Posting"; Rec."Allow Zero-Amount Posting")
             {

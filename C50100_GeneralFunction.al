@@ -436,6 +436,10 @@ codeunit 50100 "General Function"
                                     else
                                         InsertGenJnlLine_Company(TempGenJournalLine, TempGenJournalLine."Account Type"::Vendor, ICPartner."Vendor No.", TempGenJournalLine.Amount, DimMgt.GetDimensionSetID(tempDimSetEntry1), false, false, LastDocNo, AtCompany);
                                 end;
+
+                                //Set Schedule Post except last line
+                                LastDocNo := EnqueueGenJrnlLine_Company(TempGenJournalLine, AtCompany);
+
                                 FromCompany := AtCompany;
 
                             end else begin
@@ -481,9 +485,6 @@ codeunit 50100 "General Function"
                                 end;
                             end;
 
-                            //Set Schedule Post
-                            LastDocNo := EnqueueGenJrnlLine_Company(TempGenJournalLine, AtCompany);
-
                         until ICTransPathDetail.Next() = 0;
                     end;
                 end;
@@ -504,6 +505,7 @@ codeunit 50100 "General Function"
         GLSetup1: Record "General Ledger Setup";
         GLSetup2: Record "General Ledger Setup";
         CurrExchRate2: Record "Currency Exchange Rate";
+    // NoSeriesMgt: Codeunit NoSeriesManagement;
     begin
         ICGenBatch.ChangeCompany(AtCompany);
         ICGenJnlLine.ChangeCompany(AtCompany);
@@ -920,7 +922,8 @@ codeunit 50100 "General Function"
     local procedure OnSubstituteReport_GLRegister(ReportId: Integer; var NewReportId: Integer)
     begin
         if ReportId = Report::"G/L Register" then
-            NewReportId := Report::"G/L Register Ext";
+            // NewReportId := Report::"G/L Register Ext";
+            NewReportId := Report::"G/L Register Ext IC";
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::ReportManagement, 'OnAfterSubstituteReport', '', false, false)] //G004
@@ -936,7 +939,7 @@ codeunit 50100 "General Function"
         PrintSalesDoc: Boolean;
         l_CLE: Record "Cust. Ledger Entry";
         l_GLRegister: Record "G/L Register";
-        GLSalesDocReport: Report "G/L Sales Document";
+        GLSalesDocReport: Report "G/L Sales Document IC";
         RecRef: RecordRef;
         GeneralLedgerSetup: Record "General Ledger Setup";
     begin
@@ -957,7 +960,7 @@ codeunit 50100 "General Function"
             //GLSalesDocReport.SaveAs()
             GeneralLedgerSetup.Get();
             if GeneralLedgerSetup."Post & Print with Job Queue" then
-                SchedulePrintJobQueueEntry(GLRegister, 50106, GeneralLedgerSetup."Report Output Type")
+                SchedulePrintJobQueueEntry(GLRegister, 50113, GeneralLedgerSetup."Report Output Type")
             else begin
                 GLSalesDocReport.SetTableView(l_GLRegister);
                 GLSalesDocReport.UseRequestPage(true);
