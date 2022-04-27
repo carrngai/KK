@@ -876,7 +876,7 @@ codeunit 50100 "General Function"
         DimensionSetID := GetDimensionSetID_Company(TempDimSetEntry, CompanyName);
         if DimensionSetID <> GenJournalLine."Dimension Set ID" then begin
             GLEntry."Dimension Set ID" := DimensionSetID;
-            //GLEntry.Modify();
+            // GLEntry.Modify();
         end;
     end;
 

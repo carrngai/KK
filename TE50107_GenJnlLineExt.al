@@ -248,6 +248,7 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
             l_GenJnlLine."Document Type" := Rec."Document Type";
             l_GenJnlLine."Document No." := Rec."Document No.";
             l_GenJnlLine."Posting No. Series" := Rec."Posting No. Series"; //20211129
+
             l_GenJnlLine.Validate("Account Type", l_ICTransPath."Bal. Account Type");
             l_GenJnlLine.Validate("Account No.", l_ICTransPath."Bal. Account No.");
             // l_GenJnlLine.Validate("Currency Code", Rec."Currency Code"); 
@@ -260,7 +261,7 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
             l_ICTransDefaultDim.SetRange("Key 1", Rec."IC Path Code");
             l_ICTransDefaultDim.SetRange("Key 2", 0);
             l_ICTransDefaultDim.SetRange(Type, l_ICTransDefaultDim.Type::"Bal. Dimension");
-            if l_ICTransDefaultDim.FindSet() then
+            if l_ICTransDefaultDim.FindSet() then begin
                 repeat
                     DimVal.Get(l_ICTransDefaultDim."Dimension Code", l_ICTransDefaultDim."Dimension Value Code");
                     TempDimSetEntry1.Init();
@@ -270,13 +271,17 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
                     TempDimSetEntry1."Global Dimension No." := DimVal."Global Dimension No.";
                     TempDimSetEntry1.Insert();
                 until l_ICTransDefaultDim.Next() = 0;
-            l_GenJnlLine.Validate("Dimension Set ID", DimMgmt.GetDimensionSetID(TempDimSetEntry1));
+
+                l_GenJnlLine.Validate("Dimension Set ID", DimMgmt.GetDimensionSetID(TempDimSetEntry1));
+            end;
 
             if (l_GenJnlLine2."Document No." = Rec."Document No.") and (l_GenJnlLine2."Account No." <> l_ICTransPath."Bal. Account No.") then
                 l_GenJnlLine.Insert()
             else
                 if (l_GenJnlLine2."Document No." <> Rec."Document No.") then
                     l_GenJnlLine.Insert();
+
+            // l_GenJnlLine.Modify();
 
         end;
     end;
