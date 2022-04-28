@@ -131,6 +131,13 @@ report 50113 "G/L Sales Document IC"
                             end;
                         }
 
+                        trigger OnPreDataItem()
+                        begin
+                            "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
+                            "G/L Entry".SetFilter("IC Source Document No.", ICSourceDocNo);
+                            "G/L Entry".SetFilter("Document Type", '%1|%2', "Document Type"::Invoice, "Document Type"::"Credit Memo");
+                        end;
+
                         trigger OnAfterGetRecord()
                         var
                             PurchInvLine: Record "Purch. Inv. Line";
@@ -247,12 +254,6 @@ report 50113 "G/L Sales Document IC"
 
                         end;
 
-                        trigger OnPreDataItem()
-                        begin
-                            "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
-                            "G/L Entry".SetFilter("Document Type", '%1|%2', "Document Type"::Invoice, "Document Type"::"Credit Memo");
-                        end;
-
                     }
 
                     trigger OnPreDataItem()
@@ -317,7 +318,7 @@ report 50113 "G/L Sales Document IC"
                                 l_GLEntry.SetRange("IC Source Document No.", ICSourceDocNo);
                                 if not l_GLEntry.FindFirst() then begin
                                     B_FinishedPosting := false;
-                                    Sleep(1000);
+                                    Sleep(2000);
                                 end;
                             until l_Company.Next() = 0;
                     until B_FinishedPosting or (Cnt >= 10);

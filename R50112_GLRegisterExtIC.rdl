@@ -8438,11 +8438,20 @@ End Function
         <Field Name="ShowPostingGroup">
           <DataField>ShowPostingGroup</DataField>
         </Field>
+        <Field Name="ICPathCode_GLEntry">
+          <DataField>ICPathCode_GLEntry</DataField>
+        </Field>
+        <Field Name="ICSourceDocumentNo_GLEntry">
+          <DataField>ICSourceDocumentNo_GLEntry</DataField>
+        </Field>
         <Field Name="G_L_Entry__Posting_Date_">
           <DataField>G_L_Entry__Posting_Date_</DataField>
         </Field>
         <Field Name="G_L_Entry__Document_Type_">
           <DataField>G_L_Entry__Document_Type_</DataField>
+        </Field>
+        <Field Name="PreAssignedNo_GLEntry">
+          <DataField>PreAssignedNo_GLEntry</DataField>
         </Field>
         <Field Name="G_L_Entry__Document_No__">
           <DataField>G_L_Entry__Document_No__</DataField>
@@ -8515,9 +8524,6 @@ End Function
         </Field>
         <Field Name="G_L_Entry_Amount_Control41Caption">
           <DataField>G_L_Entry_Amount_Control41Caption</DataField>
-        </Field>
-        <Field Name="ICPathCode_GLEntry">
-          <DataField>ICPathCode_GLEntry</DataField>
         </Field>
         <Field Name="Purch__Inv__Line_Description">
           <DataField>Purch__Inv__Line_Description</DataField>

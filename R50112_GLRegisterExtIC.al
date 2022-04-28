@@ -94,10 +94,19 @@ report 50112 "G/L Register Ext IC"
                     dataitem("G/L Entry"; "G/L Entry")
                     {
                         DataItemTableView = SORTING("Entry No.");
+                        column(ICPathCode_GLEntry; "IC Path Code")//G003
+                        {
+                        }
+                        column(ICSourceDocumentNo_GLEntry; "IC Source Document No.")//G003
+                        {
+                        }
                         column(G_L_Entry__Posting_Date_; Format("Posting Date", 0, '<Day,2><Month text,3><Year4>'))
                         {
                         }
                         column(G_L_Entry__Document_Type_; "Document Type")
+                        {
+                        }
+                        column(PreAssignedNo_GLEntry; "Pre-Assigned No.")
                         {
                         }
                         column(G_L_Entry__Document_No__; "Document No.")
@@ -158,10 +167,6 @@ report 50112 "G/L Register Ext IC"
                         column(G_L_Entry_Amount_Control41Caption; G_L_Entry_Amount_Control41CaptionLbl)
                         {
                         }
-                        column(ICPathCode_GLEntry; "IC Path Code")
-                        {
-                        }
-
                         dataitem("Purch. Inv. Line"; "Purch. Inv. Line")
                         {
                             DataItemLink = "Document No." = FIELD("Document No."), "No." = FIELD("G/L Account No.");
@@ -191,14 +196,13 @@ report 50112 "G/L Register Ext IC"
                         {
                             DataItemLink = "Entry No." = FIELD("Entry No.");
                             DataItemTableView = sorting("Entry No.");
-
                             dataitem("Detailed Cust. Ledg. Entry"; "Detailed Cust. Ledg. Entry")
                             {
-                                DataItemTableView = WHERE("Unapplied" = CONST(false));
+                                DataItemTableView = SORTING("Entry No.") WHERE("Unapplied" = CONST(false));
                                 DataItemLink = "Applied Cust. Ledger Entry No." = FIELD("Entry No.");
                                 dataitem(AppliedCLE; "Cust. Ledger Entry")
                                 {
-                                    DataItemTableView = WHERE("Document Type" = FILTER(<> Payment));
+                                    DataItemTableView = SORTING("Entry No.") WHERE("Document Type" = FILTER(<> Payment));
                                     DataItemLink = "Entry No." = FIELD("Cust. Ledger Entry No.");
                                     column(DocumentNo_AppliedCLE; "Document No.")
                                     {
@@ -244,11 +248,11 @@ report 50112 "G/L Register Ext IC"
 
                             dataitem("Detailed Vendor Ledg. Entry"; "Detailed Vendor Ledg. Entry")
                             {
-                                DataItemTableView = WHERE("Unapplied" = CONST(false));
+                                DataItemTableView = SORTING("Entry No.") WHERE("Unapplied" = CONST(false));
                                 DataItemLink = "Applied Vend. Ledger Entry No." = FIELD("Entry No.");
                                 dataitem(AppliedVLE; "Vendor Ledger Entry")
                                 {
-                                    DataItemTableView = WHERE("Document Type" = FILTER(<> Payment));
+                                    DataItemTableView = SORTING("Entry No.") WHERE("Document Type" = FILTER(<> Payment));
                                     DataItemLink = "Entry No." = FIELD("Vendor Ledger Entry No.");
                                     column(DocumentNo_AppliedVLE; "Document No.")
                                     {
@@ -315,6 +319,13 @@ report 50112 "G/L Register Ext IC"
                                 DimSetEntry.SetRange("Dimension Set ID", "G/L Entry"."Dimension Set ID")
                             end;
                         }
+
+                        trigger OnPreDataItem()
+                        begin
+                            "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
+                            "G/L Entry".SetFilter("IC Source Document No.", ICSourceDocNo);
+                            // "G/L Entry".SetFilter("IC Source Document No.", ICSourceDocFilter);
+                        end;
 
                         trigger OnAfterGetRecord()
                         var
@@ -486,29 +497,6 @@ report 50112 "G/L Register Ext IC"
                             end;
                         end;
 
-                        trigger OnPreDataItem()
-                        begin
-                            SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
-                        end;
-
-                        trigger OnPostDataItem()
-                        var
-                            l_GLRegister: Record "G/L Register";
-                            GLSalesDocReport: Report "G/L Sales Document";
-                            RecRef: RecordRef;
-                        begin
-                            // if AutoPrintSalesDoc AND PrintSalesDoc then begin
-                            //     Commit();
-                            //     l_GLRegister.CopyFilters("G/L Register");
-                            //     //l_GLRegister.FindFirst();
-                            //     GLSalesDocReport.SetTableView(l_GLRegister);
-                            //     //RecRef.GetTable(l_GLRegister);
-                            //     //GLSalesDocReport.Execute('', RecRef);
-                            //     GLSalesDocReport.UseRequestPage(true);
-                            //     GLSalesDocReport.Run();
-                            //     //Report.Run(50106, false, false, l_GLRegister);
-                            // end;
-                        end;
                     }
 
                     trigger OnPreDataItem()
@@ -527,13 +515,14 @@ report 50112 "G/L Register Ext IC"
                         "Vendor Ledger Entry".ChangeCompany(Company.Name);
                         "Detailed Vendor Ledg. Entry".ChangeCompany(Company.Name);
                         DimSetEntry.ChangeCompany(Company.Name);
+
                         if Company.Name = CompanyName() then begin
                             "G/L Register".CopyFilters(GLRegisterIC);
-                        end
-                        else begin
+                        end else begin
                             l_GLEntry.ChangeCompany(Company.Name);
                             l_GLEntry.Reset();
-                            l_GLEntry.SetRange("IC Source Document No.", ICSourceDocNo);
+                            // l_GLEntry.SetFilter("IC Source Document No.", ICSourceDocFilter);
+                            l_GLEntry.SetFilter("IC Source Document No.", ICSourceDocNo);
                             if l_GLEntry.FindFirst() then begin
                                 "G/L Register".SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
                                 "G/L Register".SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
@@ -602,8 +591,26 @@ report 50112 "G/L Register Ext IC"
                         GLRegisterIC.SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
                         GLRegisterIC.SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
                     end;
+                    ICSourceDocFilter := l_GLEntry."Pre-Assigned No.";
                 end;
             end;
+
+            // trigger OnAfterGetRecord()
+            // var
+            //     l_GLEntry: Record "G/L Entry";
+            // begin
+            //     if ICSourceDocFilter = '' then begin
+            //         l_GLEntry.Reset();
+            //         l_GLEntry.SetCurrentKey("Entry No.");
+            //         l_GLEntry.SetRange("Entry No.", GLRegisterIC."From Entry No.", GLRegisterIC."To Entry No.");
+            //         l_GLEntry.SetFilter("IC Path Code", '<>%1', '');
+            //         if l_GLEntry.FindFirst() then
+            //             ICSourceDocFilter := l_GLEntry."Pre-Assigned No.";
+            //         if l_GLEntry.FindLast() then
+            //             ICSourceDocFilter := ICSourceDocFilter + '..' + l_GLEntry."Pre-Assigned No.";
+            //         // Message(ICSourceDocFilter);
+            //     end;
+            // end;
         }
     }
 
@@ -662,6 +669,7 @@ report 50112 "G/L Register Ext IC"
     var
         FilterDocNo: Code[20];
         ICSourceDocNo: Code[20];
+        ICSourceDocFilter: Text[250];
         GLSetup: Record "General Ledger Setup";
         GLAcc: Record "G/L Account";
         TempPurchInvLinePrinted: Record "Purch. Inv. Line" temporary;

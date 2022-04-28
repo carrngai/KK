@@ -318,25 +318,26 @@ codeunit 50100 "General Function"
                         Error('IC Transaction Path Detail does not exist for IC Transaction Path %1.', ICTransPath."Path Code");
 
                     //Check Allocation Dimension Value Exists in Last IC Partner
-                    ICTransPathDetail.Reset();
-                    ICTransPathDetail.SetRange("Path Code", ICTransPath."Path Code");
-                    if ICTransPathDetail.FindLast() then begin
-                        ICAllocation.Reset();
-                        ICAllocation.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
-                        ICAllocation.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
-                        ICAllocation.SetRange("Journal Line No.", GenJournalLine."Line No.");
-                        if ICAllocation.FindSet() then
-                            repeat
-                                tempDimSetEntry1.DeleteAll();
-                                DimMgt.GetDimensionSet(tempDimSetEntry1, ICAllocation."Bal. Dimension Set ID");
-                                if tempDimSetEntry1.FindSet() then
-                                    repeat
-                                        DimVal.ChangeCompany(AtCompany);
-                                        if not DimVal.Get(tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code") then
-                                            Error('Dimension %1 Dimension Value %2 not found in %3', tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code", AtCompany);
-                                    until tempDimSetEntry1.Next() = 0;
-                            until ICAllocation.Next() = 0;
-                    end;
+                    // ICTransPathDetail.Reset();
+                    // ICTransPathDetail.SetRange("Path Code", ICTransPath."Path Code");
+                    // if ICTransPathDetail.FindLast() then begin
+                    //     ICAllocation.Reset();
+                    //     ICAllocation.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
+                    //     ICAllocation.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
+                    //     ICAllocation.SetRange("Journal Line No.", GenJournalLine."Line No.");
+                    //     if ICAllocation.FindSet() then begin
+                    //         repeat
+                    //             tempDimSetEntry1.DeleteAll();
+                    //             DimMgt.GetDimensionSet(tempDimSetEntry1, ICAllocation."Bal. Dimension Set ID");
+                    //             if tempDimSetEntry1.FindSet() then
+                    //                 repeat
+                    //                     DimVal.ChangeCompany(AtCompany);
+                    //                     if not DimVal.Get(tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code") then
+                    //                         Error('Dimension %1 Dimension Value %2 not found in %3', tempDimSetEntry1."Dimension Code", tempDimSetEntry1."Dimension Value Code", AtCompany);
+                    //                 until tempDimSetEntry1.Next() = 0;
+                    //         until ICAllocation.Next() = 0;
+                    //     end;
+                    // end;
 
                 end;
             until Next() = 0;
@@ -402,7 +403,7 @@ codeunit 50100 "General Function"
                                             TempDimSetEntry1."Dimension Value Code" := DimVal.Code;
                                             TempDimSetEntry1."Dimension Value ID" := DimVal."Dimension Value ID";
                                             TempDimSetEntry1."Global Dimension No." := DimVal."Global Dimension No.";
-                                            TempDimSetEntry1.Insert();
+                                            if TempDimSetEntry1.Insert() then;
                                         until l_ICTransDefaultDim.Next() = 0;
 
                                     if TempGenJournalLine."Account Type" = TempGenJournalLine."Account Type"::Customer then
@@ -428,7 +429,7 @@ codeunit 50100 "General Function"
                                             TempDimSetEntry1."Dimension Value Code" := DimVal.Code;
                                             TempDimSetEntry1."Dimension Value ID" := DimVal."Dimension Value ID";
                                             TempDimSetEntry1."Global Dimension No." := DimVal."Global Dimension No.";
-                                            TempDimSetEntry1.Insert();
+                                            if TempDimSetEntry1.Insert() then;
                                         until l_ICTransDefaultDim.Next() = 0;
 
                                     if TempGenJournalLine."Account Type" = TempGenJournalLine."Account Type"::Customer then
@@ -463,7 +464,7 @@ codeunit 50100 "General Function"
                                             TempDimSetEntry1."Dimension Value Code" := DimVal.Code;
                                             TempDimSetEntry1."Dimension Value ID" := DimVal."Dimension Value ID";
                                             TempDimSetEntry1."Global Dimension No." := DimVal."Global Dimension No.";
-                                            TempDimSetEntry1.Insert();
+                                            if TempDimSetEntry1.Insert() then;
                                         until l_ICTransDefaultDim.Next() = 0;
 
                                     if TempGenJournalLine."Account Type" = TempGenJournalLine."Account Type"::Customer then
@@ -652,7 +653,7 @@ codeunit 50100 "General Function"
                 TempDimSetEntry2."Dimension Value Code" := DimVal.Code;
                 TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
                 TempDimSetEntry2."Global Dimension No." := DimVal."Global Dimension No.";
-                TempDimSetEntry2.Insert();
+                if TempDimSetEntry2.Insert() then;
             until DefaultDim.Next() = 0;
 
         //2. Add Line dimension to Master Default Dimension
@@ -674,7 +675,7 @@ codeunit 50100 "General Function"
                         TempDimSetEntry2."Dimension Value Code" := DimVal.Code;
                         TempDimSetEntry2."Dimension Value ID" := DimVal."Dimension Value ID";
                         TempDimSetEntry2."Global Dimension No." := DimVal."Global Dimension No.";
-                        TempDimSetEntry2.Insert();
+                        if TempDimSetEntry2.Insert() then;
                     end;
                 until TempDimSetEntry1.Next() = 0;
         end;
@@ -902,7 +903,7 @@ codeunit 50100 "General Function"
             TempDimSetEntry."Dimension Value Code" := FAPostingGr."Accum Depr Acc on Disposal Dim";
             TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
             TempDimSetEntry."Global Dimension No." := DimVal."Global Dimension No.";
-            TempDimSetEntry.Insert();
+            if TempDimSetEntry.Insert() then;
         end;
 
         DimensionSetID := GetDimensionSetID_Company(TempDimSetEntry, CompanyName);
@@ -989,9 +990,10 @@ codeunit 50100 "General Function"
         if l_GLE.FindFirst() then begin
             l_TransPathDetail.Reset();
             l_TransPathDetail.SetRange("Path Code", l_GLE."IC Path Code");
-            WaitSec := 1000 * l_TransPathDetail.Count();
+            WaitSec := 2000 * l_TransPathDetail.Count();
             // Message('Wait Print: ' + format(WaitSec));
             Sleep(WaitSec);
+            Commit();
         end;
 
         l_CLE.Reset();
@@ -1002,7 +1004,7 @@ codeunit 50100 "General Function"
             end;
         end;
         if PrintSalesDoc then begin
-            Commit();
+            // Commit();
             l_GLRegister.CopyFilters(GLRegister);
             l_GLRegister.FindFirst();
             l_GLRegister.SetRecFilter();
