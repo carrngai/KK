@@ -219,9 +219,9 @@ codeunit 50100 "General Function"
             Find('-');
             repeat
                 if (GenJournalLine."IC Path Code" <> '') then begin
-                    //Check Document Type
-                    if (GenJournalLine."Document Type" <> GenJournalLine."Document Type"::Invoice) AND (GenJournalLine."Document Type" <> GenJournalLine."Document Type"::"Credit Memo") then
-                        Error('Line No. %1 : Document Type must be Invoice or Credit Memo', GenJournalLine."Line No.");
+                    // //Check Document Type
+                    // if (GenJournalLine."Document Type" <> GenJournalLine."Document Type"::Invoice) AND (GenJournalLine."Document Type" <> GenJournalLine."Document Type"::"Credit Memo") then
+                    //     Error('Line No. %1 : Document Type must be Invoice or Credit Memo', GenJournalLine."Line No.");
 
                     //Check Allocated Amount
                     TotalAllocatedAmt := 0;
@@ -487,6 +487,7 @@ codeunit 50100 "General Function"
                                 //Update Document No. , not schedule post
                                 LastDocNo := EnqueueGenJrnlLine_Company(TempGenJournalLine, AtCompany, false);
 
+                                // Message('IC Entries all set');
                             end;
 
                         until ICTransPathDetail.Next() = 0;
@@ -522,58 +523,83 @@ codeunit 50100 "General Function"
         GLSetup1.Get();
         GLSetup2.Get();
 
-        IF SourceGenJnLine."Document Type" = SourceGenJnLine."Document Type"::Invoice then begin //invoice
+        CASE SourceGenJnLine."Document Type" OF
+            SourceGenJnLine."Document Type"::Invoice:
+                begin
+                    ICGenBatch.Reset();
+                    ICGenBatch.SetRange("Journal Template Name", 'GENERAL');
+                    ICGenBatch.SetRange(Name, 'IC-INV');
+                    if not ICGenBatch.FindSet() then begin
+                        ICGenBatch.Init();
+                        ICGenBatch."Journal Template Name" := 'GENERAL';
+                        ICGenBatch.Name := 'IC-INV';
+                        ICGenBatch."No. Series" := 'S-INV';
+                        ICGenBatch."Posting No. Series" := 'GJNL-GEN';
+                        ICGenBatch.Insert();
+                    end;
+                    ICGenJnlLine.Reset();
+                    ICGenJnlLine.SetRange("Journal Template Name", 'GENERAL');
+                    ICGenJnlLine.SetRange("Journal Batch Name", 'IC-INV');
+                    if ICGenJnlLine.FindLast() then
+                        NextLineNo := ICGenJnlLine."Line No." + 10000
+                    else
+                        NextLineNo := 10000;
+                end;
 
-            ICGenBatch.Reset();
-            ICGenBatch.SetRange("Journal Template Name", 'GENERAL');
-            ICGenBatch.SetRange(Name, 'IC-INV');
-            if not ICGenBatch.FindSet() then begin
-                ICGenBatch.Init();
-                ICGenBatch."Journal Template Name" := 'GENERAL';
-                ICGenBatch.Name := 'IC-INV';
-                ICGenBatch."No. Series" := 'S-INV';
-                ICGenBatch."Posting No. Series" := 'GJNL-GEN';
-                ICGenBatch.Insert();
-            end;
+            SourceGenJnLine."Document Type"::"Credit Memo":
+                begin
+                    ICGenBatch.Reset();
+                    ICGenBatch.SetRange("Journal Template Name", 'GENERAL');
+                    ICGenBatch.SetRange(Name, 'IC-CR');
+                    if not ICGenBatch.FindSet() then begin
+                        ICGenBatch.Init();
+                        ICGenBatch."Journal Template Name" := 'GENERAL';
+                        ICGenBatch.Name := 'IC-CR';
+                        ICGenBatch."No. Series" := 'S-CR';
+                        ICGenBatch."Posting No. Series" := 'GJNL-GEN';
+                        ICGenBatch.Insert();
+                    end;
+                    ICGenJnlLine.Reset();
+                    ICGenJnlLine.SetRange("Journal Template Name", 'GENERAL');
+                    ICGenJnlLine.SetRange("Journal Batch Name", 'IC-CR');
+                    if ICGenJnlLine.FindLast() then
+                        NextLineNo := ICGenJnlLine."Line No." + 10000
+                    else
+                        NextLineNo := 10000;
+                end;
 
-            ICGenJnlLine.Reset();
-            ICGenJnlLine.SetRange("Journal Template Name", 'GENERAL');
-            ICGenJnlLine.SetRange("Journal Batch Name", 'IC-INV');
-            if ICGenJnlLine.FindLast() then
-                NextLineNo := ICGenJnlLine."Line No." + 10000
-            else
-                NextLineNo := 10000;
-
-        end else begin //credit memo
-
-            ICGenBatch.Reset();
-            ICGenBatch.SetRange("Journal Template Name", 'GENERAL');
-            ICGenBatch.SetRange(Name, 'IC-CR');
-            if not ICGenBatch.FindSet() then begin
-                ICGenBatch.Init();
-                ICGenBatch."Journal Template Name" := 'GENERAL';
-                ICGenBatch.Name := 'IC-CR';
-                ICGenBatch."No. Series" := 'S-CR';
-                ICGenBatch."Posting No. Series" := 'GJNL-GEN';
-                ICGenBatch.Insert();
-            end;
-
-            ICGenJnlLine.Reset();
-            ICGenJnlLine.SetRange("Journal Template Name", 'GENERAL');
-            ICGenJnlLine.SetRange("Journal Batch Name", 'IC-CR');
-            if ICGenJnlLine.FindLast() then
-                NextLineNo := ICGenJnlLine."Line No." + 10000
-            else
-                NextLineNo := 10000;
-
-        end;
+            ELSE //Repayment
+                begin
+                    ICGenBatch.Reset();
+                    ICGenBatch.SetRange("Journal Template Name", 'GENERAL');
+                    ICGenBatch.SetRange(Name, 'IC-JV');
+                    if not ICGenBatch.FindSet() then begin
+                        ICGenBatch.Init();
+                        ICGenBatch."Journal Template Name" := 'GENERAL';
+                        ICGenBatch.Name := 'IC-JV';
+                        ICGenBatch."No. Series" := '';
+                        ICGenBatch."Posting No. Series" := 'GJNL-GEN';
+                        ICGenBatch.Insert();
+                    end;
+                    ICGenJnlLine.Reset();
+                    ICGenJnlLine.SetRange("Journal Template Name", 'GENERAL');
+                    ICGenJnlLine.SetRange("Journal Batch Name", 'IC-JV');
+                    if ICGenJnlLine.FindLast() then
+                        NextLineNo := ICGenJnlLine."Line No." + 10000
+                    else
+                        NextLineNo := 10000;
+                end;
+        END;
 
         ICGenJnlLine.Init();
         ICGenJnlLine."Journal Template Name" := 'GENERAL';
         IF SourceGenJnLine."Document Type" = SourceGenJnLine."Document Type"::Invoice then
             ICGenJnlLine."Journal Batch Name" := 'IC-INV'
         else
-            ICGenJnlLine."Journal Batch Name" := 'IC-CR';
+            if SourceGenJnLine."Document Type" = SourceGenJnLine."Document Type"::"Credit Memo" then
+                ICGenJnlLine."Journal Batch Name" := 'IC-CR'
+            else //Repayment
+                ICGenJnlLine."Journal Batch Name" := 'IC-JV';
 
         ICGenJnlLine."Line No." := NextLineNo;
         ICGenJnlLine."IC Source Document No." := SourceGenJnLine."Document No.";
@@ -613,6 +639,8 @@ codeunit 50100 "General Function"
                 DefaultDim.SetRange("Table ID", 18);
             AccType::Vendor:
                 DefaultDim.SetRange("Table ID", 23);
+            AccType::"Bank Account":
+                DefaultDim.SetRange("Table ID", 270);
         end;
         DefaultDim.SetRange("No.", AccNo);
         DefaultDim.SetFilter("Dimension Value Code", '<>%1', '');
@@ -695,7 +723,11 @@ codeunit 50100 "General Function"
         if GenJrnlLine."Document Type" = GenJrnlLine."Document Type"::Invoice then
             l_GenJnlLine.SetRange("Journal Batch Name", 'IC-INV')
         else
-            l_GenJnlLine.SetRange("Journal Batch Name", 'IC-CR');
+            if GenJrnlLine."Document Type" = GenJrnlLine."Document Type"::"Credit Memo" then
+                l_GenJnlLine.SetRange("Journal Batch Name", 'IC-CR')
+            else //Repayment
+                l_GenJnlLine.SetRange("Journal Batch Name", 'IC-JV');
+
         l_GenJnlLine.SetRange("IC Source Document No.", GenJrnlLine."Document No.");
 
         if l_GenJnlLine.FindSet() then begin
@@ -733,7 +765,7 @@ codeunit 50100 "General Function"
                 JobQueueEntry.Description := PostAndPrintDescription;
                 JobQueueEntry.Description := CopyStr(StrSubstNo(JobQueueEntry.Description, l_GenJnlLine."Journal Template Name", l_GenJnlLine."Journal Batch Name", l_GenJnlLine."Document No."), 1, MaxStrLen(JobQueueEntry.Description));
                 JobQueueEntry."User Session Started" := 0DT;
-                JobQueueEntry."Earliest Start Date/Time" := CurrentDateTime + 1000;
+                JobQueueEntry."Earliest Start Date/Time" := CurrentDateTime + 100; //0.1Sec
                 JobQueueEntry.Status := JobQueueEntry.Status::"On Hold";
                 if IsNullGuid(JobQueueEntry.ID) then
                     JobQueueEntry.Insert(true);
@@ -941,6 +973,9 @@ codeunit 50100 "General Function"
     local procedure OnBeforeGLRegPostingReportPrint(var ReportID: Integer; ReqWindow: Boolean; SystemPrinter: Boolean; var GLRegister: Record "G/L Register"; var Handled: Boolean)
     var
         PrintSalesDoc: Boolean;
+        l_GLE: Record "G/L Entry";
+        l_TransPathDetail: Record "IC Transaction Path Details";
+        WaitSec: Integer;
         l_CLE: Record "Cust. Ledger Entry";
         l_GLRegister: Record "G/L Register";
         GLSalesDocReport: Report "G/L Sales Document IC";
@@ -948,6 +983,18 @@ codeunit 50100 "General Function"
         GeneralLedgerSetup: Record "General Ledger Setup";
     begin
 
+        l_GLE.Reset();
+        l_GLE.SetRange("Entry No.", GLRegister."From Entry No.", GLRegister."To Entry No.");
+        l_GLE.SetFilter("IC Path Code", '<>%1', '');
+        if l_GLE.FindFirst() then begin
+            l_TransPathDetail.Reset();
+            l_TransPathDetail.SetRange("Path Code", l_GLE."IC Path Code");
+            WaitSec := 1000 * l_TransPathDetail.Count();
+            // Message('Wait Print: ' + format(WaitSec));
+            Sleep(WaitSec);
+        end;
+
+        l_CLE.Reset();
         l_CLE.SetRange("Entry No.", GLRegister."From Entry No.", GLRegister."To Entry No.");
         if l_CLE.FindFirst() then begin
             if (l_CLE."Document Type" = l_CLE."Document Type"::Invoice) or (l_CLE."Document Type" = l_CLE."Document Type"::"Credit Memo") then begin
