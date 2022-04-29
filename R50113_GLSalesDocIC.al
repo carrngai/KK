@@ -133,9 +133,14 @@ report 50113 "G/L Sales Document IC"
 
                         trigger OnPreDataItem()
                         begin
-                            "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
-                            "G/L Entry".SetFilter("IC Source Document No.", ICSourceDocNo);
-                            "G/L Entry".SetFilter("Document Type", '%1|%2', "Document Type"::Invoice, "Document Type"::"Credit Memo");
+                            if Company.Name = CompanyName() then begin
+                                "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
+                                "G/L Entry".SetFilter("Document Type", '%1|%2', "Document Type"::Invoice, "Document Type"::"Credit Memo");
+                            end else begin
+                                "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
+                                "G/L Entry".SetFilter("Document Type", '%1|%2', "Document Type"::Invoice, "Document Type"::"Credit Memo");
+                                "G/L Entry".SetFilter("IC Source Document No.", ICSourceDocNo);
+                            end;
                         end;
 
                         trigger OnAfterGetRecord()
@@ -342,7 +347,8 @@ report 50113 "G/L Sales Document IC"
                     if l_GLEntry.FindFirst() then begin
                         GLRegisterIC.SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
                         GLRegisterIC.SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
-                    end;
+                    end else
+                        Error('No G/L entries found for %1. Adjust your filters and try again.', FilterDocNo);
                 end;
             end;
 

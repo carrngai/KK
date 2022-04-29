@@ -23,6 +23,11 @@ tableextension 50106 "G/L Entry Ext" extends "G/L Entry"
         {
             DataClassification = ToBeClassified;
         }
+        field(50105; "IC Source Company"; Text[30]) //G014
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = Company.Name;
+        }
         field(50107; "Description 2"; Text[250])
         {
         }

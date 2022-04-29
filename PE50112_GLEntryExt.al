@@ -44,6 +44,12 @@ pageextension 50112 "General Ledger Entries Ext" extends "General Ledger Entries
                 ApplicationArea = All;
                 Editable = false;
             }
+            field("IC Source Company"; Rec."IC Source Company")
+            {
+                ToolTip = 'Specifies the value of the IC Source Company field.';
+                ApplicationArea = All;
+                Editable = false;
+            }
         }
         modify("Gen. Posting Type") { Visible = false; }
         modify("Gen. Bus. Posting Group") { Visible = false; }

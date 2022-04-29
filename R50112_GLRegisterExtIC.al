@@ -322,8 +322,12 @@ report 50112 "G/L Register Ext IC"
 
                         trigger OnPreDataItem()
                         begin
-                            "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
-                            "G/L Entry".SetFilter("IC Source Document No.", ICSourceDocNo);
+                            if Company.Name = CompanyName() then
+                                "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.")
+                            else begin
+                                "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
+                                "G/L Entry".SetFilter("IC Source Document No.", ICSourceDocNo);
+                            end;
                             // "G/L Entry".SetFilter("IC Source Document No.", ICSourceDocFilter);
                         end;
 
@@ -590,8 +594,10 @@ report 50112 "G/L Register Ext IC"
                     if l_GLEntry.FindFirst() then begin
                         GLRegisterIC.SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
                         GLRegisterIC.SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
-                    end;
-                    ICSourceDocFilter := l_GLEntry."Pre-Assigned No.";
+                        ICSourceDocFilter := l_GLEntry."Pre-Assigned No.";
+                    end else
+                        Error('No G/L entries found for %1. Adjust your filters and try again.', FilterDocNo);
+
                 end;
             end;
 

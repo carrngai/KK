@@ -28,6 +28,11 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
         {
             DataClassification = ToBeClassified;
         }
+        field(50105; "IC Source Company"; Text[30]) //G014
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = Company.Name;
+        }
         field(50107; "Description 2"; Text[250]) { }
         field(50108; "Pre-Assigned No."; Code[20]) { }
         field(50109; "Conso. Exch. Adj. Entry"; Boolean) { }

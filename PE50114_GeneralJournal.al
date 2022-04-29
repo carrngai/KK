@@ -55,6 +55,11 @@ pageextension 50114 "General Journal Ext" extends "General Journal"
                 ToolTip = 'Specifies the value of the IC Source Document No. field.';
                 ApplicationArea = All;
             }
+            field("IC Source Company"; Rec."IC Source Company")
+            {
+                ToolTip = 'Specifies the value of the IC Source Company field.';
+                ApplicationArea = All;
+            }
             field("Allow Zero-Amount Posting"; Rec."Allow Zero-Amount Posting")
             {
                 ToolTip = 'Specifies the value of the Allow Zero-Amount Posting field.';

@@ -161,6 +161,7 @@ codeunit 50100 "General Function"
         GLEntry."Netting Source No." := GenJournalLine."Netting Source No."; //G025
         GLEntry."IC Path Code" := GenJournalLine."IC Path Code"; //G014
         GLEntry."IC Source Document No." := GenJournalLine."IC Source Document No."; //G014
+        GLEntry."IC Source Company" := GenJournalLine."IC Source Company"; //G014
         GLEntry."Pre-Assigned No." := GenJournalLine."Pre-Assigned No."; //G014
         GLEntry."Description 2" := GenJournalLine."Description 2";
         GLEntry."Conso. Base Amount" := GenJournalLine."Conso. Base Amount";
@@ -604,6 +605,7 @@ codeunit 50100 "General Function"
 
         ICGenJnlLine."Line No." := NextLineNo;
         ICGenJnlLine."IC Source Document No." := SourceGenJnLine."Document No.";
+        ICGenJnlLine."IC Source Company" := CompanyName();
         ICGenJnlLine."Posting Date" := SourceGenJnLine."Posting Date";
         ICGenJnlLine."Document Type" := SourceGenJnLine."Document Type";
         ICGenJnlLine."Document No." := SourceGenJnLine."Document No.";
