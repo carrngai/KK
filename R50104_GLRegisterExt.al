@@ -533,11 +533,6 @@ report 50104 "G/L Register Ext"
                         Caption = 'Show Posting Group';
                         ToolTip = 'Specifies if the report displays posting group in detail.';
                     }
-                    field(AutoPrintSalesDoc; AutoPrintSalesDoc) //G005
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Auto Print Sales Document if any Register includes Customer Invoice / Credit Memo';
-                    }
                 }
             }
         }
@@ -577,7 +572,6 @@ report 50104 "G/L Register Ext"
         DrAmt: Decimal; //G003
         CrAmt: Decimal; //G003
         ExchRate: Decimal; //G003
-        AutoPrintSalesDoc: Boolean; //G005
         PrintSalesDoc: Boolean; //G005
         ShowDim: Boolean;//G005
         DimText: Text[75];//G003
@@ -588,7 +582,6 @@ report 50104 "G/L Register Ext"
 
     trigger OnInitReport()
     begin
-        AutoPrintSalesDoc := true;
         ShowDim := true;
     end;
 

@@ -710,14 +710,17 @@ codeunit 50100 "General Function"
     var
         // JobQueueID: Guid;
         l_GenJnlLine: Record "Gen. Journal Line";
+        l_GenJnlLine2: Record "Gen. Journal Line";
         l_GenJnlBatch: Record "Gen. Journal Batch";
         l_NoSeriesLine: Record "No. Series Line";
         DocNo: Code[20];
         JobQueueEntry: Record "Job Queue Entry";
         GeneralLedgerSetup: Record "General Ledger Setup";
         PostAndPrintDescription: Label 'Post and print journal lines for journal template %1, journal batch %2, document no. %3.';
+
     begin
         l_GenJnlLine.ChangeCompany(AtCompany);
+        l_GenJnlLine2.ChangeCompany(AtCompany);
         l_GenJnlBatch.ChangeCompany(AtCompany);
         l_NoSeriesLine.ChangeCompany(AtCompany);
 
@@ -732,25 +735,35 @@ codeunit 50100 "General Function"
                 l_GenJnlLine.SetRange("Journal Batch Name", 'IC-JV');
 
         l_GenJnlLine.SetRange("IC Source Document No.", GenJrnlLine."Document No.");
-
         if l_GenJnlLine.FindSet() then begin
 
             GeneralLedgerSetup.ChangeCompany(AtCompany);
             GeneralLedgerSetup.Get();
 
             l_GenJnlBatch.Get(l_GenJnlLine."Journal Template Name", l_GenJnlLine."Journal Batch Name");
+
             if l_GenJnlBatch."No. Series" <> '' then begin
-                l_NoSeriesLine.Reset();
-                l_NoSeriesLine.SetCurrentKey("Series Code", "Starting Date");
-                l_NoSeriesLine.SetRange("Series Code", l_GenJnlBatch."No. Series");
-                l_NoSeriesLine.SetRange("Starting Date", 0D, l_GenJnlLine."Posting Date");
-                if l_NoSeriesLine.FindLast() then begin
-                    l_NoSeriesLine.SetRange("Starting Date", l_NoSeriesLine."Starting Date");
-                    l_NoSeriesLine.SetRange(Open, true);
+                l_GenJnlLine2.Reset();
+                l_GenJnlLine2.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Posting Date", "Document No.");
+                l_GenJnlLine2.SetRange("Journal Template Name", l_GenJnlLine."Journal Template Name");
+                l_GenJnlLine2.SetRange("Journal Batch Name", l_GenJnlLine."Journal Batch Name");
+                l_GenJnlLine2.SetRange("Posting Date", CalcDate('<D1>', l_GenJnlLine."Posting Date"), CalcDate('<CM>', l_GenJnlLine."Posting Date"));
+                if l_GenJnlLine2.FindLast() then
+                    DocNo := IncStr(l_GenJnlLine2."Document No.")
+                else begin
+                    l_NoSeriesLine.Reset();
+                    l_NoSeriesLine.SetCurrentKey("Series Code", "Starting Date");
+                    l_NoSeriesLine.SetRange("Series Code", l_GenJnlBatch."No. Series");
+                    l_NoSeriesLine.SetRange("Starting Date", 0D, l_GenJnlLine."Posting Date");
+                    if l_NoSeriesLine.FindLast() then begin
+                        l_NoSeriesLine.SetRange("Starting Date", l_NoSeriesLine."Starting Date");
+                        l_NoSeriesLine.SetRange(Open, true);
+                    end;
+                    DocNo := IncStr(l_NoSeriesLine."Last No. Used");
+                    if DocNo = '' then
+                        DocNo := l_NoSeriesLine."Starting No.";
                 end;
-                DocNo := IncStr(l_NoSeriesLine."Last No. Used");
-                if DocNo = '' then
-                    DocNo := l_NoSeriesLine."Starting No.";
+
                 l_GenJnlLine.ModifyAll("Document No.", DocNo);
             end else
                 DocNo := l_GenJnlLine."Document No.";
@@ -854,6 +867,7 @@ codeunit 50100 "General Function"
                 DimSetEntry2.Insert();
             until DimSetEntry.Next() = 0;
     end;
+
 
     [EventSubscriber(ObjectType::Table, 750, 'OnAfterCopyGenJnlFromStdJnl', '', true, true)]
     local procedure OnAfterCopyGenJnlFromStdJnl_ValidateICPathCode(var GenJournalLine: Record "Gen. Journal Line"; StdGenJournalLine: Record "Standard General Journal Line")

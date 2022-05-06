@@ -15,608 +15,641 @@ report 50112 "G/L Register Ext IC"
             DataItemTableView = SORTING("No.");
             PrintOnlyIfDetail = true;
             RequestFilterFields = "No.";
-            dataitem(Company; Company)
+
+            dataitem(DocNoLoop; Integer)
             {
-                DataItemTableView = sorting(Name);
-                dataitem("G/L Register"; "G/L Register")
+                DataItemTableView = SORTING(Number) WHERE(Number = FILTER(1 ..));
+                dataitem(Company; Company)
                 {
-                    DataItemTableView = SORTING("No.");
-                    PrintOnlyIfDetail = true;
-                    column(COMPANYNAME; Company."Display Name")
+                    DataItemTableView = sorting(Name);
+                    dataitem("G/L Register"; "G/L Register")
                     {
-                    }
-                    column(LCYCode; GLSetup."LCY Code")
-                    {
-                    }
-                    column(ShowLines; ShowDetails)
-                    {
-                    }
-                    column(G_L_Register__TABLECAPTION__________GLRegFilter; TableCaption + ': ' + GLRegFilter)
-                    {
-                    }
-                    column(GLRegFilter; GLRegFilter)
-                    {
-                    }
-                    column(G_L_Register__No__; "No.")
-                    {
-                    }
-                    column(G_L_RegisterCaption; G_L_RegisterCaptionLbl)
-                    {
-                    }
-                    column(CurrReport_PAGENOCaption; CurrReport_PAGENOCaptionLbl)
-                    {
-                    }
-                    column(G_L_Entry__Posting_Date_Caption; G_L_Entry__Posting_Date_CaptionLbl)
-                    {
-                    }
-                    column(G_L_Entry__Document_Type_Caption; G_L_Entry__Document_Type_CaptionLbl)
-                    {
-                    }
-                    column(G_L_Entry__Document_No__Caption; "G/L Entry".FieldCaption("Document No."))
-                    {
-                    }
-                    column(G_L_Entry__G_L_Account_No__Caption; "G/L Entry".FieldCaption("G/L Account No."))
-                    {
-                    }
-                    column(GLAcc_NameCaption; GLAcc_NameCaptionLbl)
-                    {
-                    }
-                    column(G_L_Entry_DescriptionCaption; "G/L Entry".FieldCaption(Description))
-                    {
-                    }
-                    column(G_L_Entry__VAT_Amount_Caption; "G/L Entry".FieldCaption("VAT Amount"))
-                    {
-                    }
-                    column(G_L_Entry__Gen__Posting_Type_Caption; G_L_Entry__Gen__Posting_Type_CaptionLbl)
-                    {
-                    }
-                    column(G_L_Entry__Gen__Bus__Posting_Group_Caption; G_L_Entry__Gen__Bus__Posting_Group_CaptionLbl)
-                    {
-                    }
-                    column(G_L_Entry__Gen__Prod__Posting_Group_Caption; G_L_Entry__Gen__Prod__Posting_Group_CaptionLbl)
-                    {
-                    }
-                    column(G_L_Entry_AmountCaption; "G/L Entry".FieldCaption(Amount))
-                    {
-                    }
-                    column(G_L_Entry__Entry_No__Caption; "G/L Entry".FieldCaption("Entry No."))
-                    {
-                    }
-                    column(G_L_Register__No__Caption; G_L_Register__No__CaptionLbl)
-                    {
-                    }
-                    column(TotalCaption; TotalCaptionLbl)
-                    {
-                    }
-                    column(ShowPostingGroup; ShowPostingGroup)//G003
-                    {
-                    }
-                    dataitem("G/L Entry"; "G/L Entry")
-                    {
-                        DataItemTableView = SORTING("Entry No.");
-                        column(ICPathCode_GLEntry; "IC Path Code")//G003
+                        DataItemTableView = SORTING("No.");
+                        PrintOnlyIfDetail = true;
+                        column(COMPANYNAME; Company."Display Name")
                         {
                         }
-                        column(ICSourceDocumentNo_GLEntry; "IC Source Document No.")//G003
+                        column(LCYCode; GLSetup."LCY Code")
                         {
                         }
-                        column(G_L_Entry__Posting_Date_; Format("Posting Date", 0, '<Day,2><Month text,3><Year4>'))
+                        column(ShowLines; ShowDetails)
                         {
                         }
-                        column(G_L_Entry__Document_Type_; "Document Type")
+                        column(G_L_Register__TABLECAPTION__________GLRegFilter; TableCaption + ': ' + GLRegFilter)
                         {
                         }
-                        column(PreAssignedNo_GLEntry; "Pre-Assigned No.")
+                        column(GLRegFilter; GLRegFilter)
                         {
                         }
-                        column(G_L_Entry__Document_No__; "Document No.")
+                        column(G_L_Register__No__; "No.")
                         {
                         }
-                        column(G_L_Entry__G_L_Account_No__; "G/L Account No.")
+                        column(G_L_RegisterCaption; G_L_RegisterCaptionLbl)
                         {
                         }
-                        column(GLAcc_Name; GLAcc.Name)
+                        column(CurrReport_PAGENOCaption; CurrReport_PAGENOCaptionLbl)
                         {
                         }
-                        column(G_L_Entry_Description; Description)
+                        column(G_L_Entry__Posting_Date_Caption; G_L_Entry__Posting_Date_CaptionLbl)
                         {
                         }
-                        column(G_L_Entry__VAT_Amount_; DetailedVATAmount)
-                        {
-                            AutoCalcField = true;
-                        }
-                        column(G_L_Entry__Gen__Posting_Type_; "Gen. Posting Type")
+                        column(G_L_Entry__Document_Type_Caption; G_L_Entry__Document_Type_CaptionLbl)
                         {
                         }
-                        // column(G_L_Entry__Gen__Bus__Posting_Group_; "Gen. Bus. Posting Group")
-                        column(G_L_Entry__Gen__Bus__Posting_Group_; "VAT Bus. Posting Group") //G003
+                        column(G_L_Entry__Document_No__Caption; "G/L Entry".FieldCaption("Document No."))
                         {
                         }
-                        // column(G_L_Entry__Gen__Prod__Posting_Group_; "Gen. Prod. Posting Group")
-                        column(G_L_Entry__Gen__Prod__Posting_Group_; "VAT Prod. Posting Group") //G003
+                        column(G_L_Entry__G_L_Account_No__Caption; "G/L Entry".FieldCaption("G/L Account No."))
                         {
                         }
-                        column(G_L_Entry_Amount; Amount)
+                        column(GLAcc_NameCaption; GLAcc_NameCaptionLbl)
                         {
                         }
-                        column(DrAmt; DrAmt) //G003
+                        column(G_L_Entry_DescriptionCaption; "G/L Entry".FieldCaption(Description))
                         {
                         }
-                        column(CrAmt; CrAmt) //G003
+                        column(G_L_Entry__VAT_Amount_Caption; "G/L Entry".FieldCaption("VAT Amount"))
                         {
                         }
-                        column(TransNo; "G/L Entry"."Transaction No.") //G003
+                        column(G_L_Entry__Gen__Posting_Type_Caption; G_L_Entry__Gen__Posting_Type_CaptionLbl)
                         {
                         }
-                        column(ShowApplied; ShowApplied) //G003
+                        column(G_L_Entry__Gen__Bus__Posting_Group_Caption; G_L_Entry__Gen__Bus__Posting_Group_CaptionLbl)
                         {
+                        }
+                        column(G_L_Entry__Gen__Prod__Posting_Group_Caption; G_L_Entry__Gen__Prod__Posting_Group_CaptionLbl)
+                        {
+                        }
+                        column(G_L_Entry_AmountCaption; "G/L Entry".FieldCaption(Amount))
+                        {
+                        }
+                        column(G_L_Entry__Entry_No__Caption; "G/L Entry".FieldCaption("Entry No."))
+                        {
+                        }
+                        column(G_L_Register__No__Caption; G_L_Register__No__CaptionLbl)
+                        {
+                        }
+                        column(TotalCaption; TotalCaptionLbl)
+                        {
+                        }
+                        column(ShowPostingGroup; ShowPostingGroup)//G003
+                        {
+                        }
+                        dataitem("G/L Entry"; "G/L Entry")
+                        {
+                            DataItemTableView = SORTING("Entry No.");
+                            column(ICPathCode_GLEntry; "IC Path Code")//G003
+                            {
+                            }
+                            column(ICSourceDocumentNo_GLEntry; "IC Source Document No.")//G003
+                            {
+                            }
+                            column(G_L_Entry__Posting_Date_; Format("Posting Date", 0, '<Day,2><Month text,3><Year4>'))
+                            {
+                            }
+                            column(G_L_Entry__Document_Type_; "Document Type")
+                            {
+                            }
+                            column(PreAssignedNo_GLEntry; "Pre-Assigned No.")
+                            {
+                            }
+                            column(G_L_Entry__Document_No__; "Document No.")
+                            {
+                            }
+                            column(G_L_Entry__G_L_Account_No__; "G/L Account No.")
+                            {
+                            }
+                            column(GLAcc_Name; GLAcc.Name)
+                            {
+                            }
+                            column(G_L_Entry_Description; Description)
+                            {
+                            }
+                            column(G_L_Entry__VAT_Amount_; DetailedVATAmount)
+                            {
+                                AutoCalcField = true;
+                            }
+                            column(G_L_Entry__Gen__Posting_Type_; "Gen. Posting Type")
+                            {
+                            }
+                            // column(G_L_Entry__Gen__Bus__Posting_Group_; "Gen. Bus. Posting Group")
+                            column(G_L_Entry__Gen__Bus__Posting_Group_; "VAT Bus. Posting Group") //G003
+                            {
+                            }
+                            // column(G_L_Entry__Gen__Prod__Posting_Group_; "Gen. Prod. Posting Group")
+                            column(G_L_Entry__Gen__Prod__Posting_Group_; "VAT Prod. Posting Group") //G003
+                            {
+                            }
+                            column(G_L_Entry_Amount; Amount)
+                            {
+                            }
+                            column(DrAmt; DrAmt) //G003
+                            {
+                            }
+                            column(CrAmt; CrAmt) //G003
+                            {
+                            }
+                            column(TransNo; "G/L Entry"."Transaction No.") //G003
+                            {
+                            }
+                            column(ShowApplied; ShowApplied) //G003
+                            {
 
-                        }
-                        column(FCYCode; FCYCode) //G003
-                        {
-                        }
-                        column(ExchRate; ExchRate) //G003
-                        {
-                        }
-                        column(G_L_Entry__Entry_No__; "Entry No.")
-                        {
-                        }
-                        column(G_L_Entry_Amount_Control41; Amount)
-                        {
-                        }
-                        column(G_L_Entry_Amount_Control41Caption; G_L_Entry_Amount_Control41CaptionLbl)
-                        {
-                        }
-                        dataitem("Purch. Inv. Line"; "Purch. Inv. Line")
-                        {
-                            DataItemLink = "Document No." = FIELD("Document No."), "No." = FIELD("G/L Account No.");
-                            DataItemTableView = sorting("Document No.", "Line No.");
-                            UseTemporary = true;
-                            column(Purch__Inv__Line_Description; Description)
+                            }
+                            column(FCYCode; FCYCode) //G003
                             {
                             }
-                            column(Purch__Inv__Line_Amount; Amount)
+                            column(ExchRate; ExchRate) //G003
                             {
                             }
-                            column(Purch__Inv__Line_Document_No_; "Document No.")
+                            column(G_L_Entry__Entry_No__; "Entry No.")
                             {
                             }
-                            column(Purch__Inv__Line_Line_No_; "Line No.")
+                            column(G_L_Entry_Amount_Control41; Amount)
                             {
                             }
-                            column(Purch__Inv__Line_No_; "No.")
+                            column(G_L_Entry_Amount_Control41Caption; G_L_Entry_Amount_Control41CaptionLbl)
                             {
                             }
-                            trigger OnAfterGetRecord()
-                            begin
-                                DetailedVATAmount := "Amount Including VAT" - "VAT Base Amount";
-                            end;
-                        }
-                        dataitem("Cust. Ledger Entry"; "Cust. Ledger Entry") //G003
-                        {
-                            DataItemLink = "Entry No." = FIELD("Entry No.");
-                            DataItemTableView = sorting("Entry No.");
-                            dataitem("Detailed Cust. Ledg. Entry"; "Detailed Cust. Ledg. Entry")
+                            dataitem("Purch. Inv. Line"; "Purch. Inv. Line")
                             {
-                                DataItemTableView = SORTING("Entry No.") WHERE("Unapplied" = CONST(false));
-                                DataItemLink = "Applied Cust. Ledger Entry No." = FIELD("Entry No.");
-                                dataitem(AppliedCLE; "Cust. Ledger Entry")
+                                DataItemLink = "Document No." = FIELD("Document No."), "No." = FIELD("G/L Account No.");
+                                DataItemTableView = sorting("Document No.", "Line No.");
+                                UseTemporary = true;
+                                column(Purch__Inv__Line_Description; Description)
                                 {
-                                    DataItemTableView = SORTING("Entry No.") WHERE("Document Type" = FILTER(<> Payment));
-                                    DataItemLink = "Entry No." = FIELD("Cust. Ledger Entry No.");
-                                    column(DocumentNo_AppliedCLE; "Document No.")
+                                }
+                                column(Purch__Inv__Line_Amount; Amount)
+                                {
+                                }
+                                column(Purch__Inv__Line_Document_No_; "Document No.")
+                                {
+                                }
+                                column(Purch__Inv__Line_Line_No_; "Line No.")
+                                {
+                                }
+                                column(Purch__Inv__Line_No_; "No.")
+                                {
+                                }
+                                trigger OnAfterGetRecord()
+                                begin
+                                    DetailedVATAmount := "Amount Including VAT" - "VAT Base Amount";
+                                end;
+                            }
+                            dataitem("Cust. Ledger Entry"; "Cust. Ledger Entry") //G003
+                            {
+                                DataItemLink = "Entry No." = FIELD("Entry No.");
+                                DataItemTableView = sorting("Entry No.");
+                                dataitem("Detailed Cust. Ledg. Entry"; "Detailed Cust. Ledg. Entry")
+                                {
+                                    DataItemTableView = SORTING("Entry No.") WHERE("Unapplied" = CONST(false));
+                                    DataItemLink = "Applied Cust. Ledger Entry No." = FIELD("Entry No.");
+                                    dataitem(AppliedCLE; "Cust. Ledger Entry")
                                     {
+                                        DataItemTableView = SORTING("Entry No.") WHERE("Document Type" = FILTER(<> Payment));
+                                        DataItemLink = "Entry No." = FIELD("Cust. Ledger Entry No.");
+                                        column(DocumentNo_AppliedCLE; "Document No.")
+                                        {
+                                        }
+                                        column(ExternalDocumentNo_AppliedCLE; "External Document No.")
+                                        {
+                                        }
+                                        column(Description_AppliedCLE; Description)
+                                        {
+                                        }
+                                        column(CurrencyCode_AppliedCLE; "Currency Code")
+                                        {
+                                        }
+                                        column(Amount_AppliedCLE; -1 * "Detailed Cust. Ledg. Entry".Amount)
+                                        {
+                                        }
+                                        column(AmountLCY_AppliedCLE; -1 * "Detailed Cust. Ledg. Entry"."Amount (LCY)")
+                                        {
+                                        }
+                                        trigger OnPreDataItem()
+                                        begin
+                                            if "G/L Entry"."Source Type" <> "G/L Entry"."Source Type"::Customer then
+                                                CurrReport.Break();
+                                        end;
                                     }
-                                    column(ExternalDocumentNo_AppliedCLE; "External Document No.")
+
+                                    trigger OnPreDataItem()
+                                    begin
+                                        "Detailed Cust. Ledg. Entry".SetFilter("Cust. Ledger Entry No.", '<>%1', "Cust. Ledger Entry"."Entry No.");
+                                    end;
+                                }
+                            }
+                            dataitem("Vendor Ledger Entry"; "Vendor Ledger Entry") //G003
+                            {
+                                DataItemLink = "Entry No." = FIELD("Entry No.");
+                                DataItemTableView = sorting("Entry No.");
+
+                                dataitem("Detailed Vendor Ledg. Entry"; "Detailed Vendor Ledg. Entry")
+                                {
+                                    DataItemTableView = SORTING("Entry No.") WHERE("Unapplied" = CONST(false));
+                                    DataItemLink = "Applied Vend. Ledger Entry No." = FIELD("Entry No.");
+                                    dataitem(AppliedVLE; "Vendor Ledger Entry")
                                     {
-                                    }
-                                    column(Description_AppliedCLE; Description)
-                                    {
-                                    }
-                                    column(CurrencyCode_AppliedCLE; "Currency Code")
-                                    {
-                                    }
-                                    column(Amount_AppliedCLE; -1 * "Detailed Cust. Ledg. Entry".Amount)
-                                    {
-                                    }
-                                    column(AmountLCY_AppliedCLE; -1 * "Detailed Cust. Ledg. Entry"."Amount (LCY)")
-                                    {
+                                        DataItemTableView = SORTING("Entry No.") WHERE("Document Type" = FILTER(<> Payment));
+                                        DataItemLink = "Entry No." = FIELD("Vendor Ledger Entry No.");
+                                        column(DocumentNo_AppliedVLE; "Document No.")
+                                        {
+                                        }
+                                        column(ExternalDocumentNo_AppliedVLE; "External Document No.")
+                                        {
+                                        }
+                                        column(Description_AppliedVLE; Description)
+                                        {
+                                        }
+                                        column(CurrencyCode_AppliedVLE; "Currency Code")
+                                        {
+                                        }
+                                        column(Amount_AppliedVLE; -1 * "Detailed Vendor Ledg. Entry".Amount)
+                                        {
+                                        }
+                                        column(AmountLCY_AppliedVLE; -1 * "Detailed Vendor Ledg. Entry"."Amount (LCY)")
+                                        {
+                                        }
+                                        trigger OnPreDataItem()
+                                        begin
+                                            if "G/L Entry"."Source Type" <> "G/L Entry"."Source Type"::Vendor then
+                                                CurrReport.Break();
+                                        end;
                                     }
                                     trigger OnPreDataItem()
                                     begin
-                                        if "G/L Entry"."Source Type" <> "G/L Entry"."Source Type"::Customer then
-                                            CurrReport.Break();
+                                        "Detailed Vendor Ledg. Entry".SetFilter("Vendor Ledger Entry No.", '<>%1', "Vendor Ledger Entry"."Entry No.");
                                     end;
                                 }
 
-                                trigger OnPreDataItem()
-                                begin
-                                    "Detailed Cust. Ledg. Entry".SetFilter("Cust. Ledger Entry No.", '<>%1', "Cust. Ledger Entry"."Entry No.");
-                                end;
                             }
 
-                            // trigger OnAfterGetRecord()
-                            // begin
-                            //     if ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::Invoice) OR ("Cust. Ledger Entry"."Document Type" = "Cust. Ledger Entry"."Document Type"::"Credit Memo") then
-                            //         PrintSalesDoc := true;
-                            // end;
-                        }
-                        dataitem("Vendor Ledger Entry"; "Vendor Ledger Entry") //G003
-                        {
-                            DataItemLink = "Entry No." = FIELD("Entry No.");
-                            DataItemTableView = sorting("Entry No.");
-
-                            dataitem("Detailed Vendor Ledg. Entry"; "Detailed Vendor Ledg. Entry")
+                            dataitem(DimensionLoop; "Integer") //G003
                             {
-                                DataItemTableView = SORTING("Entry No.") WHERE("Unapplied" = CONST(false));
-                                DataItemLink = "Applied Vend. Ledger Entry No." = FIELD("Entry No.");
-                                dataitem(AppliedVLE; "Vendor Ledger Entry")
+                                DataItemTableView = SORTING(Number) WHERE(Number = FILTER(1 ..));
+                                column(DimText; DimText)
                                 {
-                                    DataItemTableView = SORTING("Entry No.") WHERE("Document Type" = FILTER(<> Payment));
-                                    DataItemLink = "Entry No." = FIELD("Vendor Ledger Entry No.");
-                                    column(DocumentNo_AppliedVLE; "Document No.")
-                                    {
-                                    }
-                                    column(ExternalDocumentNo_AppliedVLE; "External Document No.")
-                                    {
-                                    }
-                                    column(Description_AppliedVLE; Description)
-                                    {
-                                    }
-                                    column(CurrencyCode_AppliedVLE; "Currency Code")
-                                    {
-                                    }
-                                    column(Amount_AppliedVLE; -1 * "Detailed Vendor Ledg. Entry".Amount)
-                                    {
-                                    }
-                                    column(AmountLCY_AppliedVLE; -1 * "Detailed Vendor Ledg. Entry"."Amount (LCY)")
-                                    {
-                                    }
-                                    trigger OnPreDataItem()
-                                    begin
-                                        if "G/L Entry"."Source Type" <> "G/L Entry"."Source Type"::Vendor then
-                                            CurrReport.Break();
-                                    end;
                                 }
+                                column(Number_DimensionLoop; Number)
+                                {
+                                }
+                                column(DimensionsCaption; DimensionsCap)
+                                {
+                                }
+
+                                trigger OnAfterGetRecord()
+                                begin
+                                    if Number = 1 then begin
+                                        if not DimSetEntry.FindSet then
+                                            CurrReport.Break();
+                                    end else
+                                        if not Continue then
+                                            CurrReport.Break();
+
+                                    DimText := GetDimensionText(DimSetEntry);
+                                end;
+
                                 trigger OnPreDataItem()
                                 begin
-                                    "Detailed Vendor Ledg. Entry".SetFilter("Vendor Ledger Entry No.", '<>%1', "Vendor Ledger Entry"."Entry No.");
+                                    if not ShowDim then
+                                        CurrReport.Break();
+                                    DimSetEntry.Reset();
+                                    DimSetEntry.SetRange("Dimension Set ID", "G/L Entry"."Dimension Set ID")
                                 end;
                             }
-
-                        }
-
-                        dataitem(DimensionLoop; "Integer") //G003
-                        {
-                            DataItemTableView = SORTING(Number) WHERE(Number = FILTER(1 ..));
-                            column(DimText; DimText)
-                            {
-                            }
-                            column(Number_DimensionLoop; Number)
-                            {
-                            }
-                            column(DimensionsCaption; DimensionsCap)
-                            {
-                            }
-
-                            trigger OnAfterGetRecord()
-                            begin
-                                if Number = 1 then begin
-                                    if not DimSetEntry.FindSet then
-                                        CurrReport.Break();
-                                end else
-                                    if not Continue then
-                                        CurrReport.Break();
-
-                                DimText := GetDimensionText(DimSetEntry);
-                            end;
-
+                            //GLRegisterIC>>DocNoLoop>>Company>>"G/L Register">>"G/L Entry"
                             trigger OnPreDataItem()
                             begin
-                                if not ShowDim then
-                                    CurrReport.Break();
-                                DimSetEntry.Reset();
-                                DimSetEntry.SetRange("Dimension Set ID", "G/L Entry"."Dimension Set ID")
+                                if Company.Name = CompanyName() then begin
+                                    "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
+                                    "G/L Entry".SetRange("Document No.", TempGLEntry."Document No.");
+                                end else begin
+                                    "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
+                                    "G/L Entry".SetRange("IC Source Document No.", ICSourceDocNo);
+                                end;
                             end;
+
+                            trigger OnAfterGetRecord()
+                            var
+                                PurchInvLine: Record "Purch. Inv. Line";
+                                SalesInvoiceLine: Record "Sales Invoice Line";
+                                PurchCrMemoLine: Record "Purch. Cr. Memo Line";
+                                SalesCrMemoLine: Record "Sales Cr.Memo Line";
+                                PurchInvHeader: Record "Purch. Inv. Header";
+                                PurchCrMemoHdr: Record "Purch. Cr. Memo Hdr.";
+                                SalesInvoiceHeader: Record "Sales Invoice Header";
+                                SalesCrMemoHeader: Record "Sales Cr.Memo Header";
+                                CurrancyFactor: Decimal;
+                                l_CLE: Record "Cust. Ledger Entry";         //G003
+                                l_VLE: Record "Vendor Ledger Entry";        //G003
+                                l_BLE: Record "Bank Account Ledger Entry";  //G003
+
+                            begin
+                                PurchInvLine.ChangeCompany(Company.Name);
+                                SalesInvoiceLine.ChangeCompany(Company.Name);
+                                PurchCrMemoLine.ChangeCompany(Company.Name);
+                                SalesCrMemoLine.ChangeCompany(Company.Name);
+                                PurchInvHeader.ChangeCompany(Company.Name);
+                                PurchCrMemoHdr.ChangeCompany(Company.Name);
+                                SalesInvoiceHeader.ChangeCompany(Company.Name);
+                                SalesCrMemoHeader.ChangeCompany(Company.Name);
+                                l_CLE.ChangeCompany(Company.Name);
+                                l_VLE.ChangeCompany(Company.Name);
+                                l_BLE.ChangeCompany(Company.Name);
+                                GLAcc.ChangeCompany(Company.Name);
+                                GLSetup.ChangeCompany(Company.Name);
+
+                                if not GLAcc.Get("G/L Account No.") then
+                                    GLAcc.Init();
+
+                                DetailedVATAmount := "VAT Amount";
+
+                                //G003++
+                                Clear(FCYCode);
+                                Clear(DrAmt);
+                                Clear(CrAmt);
+                                Clear(ExchRate);
+
+                                if LastTransNo <> "G/L Entry"."Transaction No." then
+                                    Clear(ShowApplied);
+
+                                LastTransNo := "G/L Entry"."Transaction No.";
+
+                                FCYCode := GLSetup."LCY Code";
+                                ExchRate := 1;
+                                DrAmt := "G/L Entry"."Debit Amount";
+                                CrAmt := "G/L Entry"."Credit Amount";
+
+                                if "Source Type" = "Source Type"::"Bank Account" then begin
+                                    if l_BLE.Get("Entry No.") then begin
+                                        if l_BLE."Currency Code" <> '' then
+                                            FCYCode := l_BLE."Currency Code";
+                                        if l_BLE.Amount > 0 then
+                                            DrAmt := l_BLE.Amount
+                                        else
+                                            CrAmt := -l_BLE.Amount;
+                                        if (l_BLE.Amount <> 0) and (l_BLE."Amount (LCY)" <> 0) then
+                                            ExchRate := l_BLE."Amount (LCY)" / l_BLE.Amount;
+                                    end;
+                                end;
+
+                                if "Source Type" = "Source Type"::Customer then begin
+                                    if l_CLE.Get("Entry No.") then begin
+
+                                        l_CLE.CalcFields("Original Amount", "Original Amt. (LCY)", "Remaining Amount", Amount);
+
+                                        if l_CLE."Currency Code" <> '' then
+                                            FCYCode := l_CLE."Currency Code";
+
+                                        if l_CLE."Original Amount" > 0 then
+                                            DrAmt := l_CLE."Original Amount"
+                                        else
+                                            CrAmt := -l_CLE."Original Amount";
+
+                                        if (l_CLE."Original Amount" <> 0) and (l_CLE."Original Amt. (LCY)" <> 0) then
+                                            ExchRate := l_CLE."Original Amt. (LCY)" / l_CLE."Original Amount";
+
+                                        if (l_CLE."Original Amount" < 0) and (l_CLE."Remaining Amount" <> l_CLE.Amount) then
+                                            ShowApplied := true;
+
+                                        if (l_CLE."Document Type" = l_CLE."Document Type"::Invoice) or (l_CLE."Document Type" = l_CLE."Document Type"::"Credit Memo") then
+                                            PrintSalesDoc := true;
+                                    end;
+                                end;
+
+                                if "Source Type" = "Source Type"::Vendor then begin
+                                    if l_VLE.Get("Entry No.") then begin
+                                        l_VLE.CalcFields("Original Amount", "Original Amt. (LCY)", "Remaining Amount", Amount);
+
+                                        if l_VLE."Currency Code" <> '' then
+                                            FCYCode := l_VLE."Currency Code";
+
+                                        if l_VLE."Original Amount" > 0 then
+                                            DrAmt := l_VLE."Original Amount"
+                                        else
+                                            CrAmt := -l_VLE."Original Amount";
+                                        if (l_VLE."Original Amount" <> 0) and (l_VLE."Original Amt. (LCY)" <> 0) then
+                                            ExchRate := l_VLE."Original Amt. (LCY)" / l_VLE."Original Amount";
+
+                                        if (l_VLE."Original Amount" > 0) and (l_VLE."Remaining Amount" <> l_VLE.Amount) then
+                                            ShowApplied := true;
+                                    end;
+                                end;
+
+                                //G003--
+
+                                if not ShowDetails then
+                                    exit;
+
+                                "Purch. Inv. Line".DeleteAll();
+
+                                PurchInvLine.SetRange("Document No.", "Document No.");
+                                PurchInvLine.SetRange("No.", "G/L Account No.");
+                                PurchInvLine.SetRange("VAT Prod. Posting Group", "VAT Prod. Posting Group");
+                                if PurchInvLine.FindSet then begin
+                                    if not PurchInvHeader.Get("Document No.") then
+                                        exit;
+                                    CurrancyFactor := SetCurrancyFactor(PurchInvHeader."Currency Factor");
+                                    Amount := 0;
+                                    repeat
+                                        PopulateRecFromPurchInvLine(PurchInvLine, CurrancyFactor, PurchInvHeader."Prices Including VAT");
+                                    until PurchInvLine.Next() = 0;
+                                    exit;
+                                end;
+
+                                PurchCrMemoLine.SetRange("Document No.", "Document No.");
+                                PurchCrMemoLine.SetRange("No.", "G/L Account No.");
+                                PurchCrMemoLine.SetRange("VAT Prod. Posting Group", "VAT Prod. Posting Group");
+                                if PurchCrMemoLine.FindSet then begin
+                                    if not PurchCrMemoHdr.Get("Document No.") then
+                                        exit;
+                                    CurrancyFactor := SetCurrancyFactor(PurchCrMemoHdr."Currency Factor");
+                                    Amount := 0;
+                                    repeat
+                                        PopulateRecFromPurchCrMemoLine(PurchCrMemoLine, CurrancyFactor, PurchCrMemoHdr."Prices Including VAT");
+                                    until PurchCrMemoLine.Next() = 0;
+                                    exit;
+                                end;
+
+                                SalesInvoiceLine.SetRange("Document No.", "Document No.");
+                                SalesInvoiceLine.SetRange("No.", "G/L Account No.");
+                                SalesInvoiceLine.SetRange("VAT Prod. Posting Group", "VAT Prod. Posting Group");
+                                if SalesInvoiceLine.FindSet then begin
+                                    if not SalesInvoiceHeader.Get("Document No.") then
+                                        exit;
+                                    CurrancyFactor := SetCurrancyFactor(SalesInvoiceHeader."Currency Factor");
+                                    Amount := 0;
+                                    repeat
+                                        PopulateRecFromSalesInvoiceLine(SalesInvoiceLine, CurrancyFactor, SalesInvoiceHeader."Prices Including VAT");
+                                    until SalesInvoiceLine.Next() = 0;
+                                    exit;
+                                end;
+
+                                SalesCrMemoLine.SetRange("Document No.", "Document No.");
+                                SalesCrMemoLine.SetRange("No.", "G/L Account No.");
+                                SalesCrMemoLine.SetRange("VAT Prod. Posting Group", "VAT Prod. Posting Group");
+                                if SalesCrMemoLine.FindSet then begin
+                                    if not SalesCrMemoHeader.Get("Document No.") then
+                                        exit;
+                                    CurrancyFactor := SetCurrancyFactor(SalesCrMemoHeader."Currency Factor");
+                                    Amount := 0;
+                                    repeat
+                                        PopulateRecFromSalesCrMemoLine(SalesCrMemoLine, CurrancyFactor, SalesCrMemoHeader."Prices Including VAT");
+                                    until SalesCrMemoLine.Next() = 0;
+                                end;
+                            end;
+
                         }
 
+                        //GLRegisterIC>>DocNoLoop>>Company>>"G/L Register"
                         trigger OnPreDataItem()
-                        begin
-                            if Company.Name = CompanyName() then
-                                "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.")
-                            else begin
-                                "G/L Entry".SetRange("Entry No.", "G/L Register"."From Entry No.", "G/L Register"."To Entry No.");
-                                "G/L Entry".SetFilter("IC Source Document No.", ICSourceDocNo);
-                            end;
-                            // "G/L Entry".SetFilter("IC Source Document No.", ICSourceDocFilter);
-                        end;
-
-                        trigger OnAfterGetRecord()
                         var
-                            PurchInvLine: Record "Purch. Inv. Line";
-                            SalesInvoiceLine: Record "Sales Invoice Line";
-                            PurchCrMemoLine: Record "Purch. Cr. Memo Line";
-                            SalesCrMemoLine: Record "Sales Cr.Memo Line";
-                            PurchInvHeader: Record "Purch. Inv. Header";
-                            PurchCrMemoHdr: Record "Purch. Cr. Memo Hdr.";
-                            SalesInvoiceHeader: Record "Sales Invoice Header";
-                            SalesCrMemoHeader: Record "Sales Cr.Memo Header";
-                            CurrancyFactor: Decimal;
-                            l_CLE: Record "Cust. Ledger Entry";         //G003
-                            l_VLE: Record "Vendor Ledger Entry";        //G003
-                            l_BLE: Record "Bank Account Ledger Entry";  //G003
-
+                            l_GLEntry: Record "G/L Entry";
                         begin
-                            PurchInvLine.ChangeCompany(Company.Name);
-                            SalesInvoiceLine.ChangeCompany(Company.Name);
-                            PurchCrMemoLine.ChangeCompany(Company.Name);
-                            SalesCrMemoLine.ChangeCompany(Company.Name);
-                            PurchInvHeader.ChangeCompany(Company.Name);
-                            PurchCrMemoHdr.ChangeCompany(Company.Name);
-                            SalesInvoiceHeader.ChangeCompany(Company.Name);
-                            SalesCrMemoHeader.ChangeCompany(Company.Name);
-                            l_CLE.ChangeCompany(Company.Name);
-                            l_VLE.ChangeCompany(Company.Name);
-                            l_BLE.ChangeCompany(Company.Name);
-                            GLAcc.ChangeCompany(Company.Name);
-                            GLSetup.ChangeCompany(Company.Name);
+                            Clear(ShowApplied);
+                            Clear(LastTransNo);
 
-                            if not GLAcc.Get("G/L Account No.") then
-                                GLAcc.Init();
+                            "G/L Register".ChangeCompany(Company.Name);
+                            "G/L Entry".ChangeCompany(Company.Name);
+                            "Purch. Inv. Line".ChangeCompany(Company.Name);
+                            "Cust. Ledger Entry".ChangeCompany(Company.Name);
+                            "Detailed Cust. Ledg. Entry".ChangeCompany(Company.Name);
+                            AppliedCLE.ChangeCompany(Company.Name);
+                            "Vendor Ledger Entry".ChangeCompany(Company.Name);
+                            "Detailed Vendor Ledg. Entry".ChangeCompany(Company.Name);
+                            DimSetEntry.ChangeCompany(Company.Name);
 
-                            DetailedVATAmount := "VAT Amount";
+                            if Company.Name = CompanyName() then begin
+                                if FilterDocNo <> '' then begin
+                                    l_GLEntry.Reset();
+                                    l_GLEntry.SetRange("Document No.", TempGLEntry."Document No.");
+                                    if l_GLEntry.FindFirst() then begin
+                                        "G/L Register".SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
+                                        "G/L Register".SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
+                                    end;
+                                end else
+                                    "G/L Register".CopyFilters(GLRegisterIC);
 
-                            //G003++
-                            Clear(FCYCode);
-                            Clear(DrAmt);
-                            Clear(CrAmt);
-                            Clear(ExchRate);
-
-                            if LastTransNo <> "G/L Entry"."Transaction No." then
-                                Clear(ShowApplied);
-
-                            LastTransNo := "G/L Entry"."Transaction No.";
-
-                            FCYCode := GLSetup."LCY Code";
-                            ExchRate := 1;
-                            DrAmt := "G/L Entry"."Debit Amount";
-                            CrAmt := "G/L Entry"."Credit Amount";
-
-                            if "Source Type" = "Source Type"::"Bank Account" then begin
-                                if l_BLE.Get("Entry No.") then begin
-                                    if l_BLE."Currency Code" <> '' then
-                                        FCYCode := l_BLE."Currency Code";
-                                    if l_BLE.Amount > 0 then
-                                        DrAmt := l_BLE.Amount
-                                    else
-                                        CrAmt := -l_BLE.Amount;
-                                    if (l_BLE.Amount <> 0) and (l_BLE."Amount (LCY)" <> 0) then
-                                        ExchRate := l_BLE."Amount (LCY)" / l_BLE.Amount;
+                            end else begin
+                                l_GLEntry.ChangeCompany(Company.Name);
+                                l_GLEntry.Reset();
+                                l_GLEntry.SetFilter("IC Source Document No.", ICSourceDocNo);
+                                if l_GLEntry.FindFirst() then begin
+                                    "G/L Register".SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
+                                    "G/L Register".SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
                                 end;
-                            end;
-
-                            if "Source Type" = "Source Type"::Customer then begin
-                                if l_CLE.Get("Entry No.") then begin
-
-                                    l_CLE.CalcFields("Original Amount", "Original Amt. (LCY)", "Remaining Amount", Amount);
-
-                                    if l_CLE."Currency Code" <> '' then
-                                        FCYCode := l_CLE."Currency Code";
-
-                                    if l_CLE."Original Amount" > 0 then
-                                        DrAmt := l_CLE."Original Amount"
-                                    else
-                                        CrAmt := -l_CLE."Original Amount";
-
-                                    if (l_CLE."Original Amount" <> 0) and (l_CLE."Original Amt. (LCY)" <> 0) then
-                                        ExchRate := l_CLE."Original Amt. (LCY)" / l_CLE."Original Amount";
-
-                                    if (l_CLE."Original Amount" < 0) and (l_CLE."Remaining Amount" <> l_CLE.Amount) then
-                                        ShowApplied := true;
-
-                                    if (l_CLE."Document Type" = l_CLE."Document Type"::Invoice) or (l_CLE."Document Type" = l_CLE."Document Type"::"Credit Memo") then
-                                        PrintSalesDoc := true;
-                                end;
-                            end;
-
-                            if "Source Type" = "Source Type"::Vendor then begin
-                                if l_VLE.Get("Entry No.") then begin
-                                    l_VLE.CalcFields("Original Amount", "Original Amt. (LCY)", "Remaining Amount", Amount);
-
-                                    if l_VLE."Currency Code" <> '' then
-                                        FCYCode := l_VLE."Currency Code";
-
-                                    if l_VLE."Original Amount" > 0 then
-                                        DrAmt := l_VLE."Original Amount"
-                                    else
-                                        CrAmt := -l_VLE."Original Amount";
-                                    if (l_VLE."Original Amount" <> 0) and (l_VLE."Original Amt. (LCY)" <> 0) then
-                                        ExchRate := l_VLE."Original Amt. (LCY)" / l_VLE."Original Amount";
-
-                                    if (l_VLE."Original Amount" > 0) and (l_VLE."Remaining Amount" <> l_VLE.Amount) then
-                                        ShowApplied := true;
-                                end;
-                            end;
-
-                            //G003--
-
-                            if not ShowDetails then
-                                exit;
-
-                            "Purch. Inv. Line".DeleteAll();
-
-                            PurchInvLine.SetRange("Document No.", "Document No.");
-                            PurchInvLine.SetRange("No.", "G/L Account No.");
-                            PurchInvLine.SetRange("VAT Prod. Posting Group", "VAT Prod. Posting Group");
-                            if PurchInvLine.FindSet then begin
-                                if not PurchInvHeader.Get("Document No.") then
-                                    exit;
-                                CurrancyFactor := SetCurrancyFactor(PurchInvHeader."Currency Factor");
-                                Amount := 0;
-                                repeat
-                                    PopulateRecFromPurchInvLine(PurchInvLine, CurrancyFactor, PurchInvHeader."Prices Including VAT");
-                                until PurchInvLine.Next() = 0;
-                                exit;
-                            end;
-
-                            PurchCrMemoLine.SetRange("Document No.", "Document No.");
-                            PurchCrMemoLine.SetRange("No.", "G/L Account No.");
-                            PurchCrMemoLine.SetRange("VAT Prod. Posting Group", "VAT Prod. Posting Group");
-                            if PurchCrMemoLine.FindSet then begin
-                                if not PurchCrMemoHdr.Get("Document No.") then
-                                    exit;
-                                CurrancyFactor := SetCurrancyFactor(PurchCrMemoHdr."Currency Factor");
-                                Amount := 0;
-                                repeat
-                                    PopulateRecFromPurchCrMemoLine(PurchCrMemoLine, CurrancyFactor, PurchCrMemoHdr."Prices Including VAT");
-                                until PurchCrMemoLine.Next() = 0;
-                                exit;
-                            end;
-
-                            SalesInvoiceLine.SetRange("Document No.", "Document No.");
-                            SalesInvoiceLine.SetRange("No.", "G/L Account No.");
-                            SalesInvoiceLine.SetRange("VAT Prod. Posting Group", "VAT Prod. Posting Group");
-                            if SalesInvoiceLine.FindSet then begin
-                                if not SalesInvoiceHeader.Get("Document No.") then
-                                    exit;
-                                CurrancyFactor := SetCurrancyFactor(SalesInvoiceHeader."Currency Factor");
-                                Amount := 0;
-                                repeat
-                                    PopulateRecFromSalesInvoiceLine(SalesInvoiceLine, CurrancyFactor, SalesInvoiceHeader."Prices Including VAT");
-                                until SalesInvoiceLine.Next() = 0;
-                                exit;
-                            end;
-
-                            SalesCrMemoLine.SetRange("Document No.", "Document No.");
-                            SalesCrMemoLine.SetRange("No.", "G/L Account No.");
-                            SalesCrMemoLine.SetRange("VAT Prod. Posting Group", "VAT Prod. Posting Group");
-                            if SalesCrMemoLine.FindSet then begin
-                                if not SalesCrMemoHeader.Get("Document No.") then
-                                    exit;
-                                CurrancyFactor := SetCurrancyFactor(SalesCrMemoHeader."Currency Factor");
-                                Amount := 0;
-                                repeat
-                                    PopulateRecFromSalesCrMemoLine(SalesCrMemoLine, CurrancyFactor, SalesCrMemoHeader."Prices Including VAT");
-                                until SalesCrMemoLine.Next() = 0;
                             end;
                         end;
-
                     }
 
+                    //GLRegisterIC>>DocNoLoop>>Company
                     trigger OnPreDataItem()
                     var
                         l_GLEntry: Record "G/L Entry";
+                        l_Company: Record "Company";
+                        B_FinishedPosting: Boolean;
+                        Cnt: Integer;
                     begin
-                        Clear(ShowApplied);
-                        Clear(LastTransNo);
-
-                        "G/L Register".ChangeCompany(Company.Name);
-                        "G/L Entry".ChangeCompany(Company.Name);
-                        "Purch. Inv. Line".ChangeCompany(Company.Name);
-                        "Cust. Ledger Entry".ChangeCompany(Company.Name);
-                        "Detailed Cust. Ledg. Entry".ChangeCompany(Company.Name);
-                        AppliedCLE.ChangeCompany(Company.Name);
-                        "Vendor Ledger Entry".ChangeCompany(Company.Name);
-                        "Detailed Vendor Ledg. Entry".ChangeCompany(Company.Name);
-                        DimSetEntry.ChangeCompany(Company.Name);
-
-                        if Company.Name = CompanyName() then begin
-                            "G/L Register".CopyFilters(GLRegisterIC);
-                        end else begin
-                            l_GLEntry.ChangeCompany(Company.Name);
-                            l_GLEntry.Reset();
-                            // l_GLEntry.SetFilter("IC Source Document No.", ICSourceDocFilter);
-                            l_GLEntry.SetFilter("IC Source Document No.", ICSourceDocNo);
-                            if l_GLEntry.FindFirst() then begin
-                                "G/L Register".SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
-                                "G/L Register".SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
-                            end else begin
-                                "G/L Register".SetFilter("From Entry No.", '<=%1', 0);
-                                "G/L Register".SetFilter("To Entry No.", '>=%1', 0);
-                            end;
-                        end;
+                        Company.SetFilter(Name, CompanyFilter);
+                        Cnt := 0;
+                        repeat
+                            Cnt := Cnt + 1;
+                            B_FinishedPosting := true;
+                            l_Company.Reset();
+                            l_Company.SetFilter(Name, Copystr(CompanyFilter, StrPOS(CompanyFilter, '|') + 1));
+                            if l_Company.FindSet() then
+                                repeat
+                                    l_GLEntry.ChangeCompany(l_Company.Name);
+                                    l_GLEntry.Reset();
+                                    l_GLEntry.SetRange("IC Source Document No.", ICSourceDocNo);
+                                    if not l_GLEntry.FindFirst() then begin
+                                        B_FinishedPosting := false;
+                                        Sleep(1000);
+                                    end;
+                                until l_Company.Next() = 0;
+                        until B_FinishedPosting or (Cnt >= 5);
                     end;
-
                 }
-
-                trigger OnPreDataItem()
+                //GLRegisterIC>>DocNoLoop
+                trigger OnAfterGetRecord()
                 var
-                    l_GLEntry: Record "G/L Entry";
-                    l_Company: Record "Company";
-                    ICPath: Record "IC Transaction Path Details";
-                    CompanyFilter: Text;
-                    B_FinishedPosting: Boolean;
-                    Cnt: Integer;
+                    ICPathDetail: Record "IC Transaction Path Details";
                 begin
+                    if Number = 1 then begin
+                        if not TempGLEntry.FindSet(false, false) then
+                            CurrReport.Break();
+                    end else
+                        if TempGLEntry.Next() = 0 then
+                            CurrReport.Break();
+
+                    Clear(ICSourceDocNo);
+                    Clear(CompanyFilter);
 
                     CompanyFilter := CompanyName();
-                    l_GLEntry.Reset();
-                    l_GLEntry.SetRange("Entry No.", GLRegisterIC."From Entry No.", GLRegisterIC."To Entry No.");
-                    l_GLEntry.SetFilter("IC Path Code", '<>%1', '');
-                    if l_GLEntry.FindFirst() then begin
-                        ICSourceDocNo := l_GLEntry."Pre-Assigned No.";
-                        ICPath.Reset();
-                        ICPath.SetRange("Path Code", l_GLEntry."IC Path Code");
-                        if ICPath.FindSet() then
-                            repeat
-                                CompanyFilter := CompanyFilter + '|' + ICPath."To Company";
-                            until ICPath.next = 0;
-                    end;
-                    Company.SetFilter(Name, CompanyFilter);
-                    Cnt := 0;
 
-                    repeat
-                        Cnt := Cnt + 1;
-                        B_FinishedPosting := true;
-                        l_Company.Reset();
-                        l_Company.SetFilter(Name, Copystr(CompanyFilter, StrPOS(CompanyFilter, '|') + 1));
-                        if l_Company.FindSet() then
+                    if TempGLEntry."IC Path Code" <> '' then begin
+                        ICSourceDocNo := TempGLEntry."Pre-Assigned No.";
+                        ICPathDetail.Reset();
+                        ICPathDetail.SetRange("Path Code", TempGLEntry."IC Path Code");
+                        if ICPathDetail.FindSet() then
                             repeat
-                                l_GLEntry.ChangeCompany(l_Company.Name);
-                                l_GLEntry.Reset();
-                                l_GLEntry.SetRange("IC Source Document No.", ICSourceDocNo);
-                                if not l_GLEntry.FindFirst() then begin
-                                    B_FinishedPosting := false;
-                                    Sleep(1000);
-                                end;
-                            until l_Company.Next() = 0;
-                    until B_FinishedPosting or (Cnt >= 10);
+                                CompanyFilter := CompanyFilter + '|' + ICPathDetail."To Company";
+                            until ICPathDetail.next = 0;
+                    end;
                 end;
             }
 
+            //GLRegisterIC
             trigger OnPreDataItem()
             var
                 l_GLEntry: Record "G/L Entry";
             begin
                 if FilterDocNo <> '' then begin
                     l_GLEntry.Reset();
-                    l_GLEntry.SetRange("Document No.", FilterDocNo);
+                    l_GLEntry.SetFilter("Document No.", FilterDocNo);
                     if l_GLEntry.FindFirst() then begin
                         GLRegisterIC.SetFilter("From Entry No.", '<=%1', l_GLEntry."Entry No.");
                         GLRegisterIC.SetFilter("To Entry No.", '>=%1', l_GLEntry."Entry No.");
-                        ICSourceDocFilter := l_GLEntry."Pre-Assigned No.";
                     end else
-                        Error('No G/L entries found for %1. Adjust your filters and try again.', FilterDocNo);
-
+                        error('No G/L entries found for %1. Adjust your filters and try again.', FilterDocNo);
                 end;
             end;
 
-            // trigger OnAfterGetRecord()
-            // var
-            //     l_GLEntry: Record "G/L Entry";
-            // begin
-            //     if ICSourceDocFilter = '' then begin
-            //         l_GLEntry.Reset();
-            //         l_GLEntry.SetCurrentKey("Entry No.");
-            //         l_GLEntry.SetRange("Entry No.", GLRegisterIC."From Entry No.", GLRegisterIC."To Entry No.");
-            //         l_GLEntry.SetFilter("IC Path Code", '<>%1', '');
-            //         if l_GLEntry.FindFirst() then
-            //             ICSourceDocFilter := l_GLEntry."Pre-Assigned No.";
-            //         if l_GLEntry.FindLast() then
-            //             ICSourceDocFilter := ICSourceDocFilter + '..' + l_GLEntry."Pre-Assigned No.";
-            //         // Message(ICSourceDocFilter);
-            //     end;
-            // end;
+            trigger OnAfterGetRecord()
+            var
+                l_GLEntry: Record "G/L Entry";
+                GLEntryCount: Integer;
+            begin
+
+                TempGLEntry.Reset();
+                TempGLEntry.DeleteAll();
+
+                l_GLEntry.Reset();
+                if FilterDocNo <> '' then
+                    l_GLEntry.SetFilter("Document No.", FilterDocNo)
+                else
+                    l_GLEntry.SetRange("Entry No.", GLRegisterIC."From Entry No.", GLRegisterIC."To Entry No.");
+                if l_GLEntry.FindSet() then begin
+                    repeat
+                        TempGLEntry.Reset();
+                        TempGLEntry.SetRange("Document No.", l_GLEntry."Document No.");
+                        if TempGLEntry.FindFirst() then begin
+                            if TempGLEntry."IC Path Code" = '' then begin
+                                TempGLEntry."IC Path Code" := l_GLEntry."IC Path Code";
+                                TempGLEntry.Modify();
+                            end;
+                        end else begin
+                            TempGLEntry.Init();
+                            TempGLEntry := l_GLEntry;
+                            TempGLEntry.Insert();
+                        end;
+                    until l_GLEntry.Next() = 0;
+                end else
+                    error('No G/L entries found for %1. Adjust your filters and try again.', FilterDocNo);
+
+                TempGLEntry.Reset();
+                GLEntryCount := TempGLEntry.Count;
+            end;
         }
     }
 
@@ -653,11 +686,6 @@ report 50112 "G/L Register Ext IC"
                         Caption = 'Show Posting Group';
                         ToolTip = 'Specifies if the report displays posting group in detail.';
                     }
-                    // field(AutoPrintSalesDoc; AutoPrintSalesDoc) //G005
-                    // {
-                    //     ApplicationArea = All;
-                    //     Caption = 'Auto Print Sales Document if any Register includes Customer Invoice / Credit Memo';
-                    // }
                 }
             }
         }
@@ -673,9 +701,8 @@ report 50112 "G/L Register Ext IC"
     }
 
     var
-        FilterDocNo: Code[20];
-        ICSourceDocNo: Code[20];
-        ICSourceDocFilter: Text[250];
+        FilterDocNo: Code[20]; //G003
+        ICSourceDocNo: Code[20]; //G003
         GLSetup: Record "General Ledger Setup";
         GLAcc: Record "G/L Account";
         TempPurchInvLinePrinted: Record "Purch. Inv. Line" temporary;
@@ -708,6 +735,8 @@ report 50112 "G/L Register Ext IC"
         DimensionsCap: Label 'Dimensions';//G003  
         DimSetEntry: Record "Dimension Set Entry";//G003  
         Continue: Boolean;//G003
+        TempGLEntry: Record "G/L Entry" temporary; //G003 //220506
+        CompanyFilter: Text; //G003 //220506
 
     trigger OnInitReport()
     begin
