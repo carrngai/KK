@@ -65,47 +65,60 @@ tableextension 50107 "Gen. Journal Line Ext" extends "Gen. Journal Line"
         l_GenJnlLine: Record "Gen. Journal Line";
         LineCount: Integer;
     begin
-        //Create Allocation
-        l_ICTransAccMapping.Reset();
-        l_ICTransAccMapping.SetRange("Path Code", Rec."IC Path Code");
-        if l_ICTransAccMapping.FindSet() then begin
 
-            LineCount := l_ICTransAccMapping.Count;
+        if Rec."IC Partner Code" <> xRec."IC Path Code" then begin
+            //Remove Allocation
+            l_ICGenJnlAlloc.Reset();
+            l_ICGenJnlAlloc.SetRange("Journal Template Name", Rec."Journal Template Name");
+            l_ICGenJnlAlloc.SetRange("Journal Batch Name", Rec."Journal Batch Name");
+            l_ICGenJnlAlloc.SetRange("Journal Line No.", Rec."Line No.");
+            if l_ICGenJnlAlloc.FindSet() then
+                l_ICGenJnlAlloc.DeleteAll();
+        end;
 
-            repeat
-                l_ICGenJnlAlloc.Init();
-                l_ICGenJnlAlloc."Journal Template Name" := Rec."Journal Template Name";
-                l_ICGenJnlAlloc."Journal Batch Name" := Rec."Journal Batch Name";
-                l_ICGenJnlAlloc."Journal Line No." := Rec."Line No.";
-                l_ICGenJnlAlloc."Line No." := NextLineNo;
-                l_ICGenJnlAlloc."IC Bal. Account Type" := l_ICTransAccMapping."Bal. Account Type";
-                l_ICGenJnlAlloc."IC Bal. Account No." := l_ICTransAccMapping."Bal. Account No.";
-                if LineCount = 1 then
-                    l_ICGenJnlAlloc.Amount := Rec.Amount;
-                l_ICGenJnlAlloc.Insert();
+        if Rec."IC Partner Code" <> '' then begin
+            //Create Allocation
+            l_ICTransAccMapping.Reset();
+            l_ICTransAccMapping.SetRange("Path Code", Rec."IC Path Code");
+            if l_ICTransAccMapping.FindSet() then begin
 
-                TempDimSetEntry.DeleteAll();
-                l_ICTransDefaultDim.Reset();
-                l_ICTransDefaultDim.SetRange("Table ID", Database::"IC Transaction Account Mapping");
-                l_ICTransDefaultDim.SetRange("Key 1", '');
-                l_ICTransDefaultDim.SetRange("Key 2", l_ICTransAccMapping.ID);
-                l_ICTransDefaultDim.SetRange(Type, l_ICTransDefaultDim.Type::"Bal. Dimension");
-                if l_ICTransDefaultDim.FindSet() then
-                    repeat
-                        DimVal.Get(l_ICTransDefaultDim."Dimension Code", l_ICTransDefaultDim."Dimension Value Code");
-                        TempDimSetEntry.Init();
-                        TempDimSetEntry."Dimension Code" := DimVal."Dimension Code";
-                        TempDimSetEntry."Dimension Value Code" := DimVal.Code;
-                        TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
-                        TempDimSetEntry.Insert();
-                    until l_ICTransDefaultDim.Next() = 0;
+                LineCount := l_ICTransAccMapping.Count;
 
-                l_ICGenJnlAlloc.validate("Bal. Dimension Set ID", DimMgmt.GetDimensionSetID(TempDimSetEntry));
-                l_ICGenJnlAlloc.Modify();
+                repeat
+                    l_ICGenJnlAlloc.Init();
+                    l_ICGenJnlAlloc."Journal Template Name" := Rec."Journal Template Name";
+                    l_ICGenJnlAlloc."Journal Batch Name" := Rec."Journal Batch Name";
+                    l_ICGenJnlAlloc."Journal Line No." := Rec."Line No.";
+                    l_ICGenJnlAlloc."Line No." := NextLineNo;
+                    l_ICGenJnlAlloc."IC Bal. Account Type" := l_ICTransAccMapping."Bal. Account Type";
+                    l_ICGenJnlAlloc."IC Bal. Account No." := l_ICTransAccMapping."Bal. Account No.";
+                    if LineCount = 1 then
+                        l_ICGenJnlAlloc.Amount := Rec.Amount;
+                    l_ICGenJnlAlloc.Insert();
 
-                NextLineNo += 10000;
+                    TempDimSetEntry.DeleteAll();
+                    l_ICTransDefaultDim.Reset();
+                    l_ICTransDefaultDim.SetRange("Table ID", Database::"IC Transaction Account Mapping");
+                    l_ICTransDefaultDim.SetRange("Key 1", '');
+                    l_ICTransDefaultDim.SetRange("Key 2", l_ICTransAccMapping.ID);
+                    l_ICTransDefaultDim.SetRange(Type, l_ICTransDefaultDim.Type::"Bal. Dimension");
+                    if l_ICTransDefaultDim.FindSet() then
+                        repeat
+                            DimVal.Get(l_ICTransDefaultDim."Dimension Code", l_ICTransDefaultDim."Dimension Value Code");
+                            TempDimSetEntry.Init();
+                            TempDimSetEntry."Dimension Code" := DimVal."Dimension Code";
+                            TempDimSetEntry."Dimension Value Code" := DimVal.Code;
+                            TempDimSetEntry."Dimension Value ID" := DimVal."Dimension Value ID";
+                            TempDimSetEntry.Insert();
+                        until l_ICTransDefaultDim.Next() = 0;
 
-            until l_ICTransAccMapping.Next() = 0;
+                    l_ICGenJnlAlloc.validate("Bal. Dimension Set ID", DimMgmt.GetDimensionSetID(TempDimSetEntry));
+                    l_ICGenJnlAlloc.Modify();
+
+                    NextLineNo += 10000;
+
+                until l_ICTransAccMapping.Next() = 0;
+            end;
         end;
     end;
 
